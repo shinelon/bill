@@ -19,17 +19,16 @@ public class MailQQOperationImpl extends BaseMailOperation {
 
     @Override
     public String getKeywords() {
-        return "中信银行";
+        return "验证码";
     }
 
     @Override
     public Properties getMailProperties() {
         Properties props = new Properties();
-        // 协议
+        props.setProperty("mail.pop3.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.setProperty("mail.pop3.socketFactory.fallback", "false");
         props.setProperty("mail.store.protocol", "pop3");
-        // 端口
-        props.setProperty("mail.pop3.port", "110");
-        // 服务器地址
+        props.setProperty("mail.pop3.port", "995");
         props.setProperty("mail.pop3.host", "pop.qq.com");
         return props;
     }
