@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  * @description 广大银行信用卡账单内容解析模板
  */
 @Service
-public class CebTemplate extends AbstractCebTemplate {
+public class CEBTemplate extends AbstractCEBTemplate {
 
     @Override
     protected void analyzeInternal(List<String> content) {

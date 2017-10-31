@@ -2,6 +2,8 @@ package com.pay.aile.bill.service.mail.analyze.impl;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,9 +11,14 @@ import com.pay.aile.bill.service.mail.analyze.BankMailAnalyzer;
 import com.pay.aile.bill.service.mail.analyze.IParseMail;
 import com.pay.aile.bill.service.mail.analyze.MailContentExtractor;
 
+/**
+ * 
+ * @author Charlie
+ * @description 
+ */
 @Service
 public class ParseMailImpl implements IParseMail {
-
+    private Logger logger = LoggerFactory.getLogger(getClass());
     /**
      * 邮件内容提取
      */
@@ -40,8 +47,11 @@ public class ParseMailImpl implements IParseMail {
         if (extractor == null) {
 
         }
-        //TODO 读取文件流
+        //TODO 读取文件
         List<String> content = extractor.extract(System.in);
+        if (content == null || content.isEmpty()) {
+            logger.error("extract error");
+        }
         BankMailAnalyzer parser = null;
         for (BankMailAnalyzer p : parsers) {
             if (p.support(prefix)) {
