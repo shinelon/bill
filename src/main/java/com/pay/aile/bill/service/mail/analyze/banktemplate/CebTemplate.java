@@ -10,7 +10,7 @@ import java.util.List;
 public class CebTemplate extends AbstractCebTemplate {
 
     @Override
-    protected void anylyzeInternal(List<String> content) {
+    protected void analyzeInternal(List<String> content) {
 
     }
 

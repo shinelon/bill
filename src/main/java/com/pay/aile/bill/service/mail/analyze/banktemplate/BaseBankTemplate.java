@@ -28,10 +28,10 @@ public abstract class BaseBankTemplate
     @Override
     public void analyze(List<String> content) {
         count.incrementAndGet();
-        anylyzeInternal(content);
+        analyzeInternal(content);
     }
 
-    protected void anylyzeInternal(List<String> content) {
+    protected void analyzeInternal(List<String> content) {
 
     }
 
