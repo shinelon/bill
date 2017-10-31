@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import com.pay.aile.bill.service.mail.analyze.BankMailAnalyzer;
 import com.pay.aile.bill.service.mail.analyze.banktemplate.AbstractCebTemplate;
 import com.pay.aile.bill.service.mail.analyze.banktemplate.CebTemplate;
-import com.pay.aile.bill.service.mail.analyze.util.ApplicationContextUtil;
+import com.pay.aile.bill.utils.SpringContextUtil;
 
 /**
  * 
@@ -50,7 +50,7 @@ public class CebAnalyzer implements BankMailAnalyzer {
             Class<? extends AbstractCebTemplate> clazz = templateCache
                     .get(cardType);
             //从applicationContext中获取对应的template
-            template = ApplicationContextUtil.getBean(clazz);
+            template = SpringContextUtil.getBean(clazz);
         }
         if (template != null) {
             template.analyze(content);
