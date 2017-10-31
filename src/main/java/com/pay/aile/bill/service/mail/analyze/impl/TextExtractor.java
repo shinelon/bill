@@ -3,6 +3,8 @@ package com.pay.aile.bill.service.mail.analyze.impl;
 import java.io.InputStream;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.pay.aile.bill.service.mail.analyze.MailContentExtractor;
 
 /**
@@ -10,6 +12,7 @@ import com.pay.aile.bill.service.mail.analyze.MailContentExtractor;
  * @author Charlie
  * @description
  */
+@Service
 public class TextExtractor implements MailContentExtractor {
 
     @Override
