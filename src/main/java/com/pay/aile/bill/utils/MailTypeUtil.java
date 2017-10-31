@@ -13,7 +13,7 @@ import com.pay.aile.bill.enums.MailType;
 public class MailTypeUtil {
     public static MailType getMailType(String mailAddrSuffix) {
         for (MailType tmpMailType : MailType.values()) {
-            if (tmpMailType.getValue().equals(mailAddrSuffix)) {
+            if (tmpMailType.getKey().equals(mailAddrSuffix)) {
                 return tmpMailType;
             }
         }

@@ -1,5 +1,8 @@
 package com.pay.aile.bill.enums;
 
+import com.pay.aile.bill.service.mail.MailOperation;
+import com.pay.aile.bill.service.mail.impl.Mail126OperationImpl;
+
 /***
  * MailType.java
  *
@@ -9,14 +12,20 @@ package com.pay.aile.bill.enums;
  *
  */
 public enum MailType {
-    Mail_126("126.com");
-    private String value;
+    Mail_126("126.com", Mail126OperationImpl.class);
+    private String key;
+    private Class<? extends MailOperation> classes;
 
-    MailType(String value) {
-        this.value = value;
+    MailType(String key, Class<? extends MailOperation> classes) {
+        this.key = key;
+        this.classes = classes;
     }
 
-    public String getValue() {
-        return value;
+    public Class<? extends MailOperation> getClzz() {
+        return classes;
+    }
+
+    public String getKey() {
+        return key;
     }
 }

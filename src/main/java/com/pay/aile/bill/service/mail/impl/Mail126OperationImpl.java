@@ -11,6 +11,7 @@ import javax.mail.Store;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import com.pay.aile.bill.exception.MailBillException;
 import com.pay.aile.bill.service.mail.MailOperation;
@@ -26,7 +27,7 @@ import com.pay.aile.bill.utils.MailSearchUtil;
  * @date 2017年10月30日
  *
  */
-
+@Service
 public class Mail126OperationImpl implements MailOperation {
     private static final Logger logger = LoggerFactory.getLogger(Mail126OperationImpl.class);
 
@@ -59,7 +60,7 @@ public class Mail126OperationImpl implements MailOperation {
 
     /***
      * 获取搜索邮件关键字
-     * 
+     *
      * @return
      */
     private String getKeywords() {
