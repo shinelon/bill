@@ -44,7 +44,7 @@ public abstract class BaseMailOperation {
                 folder.open(Folder.READ_ONLY);
                 Message[] messages = MailSearchUtil.search(getKeywords(), folder);
                 for (int i = 0; i < messages.length; i++) {
-                    DownloadUtil.saveFile(messages[i], i);
+                    DownloadUtil.saveFile(messages[i]);
                 }
                 folder.close(true);
             }

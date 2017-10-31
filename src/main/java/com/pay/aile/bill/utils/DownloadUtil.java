@@ -38,6 +38,7 @@ public class DownloadUtil {
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
+                logger.info("创建文件：[{}]成功", newFile);
             } else {
                 logger.info("创建文件：[{}]失败", newFile);
             }
@@ -46,17 +47,29 @@ public class DownloadUtil {
         }
     }
 
-    public static void saveFile(Message message, int index) throws MailBillException {
+    public static void saveFile(Message message) throws MailBillException {
         MimeMessage msg = (MimeMessage) message;
         String subject = MailDecodeUtil.getSubject(msg);
         String receiveAdd = MailDecodeUtil.getReceiveAddress(msg, null);
         String senderAdd = MailDecodeUtil.getFrom(msg);
-        String sentData = MailDecodeUtil.getSentDate(msg, null);
-        logger.debug("subject:{} receiveAdd:{} senderAdd:{} sentData:{}", subject, receiveAdd, senderAdd, sentData);
+        String sentDate = MailDecodeUtil.getSentDate(msg, "yyyyMMddHHmmss");
+        logger.debug("subject:{} receiveAdd:{} senderAdd:{} sentData:{}", subject, receiveAdd, senderAdd, sentDate);
         StringBuffer content = new StringBuffer(20480);
         MailDecodeUtil.getMailTextContent(msg, content);
-        String fileNamePrefix = "C:\\Users\\syq\\Desktop\\downMailTest\\";
-        createFile(fileNamePrefix + subject + index++ + ".txt", content);
+        content = MailDecodeUtil.getUtf8(content);
+        createFile(formatFileName(subject, sentDate), content);
         logger.info("=========================================");
     }
+
+    private static String formatFileName(String subject, String sentDate) {
+        String fileNamePrefix = "C:\\Users\\syq\\Desktop\\downMailTest\\";
+        StringBuffer fileNameBuffer = new StringBuffer(64);
+        fileNameBuffer.append(fileNamePrefix);
+        fileNameBuffer.append(subject);
+        fileNameBuffer.append('-');
+        fileNameBuffer.append(sentDate);
+        fileNameBuffer.append(".html");
+        return fileNameBuffer.toString();
+    }
+
 }
