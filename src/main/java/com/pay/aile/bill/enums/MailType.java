@@ -1,6 +1,6 @@
 package com.pay.aile.bill.enums;
 
-import com.pay.aile.bill.service.mail.MailOperation;
+import com.pay.aile.bill.service.mail.BaseMailOperation;
 import com.pay.aile.bill.service.mail.impl.Mail126OperationImpl;
 
 /***
@@ -12,16 +12,17 @@ import com.pay.aile.bill.service.mail.impl.Mail126OperationImpl;
  *
  */
 public enum MailType {
+
     Mail_126("126.com", Mail126OperationImpl.class);
     private String key;
-    private Class<? extends MailOperation> classes;
+    private Class<? extends BaseMailOperation> classes;
 
-    MailType(String key, Class<? extends MailOperation> classes) {
+    MailType(String key, Class<? extends BaseMailOperation> classes) {
         this.key = key;
         this.classes = classes;
     }
 
-    public Class<? extends MailOperation> getClzz() {
+    public Class<? extends BaseMailOperation> getClzz() {
         return classes;
     }
 

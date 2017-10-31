@@ -5,8 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.pay.aile.bill.service.mail.BaseMailOperation;
 import com.pay.aile.bill.service.mail.DownloadMail;
-import com.pay.aile.bill.service.mail.MailOperation;
 import com.pay.aile.bill.utils.MailTypeUtil;
 import com.pay.aile.bill.utils.SpringContextUtil;
 
@@ -26,7 +26,8 @@ public class DownloadMailImpl implements DownloadMail {
     @Override
     public void execute(final String mailAddr, final String password) throws Exception {
         String[] mailParms = StringUtils.split(mailAddr, "@");
-        MailOperation mailOperation = SpringContextUtil.getBean(MailTypeUtil.getMailType(mailParms[1]).getClzz());
+        BaseMailOperation mailOperation = (BaseMailOperation) SpringContextUtil
+                .getBean(MailTypeUtil.getMailType(mailParms[1]).getClzz());
         mailOperation.downloadMail(mailAddr, password);
 
     }
