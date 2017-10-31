@@ -1,4 +1,4 @@
-package com.pay.aile.bill.service.mail.impl;
+package com.pay.aile.bill.service.mail.download.impl;
 
 import java.util.Properties;
 
@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.pay.aile.bill.service.mail.BaseMailOperation;
+import com.pay.aile.bill.service.mail.download.BaseMailOperation;
 
 /***
  * MailOperationImpl.java

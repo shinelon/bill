@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.pay.aile.bill.BillApplication;
-import com.pay.aile.bill.service.mail.DownloadMail;
+import com.pay.aile.bill.service.mail.download.DownloadMail;
 
 /***
  * DownloadMailTest.java

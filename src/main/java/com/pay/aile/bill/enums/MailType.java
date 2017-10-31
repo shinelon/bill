@@ -1,7 +1,7 @@
 package com.pay.aile.bill.enums;
 
-import com.pay.aile.bill.service.mail.BaseMailOperation;
-import com.pay.aile.bill.service.mail.impl.Mail126OperationImpl;
+import com.pay.aile.bill.service.mail.download.BaseMailOperation;
+import com.pay.aile.bill.service.mail.download.impl.Mail126OperationImpl;
 
 /***
  * MailType.java

@@ -1,4 +1,4 @@
-package com.pay.aile.bill.service.mail;
+package com.pay.aile.bill.service.mail.download;
 
 import java.util.Properties;
 
