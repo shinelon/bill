@@ -12,6 +12,7 @@ import com.pay.aile.bill.enums.MailType;
 import com.pay.aile.bill.service.mail.DownloadMail;
 import com.pay.aile.bill.service.mail.MailOperation;
 import com.pay.aile.bill.utils.MailTypeUtil;
+import com.pay.aile.bill.utils.SpringContextUtil;
 
 /***
  * DownloadMailImpl.java
@@ -34,8 +35,10 @@ public class DownloadMailImpl implements DownloadMail {
     @Override
     public void execute(final String mailAddr, final String password) throws Exception {
         String[] mailParms = StringUtils.split(mailAddr, "@");
-        Class<? extends MailOperation> clzz = mailOperationMap.get(MailTypeUtil.getMailType(mailParms[1]));
-        MailOperation mailOperation = clzz.newInstance();
+        // Class<? extends MailOperation> clzz =
+        // mailOperationMap.get(MailTypeUtil.getMailType(mailParms[1]));
+        // MailOperation mailOperation = clzz.newInstance();
+        MailOperation mailOperation = SpringContextUtil.getBean(MailTypeUtil.getMailType(mailParms[1]).getClzz());
         mailOperation.downloadMail(mailAddr, password);
 
     }
