@@ -24,9 +24,18 @@ public class DownloadMailTest {
     public DownloadMail downloadMail;
 
     @Test
-    public void test() {
+    public void testMail126() {
         try {
             downloadMail.execute("jinjing_0316@126.com", "jinjing03161");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testMail163() {
+        try {
+            downloadMail.execute("yanming15@163.com", "yanming151");
         } catch (Exception e) {
             e.printStackTrace();
         }

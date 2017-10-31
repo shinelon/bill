@@ -2,7 +2,10 @@ package com.pay.aile.bill.enums;
 
 import com.pay.aile.bill.service.mail.download.BaseMailOperation;
 import com.pay.aile.bill.service.mail.download.impl.Mail126OperationImpl;
+import com.pay.aile.bill.service.mail.download.impl.Mail139OperationImpl;
+import com.pay.aile.bill.service.mail.download.impl.Mail163OperationImpl;
 import com.pay.aile.bill.service.mail.download.impl.MailQQOperationImpl;
+import com.pay.aile.bill.service.mail.download.impl.MailSinaOperationImpl;
 
 /***
  * MailType.java
@@ -14,7 +17,9 @@ import com.pay.aile.bill.service.mail.download.impl.MailQQOperationImpl;
  */
 public enum MailType {
 
-    MAIL_126("126.com", Mail126OperationImpl.class), MAIL_QQ("qq.com", MailQQOperationImpl.class);
+    MAIL_126("126.com", Mail126OperationImpl.class), MAIL_139("139.com", Mail139OperationImpl.class), MAIL_163(
+            "163.com", Mail163OperationImpl.class), MAIL_SINA("sina.com",
+                    MailSinaOperationImpl.class), MAIL_QQ("qq.com", MailQQOperationImpl.class);
 
     public static MailType getMailType(String mailAddrSuffix) {
         for (MailType tmpMailType : MailType.values()) {
