@@ -35,11 +35,11 @@ public abstract class BaseMailOperation {
     public void downloadMail(String mailAddr, String password) throws Exception {
         Store store = MailLoginUtil.login(getMailProperties(), mailAddr, password);
         Folder defaultFolder = null;
-        Folder[] folder_arr = null;
+        Folder[] folderArr = null;
         try {
             defaultFolder = store.getDefaultFolder();
-            folder_arr = defaultFolder.list();
-            for (Folder tempFolder : folder_arr) {
+            folderArr = defaultFolder.list();
+            for (Folder tempFolder : folderArr) {
                 Folder folder = store.getFolder(tempFolder.getName());
                 folder.open(Folder.READ_ONLY);
                 Message[] messages = MailSearchUtil.search(getKeywords(), folder);

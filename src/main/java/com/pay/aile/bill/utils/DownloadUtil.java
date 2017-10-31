@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import javax.mail.Message;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +66,7 @@ public class DownloadUtil {
         String fileNamePrefix = "C:\\Users\\syq\\Desktop\\downMailTest\\";
         StringBuffer fileNameBuffer = new StringBuffer(64);
         fileNameBuffer.append(fileNamePrefix);
-        fileNameBuffer.append(subject);
+        fileNameBuffer.append(StringUtils.remove(subject, ":"));
         fileNameBuffer.append('-');
         fileNameBuffer.append(sentDate);
         fileNameBuffer.append(".html");

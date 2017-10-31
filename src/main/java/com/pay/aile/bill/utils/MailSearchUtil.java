@@ -10,6 +10,10 @@ import javax.mail.search.OrTerm;
 import javax.mail.search.SearchTerm;
 import javax.mail.search.SubjectTerm;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.pay.aile.bill.contant.ErrorCodeContants;
 import com.pay.aile.bill.exception.MailBillException;
 
 /***
@@ -21,6 +25,7 @@ import com.pay.aile.bill.exception.MailBillException;
  *
  */
 public class MailSearchUtil {
+    private static final Logger logger = LoggerFactory.getLogger(MailSearchUtil.class);
 
     public static Message[] search(String querykey, Folder folder) throws MailBillException {
         SearchTerm subjectTerm = null;
@@ -67,7 +72,8 @@ public class MailSearchUtil {
                 return folder.search(subjectTerm);
             }
         } catch (MessagingException e) {
-            throw new MailBillException("");
+            throw MailBillExceptionUtil.getWithLog(e, ErrorCodeContants.SEARCH_FAILED_CODE,
+                    ErrorCodeContants.SEARCH_FAILED.getMsg(), logger);
         }
     }
 }
