@@ -22,43 +22,46 @@ import com.pay.aile.bill.utils.MailSearchUtil;
  *
  */
 public abstract class BaseMailOperation {
-    /***
-     * 下载邮件
-     *
-     * 注意126、163、和qq邮箱使用POP3授权码
-     *
-     * @param mailAddr
-     * @param password
-     * @throws Exception
-     */
-    public void downloadMail(String mailAddr, String password) throws Exception {
-        Store store = MailLoginUtil.login(getMailProperties(), mailAddr, password);
-        Folder defaultFolder = null;
-        Folder[] folder_arr = null;
-        try {
-            defaultFolder = store.getDefaultFolder();
-            folder_arr = defaultFolder.list();
-            for (Folder tempFolder : folder_arr) {
-                Folder folder = store.getFolder(tempFolder.getName());
-                folder.open(Folder.READ_ONLY);
-                Message[] messages = MailSearchUtil.search(getKeywords(), folder);
-                for (int i = 0; i < messages.length; i++) {
-                    DownloadUtil.saveFile(messages[i], i);
-                }
-                folder.close(true);
-            }
+	/***
+	 * 下载邮件
+	 *
+	 * 注意126、163、和qq邮箱使用POP3授权码
+	 *
+	 * @param mailAddr
+	 * @param password
+	 * @throws Exception
+	 */
+	public void downloadMail(String mailAddr, String password) throws Exception {
+		Store store = MailLoginUtil.login(getMailProperties(), mailAddr, password);
+		Folder defaultFolder = null;
+		Folder[] folder_arr = null;
+		try {
+			defaultFolder = store.getDefaultFolder();
+			folder_arr = defaultFolder.list();
+			for (Folder tempFolder : folder_arr) {
+				Folder folder = store.getFolder(tempFolder.getName());
+				folder.open(Folder.READ_ONLY);
+				Message[] messages = MailSearchUtil.search(getKeywords(), folder);
+				for (int i = 0; i < messages.length; i++) {
+					DownloadUtil.saveFile(messages[i], i);
+				}
+				folder.close(true);
+			}
 
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        } catch (MailBillException e) {
-            e.printStackTrace();
-        } finally {
-            MailReleaseUtil.releaseFolderAndStore(defaultFolder, store);
-        }
-    }
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		} catch (MailBillException e) {
+			e.printStackTrace();
+		} finally {
+			MailReleaseUtil.releaseFolderAndStore(defaultFolder, store);
+		}
+	}
 
-    public abstract String getKeywords();
+	public String getKeywords() {
 
-    public abstract Properties getMailProperties();
+		return "中信银行";
+	}
+
+	public abstract Properties getMailProperties();
 
 }
