@@ -34,7 +34,7 @@ public class DownloadMailTest {
     }
 
     // 不需要POP3授权码
-    @Test
+    // @Test
     public void testmail139() {
         try {
             downloadMail.execute("15701680705@139.com", "yanming1710");
@@ -44,7 +44,7 @@ public class DownloadMailTest {
     }
 
     // 开启POP3授权码
-    @Test
+    // @Test
     public void testMail163() {
         try {
             downloadMail.execute("yanming15@163.com", "yanming151");
@@ -54,7 +54,7 @@ public class DownloadMailTest {
     }
 
     // 开启POP3授权码
-    @Test
+    // @Test
     public void testMailQQ() {
         try {
             downloadMail.execute("xxxx@qq.com", "vjbvejavwiqobcgf");

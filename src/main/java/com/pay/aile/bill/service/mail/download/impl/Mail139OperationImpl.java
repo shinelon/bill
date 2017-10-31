@@ -18,11 +18,6 @@ import com.pay.aile.bill.service.mail.download.BaseMailOperation;
 public class Mail139OperationImpl extends BaseMailOperation {
 
     @Override
-    public String getKeywords() {
-        return "中信银行";
-    }
-
-    @Override
     public Properties getMailProperties() {
         Properties props = new Properties();
         // 协议

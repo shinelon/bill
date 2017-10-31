@@ -20,16 +20,6 @@ import com.pay.aile.bill.service.mail.download.BaseMailOperation;
 public class Mail126OperationImpl extends BaseMailOperation {
     private static final Logger logger = LoggerFactory.getLogger(Mail126OperationImpl.class);
 
-    /***
-     * 获取搜索邮件关键字
-     *
-     * @return
-     */
-    @Override
-    public String getKeywords() {
-        return "中信银行";
-    }
-
     @Override
     public Properties getMailProperties() {
         Properties props = new Properties();
