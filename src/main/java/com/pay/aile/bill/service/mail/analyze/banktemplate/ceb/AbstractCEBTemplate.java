@@ -1,4 +1,6 @@
-package com.pay.aile.bill.service.mail.analyze.banktemplate;
+package com.pay.aile.bill.service.mail.analyze.banktemplate.ceb;
+
+import com.pay.aile.bill.service.mail.analyze.banktemplate.BaseBankTemplate;
 
 /**
  * 
