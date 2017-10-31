@@ -31,15 +31,11 @@ public class MailLoginUtil {
      * @return
      * @throws MailBillException
      */
-    public static Store login(final String pop3ServerAddr, final String mailAddrWithoutSuffix, final String password)
+    public static Store login(Properties mailProps, final String mailAddrWithoutSuffix, final String password)
             throws MailBillException {
         logger.info("begin landing user mail:{}", mailAddrWithoutSuffix);
-        Properties props = new Properties();
-        props.setProperty("mail.store.protocol", "pop3"); // 协议
-        props.setProperty("mail.pop3.port", "110"); // 端口
-        props.setProperty("mail.pop3.host", pop3ServerAddr);// 服务器地址
         // 创建Session实例对象
-        Session session = Session.getInstance(props);
+        Session session = Session.getInstance(mailProps);
         // 创建pop3协议的Store对象
         try {
             Store store = session.getStore("pop3");
