@@ -1,5 +1,7 @@
 package com.pay.aile.bill.service.mail;
 
+import java.util.Properties;
+
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -30,7 +32,7 @@ public abstract class BaseMailOperation {
      * @throws Exception
      */
     public void downloadMail(String mailAddr, String password) throws Exception {
-        Store store = MailLoginUtil.login(getPop3ServerAddr(), mailAddr, password);
+        Store store = MailLoginUtil.login(getMailProperties(), mailAddr, password);
         Folder defaultFolder = null;
         Folder[] folder_arr = null;
         try {
@@ -57,5 +59,6 @@ public abstract class BaseMailOperation {
 
     public abstract String getKeywords();
 
-    public abstract String getPop3ServerAddr();
+    public abstract Properties getMailProperties();
+
 }
