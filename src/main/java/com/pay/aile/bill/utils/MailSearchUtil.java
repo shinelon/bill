@@ -16,8 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import com.pay.aile.bill.contant.BankKeywordContants;
-import com.pay.aile.bill.contant.ErrorCodeContants;
-import com.pay.aile.bill.exception.MailBillException;
 
 /***
  * MailSearchUtil.java
@@ -36,39 +34,29 @@ public class MailSearchUtil {
      * @param queryKey
      * @param folder
      * @return
-     * @throws MailBillException
+     * @throws MessagingException
      */
-    public static Message[] search(String queryKey, Folder folder) throws MailBillException {
-        try {
-            SearchTerm searchTerm = getSearchTerm(queryKey);
-            return folder.search(searchTerm);
-        } catch (MessagingException e) {
-            throw MailBillExceptionUtil.getWithLog(e, ErrorCodeContants.SEARCH_FAILED_CODE,
-                    ErrorCodeContants.SEARCH_FAILED.getMsg(), logger);
-        }
+    public static Message[] search(String queryKey, Folder folder) throws MessagingException {
+        SearchTerm searchTerm = getSearchTerm(queryKey);
+        return folder.search(searchTerm);
 
     }
 
     /***
      * 根据主题搜索关键字-多线程搜索
      *
-     * @问题 开启线程多，线程切换多反而慢
+     * @注意 性能瓶颈在网络传输，多线程搜索效率没有提升
      *
      * @param queryKey
      * @param folder
      * @param taskExecutor
      * @return
-     * @throws MailBillException
+     * @throws MessagingException
      */
     public static Message[] search(String queryKey, Folder folder, ThreadPoolTaskExecutor taskExecutor)
-            throws MailBillException {
-        try {
-            Message[] messageAry = folder.getMessages();
-            return mulitSearch(queryKey, messageAry, taskExecutor);
-        } catch (MessagingException | InterruptedException e) {
-            throw MailBillExceptionUtil.getWithLog(e, ErrorCodeContants.SEARCH_FAILED_CODE,
-                    ErrorCodeContants.SEARCH_FAILED.getMsg(), logger);
-        }
+            throws MessagingException {
+        Message[] messageAry = folder.getMessages();
+        return mulitSearch(queryKey, messageAry, taskExecutor);
     }
 
     private static SearchTerm getSearchTerm(String queryKey) {
@@ -86,8 +74,7 @@ public class MailSearchUtil {
         }
     }
 
-    private static Message[] mulitSearch(String queryKey, Message[] messageAry, ThreadPoolTaskExecutor taskExecutor)
-            throws InterruptedException {
+    private static Message[] mulitSearch(String queryKey, Message[] messageAry, ThreadPoolTaskExecutor taskExecutor) {
         SearchTerm searchTerm = getSearchTerm(queryKey);
         List<Message> retMessageList = new ArrayList<>();
         CountDownLatch doneSignal = new CountDownLatch(messageAry.length);
@@ -103,7 +90,12 @@ public class MailSearchUtil {
                 doneSignal.countDown();
             });
         }
-        doneSignal.await();
+        try {
+            doneSignal.await();
+        } catch (InterruptedException e) {
+            logger.error("mulit search error");
+            logger.error(e.getMessage(), e);
+        }
         Message[] retMessageAry = new Message[retMessageList.size()];
         retMessageList.toArray(retMessageAry);
         return retMessageAry;

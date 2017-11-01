@@ -42,7 +42,7 @@ public abstract class BaseMailOperation {
     @Autowired
     private ThreadPoolTaskExecutor taskExecutor;
 
-    public void downloadMail(String mailAddr, String password) throws Exception {
+    public void downloadMail(String mailAddr, String password) throws MailBillException {
         Store store = MailLoginUtil.login(getMailProperties(), mailAddr, password);
         Folder defaultFolder = null;
         Folder[] folderArr = null;
@@ -62,11 +62,9 @@ public abstract class BaseMailOperation {
                 }
                 folder.close(true);
             }
-
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        } catch (MailBillException e) {
-            e.printStackTrace();
+        } catch (MessagingException | MailBillException e) {
+            logger.error("下载邮件异常");
+            logger.error(e.getMessage(), e);
         } finally {
             MailReleaseUtil.releaseFolderAndStore(defaultFolder, store);
         }

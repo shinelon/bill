@@ -10,6 +10,7 @@ import javax.mail.Store;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.pay.aile.bill.contant.ErrorCodeContants;
 import com.pay.aile.bill.exception.MailBillException;
 
 /***
@@ -43,15 +44,16 @@ public class MailLoginUtil {
             boolean connected = store.isConnected();
             logger.info("mail:{} \tis connected:{}", mailAddrWithoutSuffix, connected);
             if (!connected) {
-                throw new MailBillException("");
+                throw MailBillExceptionUtil.getWithLog(ErrorCodeContants.EMAIL_LOGIN_FAILED_CODE,
+                        ErrorCodeContants.EMAIL_LOGIN_FAILED.getMsg(), logger);
             }
             return store;
         } catch (NoSuchProviderException e) {
-            e.printStackTrace();
-            throw new MailBillException("");
+            throw MailBillExceptionUtil.getWithLog(e, ErrorCodeContants.EMAIL_INVALID_PROTOCOL_CODE,
+                    ErrorCodeContants.EMAIL_INVALID_PROTOCOL.getMsg(), logger);
         } catch (MessagingException e) {
-            e.printStackTrace();
-            throw new MailBillException("");
+            throw MailBillExceptionUtil.getWithLog(e, ErrorCodeContants.POP_NOT_OPEN_EXCEPTION_CODE,
+                    ErrorCodeContants.POP_NOT_OPEN_EXCEPTION.getMsg(), logger);
         }
     }
 
