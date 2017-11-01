@@ -1,3 +1,3 @@
 ##bill
 
-123455
+mybatis plus :  http://baomidou.oschina.io/mybatis-plus-doc/#/
