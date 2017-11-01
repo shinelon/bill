@@ -48,7 +48,7 @@ public class ParseMailImpl implements IParseMail {
 
         }
         //TODO 读取文件
-        List<String> content = extractor.extract(System.in);
+        String content = extractor.extract(System.in);
         if (content == null || content.isEmpty()) {
             logger.error("extract error");
         }

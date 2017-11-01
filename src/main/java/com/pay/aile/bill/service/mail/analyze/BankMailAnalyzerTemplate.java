@@ -1,7 +1,5 @@
 package com.pay.aile.bill.service.mail.analyze;
 
-import java.util.List;
-
 /**
  * 
  * @author Charlie
@@ -13,5 +11,5 @@ public interface BankMailAnalyzerTemplate {
      * 
      * @param content
      */
-    public void analyze(List<String> content);
+    public void analyze(String content);
 }

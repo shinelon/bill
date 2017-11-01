@@ -1,7 +1,5 @@
 package com.pay.aile.bill.service.mail.analyze.impl;
 
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 
 import com.pay.aile.bill.service.mail.analyze.AbstractBankMailAnalyzer;
@@ -22,7 +20,7 @@ public class CITICAnalyzer
     }
 
     @Override
-    protected void preAnalyze(List<String> content) {
+    protected void preAnalyze(String content) {
 
     }
 

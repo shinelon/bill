@@ -1,7 +1,5 @@
 package com.pay.aile.bill.service.mail.analyze.banktemplate.ceb;
 
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class CEBTemplate extends AbstractCEBTemplate {
 
     @Override
-    protected void analyzeInternal(List<String> content) {
+    protected void analyzeInternal(String content) {
 
     }
 

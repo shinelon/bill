@@ -10,6 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.pay.aile.bill.service.mail.analyze.banktemplate.BaseBankTemplate;
 import com.pay.aile.bill.utils.SpringContextUtil;
 
+/**
+ * 
+ * @author Charlie
+ * @description 统一处理每个分析器共同的业务
+ * @param <T> 每个银行卡种的父类
+ */
 public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
         implements BankMailAnalyzer, InitializingBean {
 
@@ -34,7 +40,7 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
      * 子类不要重写此方法
      */
     @Override
-    public void analyze(List<String> content) {
+    public void analyze(String content) {
         preAnalyze(content);
         String cardType = "";
         T template = null;
@@ -70,7 +76,7 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
      * 比如可以从content中找出能判断卡种的关键字
      * @param content
      */
-    protected void preAnalyze(List<String> content) {
+    protected void preAnalyze(String content) {
 
     }
 
@@ -79,6 +85,9 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
         initTemplateCache();
     }
 
+    /**
+     * 子类通过重写此方法初始化模板
+     */
     protected void initTemplateCache() {
     }
 }

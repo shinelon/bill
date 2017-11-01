@@ -1,7 +1,6 @@
 package com.pay.aile.bill.service.mail.analyze;
 
 import java.io.InputStream;
-import java.util.List;
 
 /**
  * 
@@ -19,7 +18,7 @@ public interface MailContentExtractor {
     /**
      * 
      * @param is
-     * @return 提取邮件内容
+     * @return 提取邮件内容 提取失败返回null
      */
-    public List<String> extract(InputStream is);
+    public String extract(InputStream is);
 }

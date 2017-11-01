@@ -1,7 +1,6 @@
 package com.pay.aile.bill.service.mail.analyze.impl;
 
 import java.io.InputStream;
-import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -22,7 +21,7 @@ public class PdfExtractor implements MailContentExtractor {
     }
 
     @Override
-    public List<String> extract(InputStream is) {
+    public String extract(InputStream is) {
         // TODO Auto-generated method stub
         return null;
     }

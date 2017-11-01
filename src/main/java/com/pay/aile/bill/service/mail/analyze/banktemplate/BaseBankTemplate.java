@@ -1,6 +1,6 @@
 package com.pay.aile.bill.service.mail.analyze.banktemplate;
 
-import java.util.List;
+import java.util.Map;
 
 import com.pay.aile.bill.service.mail.analyze.BankMailAnalyzerTemplate;
 
@@ -16,6 +16,13 @@ public abstract class BaseBankTemplate
      * 统计每一种模板的调用次数
      */
     private volatile int count;
+    /**
+     * 模板解析邮件时需要的关键字及对应的规则
+     * key:到期还款日/应还款金额.eg
+     * value:规则
+     * TODO 如何初始化
+     */
+    protected Map<String, String> keywords;
 
     @Override
     public int compareTo(BaseBankTemplate o) {
@@ -25,12 +32,20 @@ public abstract class BaseBankTemplate
     }
 
     @Override
-    public void analyze(List<String> content) {
+    public void analyze(String content) {
         count++;
+        initKeywords();
         analyzeInternal(content);
     }
 
-    protected void analyzeInternal(List<String> content) {
+    protected void analyzeInternal(String content) {
+
+    }
+
+    /**
+     * 获取模板对应的关键字
+     */
+    protected void initKeywords() {
 
     }
 

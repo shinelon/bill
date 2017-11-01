@@ -1,7 +1,5 @@
 package com.pay.aile.bill.service.mail.analyze.banktemplate.citic;
 
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class CITICTemplate extends AbstractCITICTemplate {
 
     @Override
-    protected void analyzeInternal(List<String> content) {
+    protected void analyzeInternal(String content) {
 
     }
 
