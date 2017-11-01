@@ -13,14 +13,14 @@ import com.pay.aile.bill.utils.SpringContextUtil;
 /**
  * 
  * @author Charlie
- * @description 统一处理每个分析器共同的业务
+ * @description 统一处理每个银行分析器共同的业务
  * @param <T> 每个银行卡种的父类
  */
 public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
         implements BankMailAnalyzer, InitializingBean {
 
     /**
-     * 
+     * 当前银行包含的卡种解析模板
      */
     @Autowired
     protected List<T> templates;
@@ -30,8 +30,8 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
      */
     protected String cardType;
     /**
-     * 同银行不同卡的模板缓存
-     * key:区分不同卡的关键字
+     * 当前银行卡种解析模板缓存
+     * key:区分不同卡的标识
      * value:对应的模板
      */
     protected Map<String, Class<? extends T>> templateCache;
@@ -44,7 +44,7 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
         preAnalyze(content);
         String cardType = "";
         T template = null;
-        if (!templateCache.isEmpty()) {
+        if (templateCache != null && !templateCache.isEmpty()) {
             Class<? extends T> clazz = templateCache.get(cardType);
             //从applicationContext中获取对应的template
             template = SpringContextUtil.getBean(clazz);
@@ -65,6 +65,8 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
                 if (analyzeError == null) {
                     //执行成功,返回
                     break;
+                } else {
+                    analyzeError.printStackTrace();
                 }
             }
         }
@@ -73,7 +75,7 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
 
     /**
      * 解析之前，由子类实现进行特殊处理 
-     * 比如可以从content中找出能判断卡种的关键字
+     * 比如可以从content中找出能判断卡种的标识
      * @param content
      */
     protected void preAnalyze(String content) {
@@ -86,7 +88,7 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
     }
 
     /**
-     * 子类通过重写此方法初始化模板
+     * 子类通过重写此方法初始化银行不同卡种的处理模板
      */
     protected void initTemplateCache() {
     }

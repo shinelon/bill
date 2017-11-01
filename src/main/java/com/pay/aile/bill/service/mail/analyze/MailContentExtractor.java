@@ -6,6 +6,7 @@ import java.io.InputStream;
  * 
  * @author Charlie
  * @description 邮件内容提取
+ * 从文件中提取出账单的格式化后的内容
  */
 public interface MailContentExtractor {
     /**

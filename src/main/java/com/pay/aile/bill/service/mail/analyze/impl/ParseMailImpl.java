@@ -1,5 +1,8 @@
 package com.pay.aile.bill.service.mail.analyze.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -16,7 +19,7 @@ import com.pay.aile.bill.service.mail.analyze.MailContentExtractor;
  * @author Charlie
  * @description 
  */
-@Service
+@Service("parseMail")
 public class ParseMailImpl implements IParseMail {
     private Logger logger = LoggerFactory.getLogger(getClass());
     /**
@@ -34,7 +37,14 @@ public class ParseMailImpl implements IParseMail {
     @Override
     public void execute() {
         //TODO 获取文件/文件名称
-        String name = "test.pdf";//文件内容
+        File file = new File("D:\\中信银行信用卡电子账单1.html");
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        String name = file.getName();//文件内容
         String suffix = name.substring(name.indexOf(".") + 1);
         String prefix = name.substring(0, name.indexOf("."));
         MailContentExtractor extractor = null;
@@ -48,7 +58,7 @@ public class ParseMailImpl implements IParseMail {
 
         }
         //TODO 读取文件
-        String content = extractor.extract(System.in);
+        String content = extractor.extract(fis);
         if (content == null || content.isEmpty()) {
             logger.error("extract error");
         }

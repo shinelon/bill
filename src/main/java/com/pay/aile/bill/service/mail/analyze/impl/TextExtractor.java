@@ -25,8 +25,8 @@ public class TextExtractor implements MailContentExtractor {
 
     @Override
     public boolean support(String suffix) {
-        if (!StringUtils.hasText(suffix) || !"html".equalsIgnoreCase(suffix)
-                || !"txt".equalsIgnoreCase(suffix)) {
+        if (!StringUtils.hasText(suffix) || (!"html".equalsIgnoreCase(suffix)
+                && !"txt".equalsIgnoreCase(suffix))) {
             return false;
         }
         return true;
@@ -34,9 +34,9 @@ public class TextExtractor implements MailContentExtractor {
 
     @Override
     public String extract(InputStream is) {
-        String content = "";
         try {
-            content = StreamUtils.copyToString(is, Charset.forName("utf-8"));
+            String content = StreamUtils.copyToString(is,
+                    Charset.forName("utf-8"));
             return TextExtractUtil.parseHtml(content);
         } catch (IOException e) {
             logger.error(e.getMessage(), e);

@@ -7,13 +7,14 @@ import com.pay.aile.bill.service.mail.analyze.BankMailAnalyzerTemplate;
 /**
  * 
  * @author Charlie
- * @description 基础模板
+ * @description 卡种解析基础模板
  */
 public abstract class BaseBankTemplate
         implements BankMailAnalyzerTemplate, Comparable<BaseBankTemplate> {
 
     /**
      * 统计每一种模板的调用次数
+     * 用于不同卡种之间的排序,调用次数高的排位靠前
      */
     private volatile int count;
     /**
@@ -24,6 +25,9 @@ public abstract class BaseBankTemplate
      */
     protected Map<String, String> keywords;
 
+    /**
+     * 用于不同卡种之间的排序,调用次数高的排位靠前
+     */
     @Override
     public int compareTo(BaseBankTemplate o) {
         if (o == null)

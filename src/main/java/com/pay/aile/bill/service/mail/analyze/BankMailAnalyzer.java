@@ -4,6 +4,7 @@ package com.pay.aile.bill.service.mail.analyze;
  * 
  * @author Charlie
  * @description 银行账单解析器
+ * 解析经格式化后的邮件内容
  */
 public interface BankMailAnalyzer {
 
