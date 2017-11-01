@@ -2,6 +2,7 @@ package com.pay.aile.bill.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import javax.mail.Folder;
 import javax.mail.Message;
@@ -12,7 +13,9 @@ import javax.mail.search.SubjectTerm;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+import com.pay.aile.bill.contant.BankKeywordContants;
 import com.pay.aile.bill.contant.ErrorCodeContants;
 import com.pay.aile.bill.exception.MailBillException;
 
@@ -27,53 +30,83 @@ import com.pay.aile.bill.exception.MailBillException;
 public class MailSearchUtil {
     private static final Logger logger = LoggerFactory.getLogger(MailSearchUtil.class);
 
-    public static Message[] search(String querykey, Folder folder) throws MailBillException {
-        SearchTerm subjectTerm = null;
-        SearchTerm orTerm1 = null;
-        List<SearchTerm> searchTermList = new ArrayList<SearchTerm>();
-
+    /***
+     * 根据主题搜索关键字
+     *
+     * @param queryKey
+     * @param folder
+     * @return
+     * @throws MailBillException
+     */
+    public static Message[] search(String queryKey, Folder folder) throws MailBillException {
         try {
-            if (-1 != querykey.indexOf("，")) {
-                String[] split = querykey.split("，");
-                int length = split.length;
-                for (int i = 0; i < length; i++) {
-                    subjectTerm = new SubjectTerm(split[i]);
-                    searchTermList.add(subjectTerm);
-                }
-                int size = searchTermList.size();
-                for (int j = 0; j < size; j++) {
-                    if (size == 1) {
-                        return folder.search(searchTermList.get(j));
-                    }
-                    if (size <= 2) {
-                        orTerm1 = new OrTerm(searchTermList.get(j), searchTermList.get(j + 1));
-                        return folder.search(orTerm1);
-                    }
-                    if (j < 1) {
-                        orTerm1 = new OrTerm(searchTermList.get(j), searchTermList.get(j + 1));
-                        continue;
-                    }
-                    orTerm1 = new OrTerm(searchTermList.get(j), orTerm1);
-                }
-                return folder.search(orTerm1);
-            } else if (-1 != querykey.indexOf(",")) {
-                String[] split = querykey.split(",");
-                int length = split.length;
-                for (int i = 0; i < length; i++) {
-                    if (i == 0) {
-                        subjectTerm = new SubjectTerm(split[i]);
-                        continue;
-                    }
-                    orTerm1 = new OrTerm(subjectTerm, new SubjectTerm(split[i]));
-                }
-                return folder.search(orTerm1);
-            } else {
-                subjectTerm = new SubjectTerm(querykey);
-                return folder.search(subjectTerm);
-            }
+            SearchTerm searchTerm = getSearchTerm(queryKey);
+            return folder.search(searchTerm);
         } catch (MessagingException e) {
             throw MailBillExceptionUtil.getWithLog(e, ErrorCodeContants.SEARCH_FAILED_CODE,
                     ErrorCodeContants.SEARCH_FAILED.getMsg(), logger);
         }
+
     }
+
+    /***
+     * 根据主题搜索关键字-多线程搜索
+     *
+     * @问题 开启线程多，线程切换多反而慢
+     *
+     * @param queryKey
+     * @param folder
+     * @param taskExecutor
+     * @return
+     * @throws MailBillException
+     */
+    public static Message[] search(String queryKey, Folder folder, ThreadPoolTaskExecutor taskExecutor)
+            throws MailBillException {
+        try {
+            Message[] messageAry = folder.getMessages();
+            return mulitSearch(queryKey, messageAry, taskExecutor);
+        } catch (MessagingException | InterruptedException e) {
+            throw MailBillExceptionUtil.getWithLog(e, ErrorCodeContants.SEARCH_FAILED_CODE,
+                    ErrorCodeContants.SEARCH_FAILED.getMsg(), logger);
+        }
+    }
+
+    private static SearchTerm getSearchTerm(String queryKey) {
+        if (-1 != queryKey.indexOf(BankKeywordContants.BANK_KEYWORD_SEPARATOR)) {
+            String[] queryKeyAry = queryKey.split(BankKeywordContants.BANK_KEYWORD_SEPARATOR);
+            SubjectTerm[] subjectTermAry = new SubjectTerm[queryKeyAry.length];
+            for (int i = 0; i < queryKeyAry.length; i++) {
+                subjectTermAry[i] = new SubjectTerm(queryKeyAry[i]);
+            }
+            OrTerm orTerm = new OrTerm(subjectTermAry);
+            return orTerm;
+        } else {
+            SearchTerm subjectTerm = new SubjectTerm(queryKey);
+            return subjectTerm;
+        }
+    }
+
+    private static Message[] mulitSearch(String queryKey, Message[] messageAry, ThreadPoolTaskExecutor taskExecutor)
+            throws InterruptedException {
+        SearchTerm searchTerm = getSearchTerm(queryKey);
+        List<Message> retMessageList = new ArrayList<>();
+        CountDownLatch doneSignal = new CountDownLatch(messageAry.length);
+        for (Message message : messageAry) {
+            taskExecutor.execute(() -> {
+                try {
+                    if (message.match(searchTerm)) {
+                        retMessageList.add(message);
+                    }
+                } catch (Exception e) {
+                    logger.error("mulit search mail with keywords error!", e);
+                }
+                doneSignal.countDown();
+            });
+        }
+        doneSignal.await();
+        Message[] retMessageAry = new Message[retMessageList.size()];
+        retMessageList.toArray(retMessageAry);
+        return retMessageAry;
+    }
+
 }

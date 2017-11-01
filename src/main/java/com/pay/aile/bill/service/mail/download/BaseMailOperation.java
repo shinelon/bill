@@ -7,6 +7,11 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Store;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+
 import com.pay.aile.bill.contant.BankKeywordContants;
 import com.pay.aile.bill.exception.MailBillException;
 import com.pay.aile.bill.utils.DownloadUtil;
@@ -32,6 +37,11 @@ public abstract class BaseMailOperation {
      * @param password
      * @throws Exception
      */
+    private static final Logger logger = LoggerFactory.getLogger(BaseMailOperation.class);
+
+    @Autowired
+    private ThreadPoolTaskExecutor taskExecutor;
+
     public void downloadMail(String mailAddr, String password) throws Exception {
         Store store = MailLoginUtil.login(getMailProperties(), mailAddr, password);
         Folder defaultFolder = null;
@@ -42,9 +52,13 @@ public abstract class BaseMailOperation {
             for (Folder tempFolder : folderArr) {
                 Folder folder = store.getFolder(tempFolder.getName());
                 folder.open(Folder.READ_ONLY);
+                long startTime = System.currentTimeMillis();
                 Message[] messages = MailSearchUtil.search(getKeywords(), folder);
+                long endTime = System.currentTimeMillis();
+                logger.debug("====搜索到{}封邮件，耗时{}ms", messages.length, endTime - startTime);
                 for (int i = 0; i < messages.length; i++) {
-                    DownloadUtil.saveFile(messages[i]);
+                    Message tmpMessage = messages[i];
+                    DownloadUtil.saveFile(tmpMessage);
                 }
                 folder.close(true);
             }

@@ -24,7 +24,7 @@ public class DownloadMailTest {
     public DownloadMail downloadMail;
 
     // 开启POP3授权码
-    // @Test
+    @Test
     public void testMail126() {
         try {
             downloadMail.execute("jinjing_0316@126.com", "jinjing03161");
@@ -53,7 +53,7 @@ public class DownloadMailTest {
         }
     }
 
-    @Test
+    // @Test
     public void testMailAliyun() {
         try {
             downloadMail.execute("jinjing_0316@aliyun.com", "jinjing0316");

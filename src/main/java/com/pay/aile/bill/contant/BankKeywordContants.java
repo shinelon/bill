@@ -13,11 +13,11 @@ import org.apache.commons.lang3.StringUtils;
  *
  * @描述 通过关键字检索邮件并下载
  */
-
 public class BankKeywordContants {
 
     public static String ALL_BANK_KEYWORDS = "";
-    // 若银行有多个关键字需要使用汉字逗号分隔
+    // 汉字使用汉字逗号分割
+    public static final String BANK_KEYWORD_SEPARATOR = "，";
     public static final String BANK_KEYWORD_CCB = "中国建设银行";
     public static final String BANK_KEYWORD_ABC = "中国农业银行";
     public static final String BANK_KEYWORD_ICBC = "中国工商银行";
@@ -43,10 +43,9 @@ public class BankKeywordContants {
         try {
             for (Field field : fields) {
                 String tmpValue = (String) field.get(BankKeywordContants.class);
-                if (!StringUtils.isEmpty(tmpValue)) {
+                if (!StringUtils.isEmpty(tmpValue) && !tmpValue.equals(BANK_KEYWORD_SEPARATOR)) {
                     formatKeywords.append(field.get(BankKeywordContants.class));
-                    // 中文输入法汉字逗号
-                    formatKeywords.append("，");
+                    formatKeywords.append(BANK_KEYWORD_SEPARATOR);
                 }
             }
         } catch (IllegalArgumentException e) {
@@ -55,5 +54,9 @@ public class BankKeywordContants {
             e.printStackTrace();
         }
         return formatKeywords.deleteCharAt(formatKeywords.length() - 1).toString();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(formatKeywords());
     }
 }
