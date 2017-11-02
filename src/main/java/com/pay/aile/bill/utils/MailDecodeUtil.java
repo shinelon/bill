@@ -106,7 +106,7 @@ public class MailDecodeUtil {
 					BodyPart bodyPart = multipart.getBodyPart(i);
 					// System.out.println("filename =========" + i +
 					// bodyPart.getFileName());
-					if (StringUtils.isNotBlank(bodyPart.getFileName())) {
+					if (StringUtils.isNotBlank(bodyPart.getFileName()) && bodyPart.getFileName().endsWith(".pdf")) {
 						InputStream in = bodyPart.getInputStream();
 
 						String tempContent = PDFReader.readContent(in);
