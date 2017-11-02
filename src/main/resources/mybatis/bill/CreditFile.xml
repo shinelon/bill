@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pay.aile.bill.mapper.CreditFileMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.pay.aile.bill.entity.CreditFile">
+		<id column="id" property="id" />
+		<result column="filen_name" property="filenName" />
+		<result column="create_date" property="createDate" />
+		<result column="receive_date" property="receiveDate" />
+		<result column="email_id" property="emailId" />
+		<result column="process_result" property="processResult" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, filen_name AS filenName, create_date AS createDate, receive_date AS receiveDate, email_id AS emailId, process_result AS processResult
+    </sql>
+
+</mapper>

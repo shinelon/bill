@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.pay.aile.bill.BillApplication;
+import com.pay.aile.bill.entity.CreditBank;
 
 /***
  * TestMapperTest.java
@@ -22,15 +23,15 @@ import com.pay.aile.bill.BillApplication;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = BillApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class TestMapperTest {
+public class CreditBankMapperTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(TestMapperTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(CreditBankMapperTest.class);
     @Autowired
-    private TestMapper testMapper;
+    private CreditBankMapper CreditBankMapper;
 
     @Test
     public void testSelect() {
-        List<com.pay.aile.bill.entity.Test> list = testMapper.selectList(null);
+        List<CreditBank> list = CreditBankMapper.selectList(null);
         logger.info(list.toString());
     }
 

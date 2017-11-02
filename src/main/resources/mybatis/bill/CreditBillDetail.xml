@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pay.aile.bill.mapper.CreditBillDetailMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.pay.aile.bill.entity.CreditBillDetail">
+		<id column="id" property="id" />
+		<result column="bill_id" property="billId" />
+		<result column="transaction_date" property="transactionDate" />
+		<result column="billing_date" property="billingDate" />
+		<result column="transaction_description" property="transactionDescription" />
+		<result column="transaction_amount" property="transactionAmount" />
+		<result column="accountable_amount" property="accountableAmount" />
+		<result column="account_type" property="accountType" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, bill_id AS billId, transaction_date AS transactionDate, billing_date AS billingDate, transaction_description AS transactionDescription, transaction_amount AS transactionAmount, accountable_amount AS accountableAmount, account_type AS accountType
+    </sql>
+
+</mapper>

@@ -45,7 +45,7 @@ public class MpGenerator {
         gc.setBaseResultMap(true);
         // XML columList
         gc.setBaseColumnList(true);
-        gc.setAuthor("shinelon");
+        gc.setAuthor("yaoqiang.sun");
 
         // 自定义文件命名，注意 %s 会自动填充表实体属性！
         // gc.setMapperName("%sDao");
@@ -70,7 +70,7 @@ public class MpGenerator {
         dsc.setDriverName("com.mysql.jdbc.Driver");
         dsc.setUsername("root");
         dsc.setPassword("123456");
-        dsc.setUrl("jdbc:mysql://127.0.0.1/admin?characterEncoding=utf8");
+        dsc.setUrl("jdbc:mysql://127.0.0.1/bill?characterEncoding=utf8");
         mpg.setDataSource(dsc);
 
         // 策略配置
@@ -81,13 +81,14 @@ public class MpGenerator {
         // 表名生成策略
         strategy.setNaming(NamingStrategy.underline_to_camel);
         // 需要生成的表
-        strategy.setInclude(new String[] { "sys_role", "sys_user", "sys_user_role" });
+        strategy.setInclude(new String[] { "credit_account_type", "credit_bank", "credit_bill", "credit_bill_detail",
+                "credit_cardtype", "credit_email", "credit_file", "credit_template" });
         mpg.setStrategy(strategy);
 
         // 包配置
         PackageConfig pc = new PackageConfig();
-        pc.setParent("com.shinelon.demo");
-        pc.setModuleName("admin");
+        pc.setParent("com.pay.aile");
+        pc.setModuleName("bill");
         mpg.setPackageInfo(pc);
 
         // 注入自定义配置，可以在 VM 中使用 cfg.abc 【可无】
