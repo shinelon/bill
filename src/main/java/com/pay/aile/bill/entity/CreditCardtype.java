@@ -1,5 +1,6 @@
 package com.pay.aile.bill.entity;
 
+import java.util.Date;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
@@ -32,6 +33,20 @@ public class CreditCardtype extends Model<CreditCardtype> {
      * 编码
      */
 	private String code;
+    /**
+     * 有效标志1有效0无效
+     */
+	private Integer status;
+    /**
+     * 修改时间
+     */
+	@TableField("update_date")
+	private Date updateDate;
+    /**
+     * 创建时间
+     */
+	@TableField("create_date")
+	private Date createDate;
 
 
 	public Long getId() {
@@ -66,6 +81,30 @@ public class CreditCardtype extends Model<CreditCardtype> {
 		this.code = code;
 	}
 
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public Date getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
+	}
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
 	@Override
 	protected Serializable pkVal() {
 		return this.id;
@@ -78,6 +117,9 @@ public class CreditCardtype extends Model<CreditCardtype> {
 			", bankId=" + bankId +
 			", name=" + name +
 			", code=" + code +
+			", status=" + status +
+			", updateDate=" + updateDate +
+			", createDate=" + createDate +
 			"}";
 	}
 }

@@ -1,5 +1,6 @@
 package com.pay.aile.bill.entity;
 
+import java.util.Date;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
@@ -51,6 +52,20 @@ public class CreditBillDetail extends Model<CreditBillDetail> {
 	private String accountableAmount;
 	@TableField("account_type")
 	private String accountType;
+    /**
+     * 有效标志1有效0无效
+     */
+	private Integer status;
+    /**
+     * 修改时间
+     */
+	@TableField("update_date")
+	private Date updateDate;
+    /**
+     * 创建时间
+     */
+	@TableField("create_date")
+	private Date createDate;
 
 
 	public Long getId() {
@@ -117,6 +132,30 @@ public class CreditBillDetail extends Model<CreditBillDetail> {
 		this.accountType = accountType;
 	}
 
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public Date getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
+	}
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
 	@Override
 	protected Serializable pkVal() {
 		return this.id;
@@ -133,6 +172,9 @@ public class CreditBillDetail extends Model<CreditBillDetail> {
 			", transactionAmount=" + transactionAmount +
 			", accountableAmount=" + accountableAmount +
 			", accountType=" + accountType +
+			", status=" + status +
+			", updateDate=" + updateDate +
+			", createDate=" + createDate +
 			"}";
 	}
 }

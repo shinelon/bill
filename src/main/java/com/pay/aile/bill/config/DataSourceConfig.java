@@ -43,7 +43,7 @@ public class DataSourceConfig {
         PaginationInterceptor pagination = new PaginationInterceptor();
         fb.setPlugins(new Interceptor[] { pagination });
         GlobalConfiguration gcf = new GlobalConfiguration();
-        gcf.setDbType("jdbc:mysql:");
+        gcf.setMetaObjectHandler(new ComMetaObjectHandler());
         gcf.setIdType(0);
         gcf.setDbColumnUnderline(true);
         fb.setGlobalConfig(gcf);

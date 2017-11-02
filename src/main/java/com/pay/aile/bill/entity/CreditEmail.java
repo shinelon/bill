@@ -1,7 +1,9 @@
 package com.pay.aile.bill.entity;
 
 import com.baomidou.mybatisplus.enums.IdType;
+import java.util.Date;
 import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
@@ -33,6 +35,20 @@ public class CreditEmail extends Model<CreditEmail> {
      * 密码
      */
 	private String password;
+    /**
+     * 有效标志1有效0无效
+     */
+	private Integer status;
+    /**
+     * 修改时间
+     */
+	@TableField("update_date")
+	private Date updateDate;
+    /**
+     * 创建时间
+     */
+	@TableField("create_date")
+	private Date createDate;
 
 
 	public Long getId() {
@@ -67,6 +83,30 @@ public class CreditEmail extends Model<CreditEmail> {
 		this.password = password;
 	}
 
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public Date getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
+	}
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
 	@Override
 	protected Serializable pkVal() {
 		return this.id;
@@ -79,6 +119,9 @@ public class CreditEmail extends Model<CreditEmail> {
 			", customerNo=" + customerNo +
 			", email=" + email +
 			", password=" + password +
+			", status=" + status +
+			", updateDate=" + updateDate +
+			", createDate=" + createDate +
 			"}";
 	}
 }
