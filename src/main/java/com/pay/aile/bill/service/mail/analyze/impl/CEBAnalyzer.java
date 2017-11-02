@@ -1,7 +1,5 @@
 package com.pay.aile.bill.service.mail.analyze.impl;
 
-import java.util.HashMap;
-
 import org.springframework.stereotype.Service;
 
 import com.pay.aile.bill.service.mail.analyze.AbstractBankMailAnalyzer;
@@ -24,11 +22,6 @@ public class CEBAnalyzer extends AbstractBankMailAnalyzer<AbstractCEBTemplate> {
     @Override
     protected void preAnalyze(String content) {
 
-    }
-
-    @Override
-    protected void initTemplateCache() {
-        templateCache = new HashMap<String, Class<? extends AbstractCEBTemplate>>();
     }
 
 }

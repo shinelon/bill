@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.pay.aile.bill.service.mail.analyze.BankMailAnalyzer;
 import com.pay.aile.bill.service.mail.analyze.IParseMail;
 import com.pay.aile.bill.service.mail.analyze.MailContentExtractor;
+import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
 
 /**
  * 
@@ -55,7 +56,7 @@ public class ParseMailImpl implements IParseMail {
             }
         }
         if (extractor == null) {
-
+            throw new RuntimeException("no extractors found");
         }
         //TODO 读取文件
         String content = extractor.extract(fis);
@@ -70,10 +71,18 @@ public class ParseMailImpl implements IParseMail {
             }
         }
         if (parser == null) {
-
+            throw new RuntimeException("no parsers found");
         }
         //解析
-        parser.analyze(content);
+        try {
+            //TODO 组装AnalyzeParamsModel
+            AnalyzeParamsModel apm = new AnalyzeParamsModel();
+            apm.setContent(content);
+            parser.analyze(apm);
+        } catch (Exception e) {
+            //TODO 解析错误,发送信息告知
+            logger.error(e.getMessage());
+        }
     }
 
 }

@@ -26,9 +26,4 @@ public class CITICAnalyzer
 
     }
 
-    @Override
-    protected void initTemplateCache() {
-
-    }
-
 }

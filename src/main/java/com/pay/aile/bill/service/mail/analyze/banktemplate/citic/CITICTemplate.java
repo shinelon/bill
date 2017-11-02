@@ -10,7 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.pay.aile.bill.service.mail.analyze.enums.CardTypeEnum;
 import com.pay.aile.bill.service.mail.analyze.enums.MailKey;
+import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
 import com.pay.aile.bill.service.mail.analyze.util.PatternMatcherUtil;
 
 /**
@@ -23,8 +25,9 @@ public class CITICTemplate extends AbstractCITICTemplate {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
-    protected void analyzeInternal(String content) {
-        logger.info("账单内容：{}", content);
+    protected void analyzeInternal(AnalyzeParamsModel apm) {
+        logger.info("账单内容：{}", apm);
+        String content = apm.getContent();
         if (keywords == null || keywords.isEmpty()) {
             throw new RuntimeException("账单关键字未初始化");
         }
@@ -112,7 +115,7 @@ public class CITICTemplate extends AbstractCITICTemplate {
     }
 
     @Override
-    protected void initKeywords() {
+    public void initKeywords() {
         Map<String, String> kw = new HashMap<String, String>();
         kw.put(MailKey.payDate.name(), "到期还款日：\\d{4}年\\d{2}月\\d{2}日");
         kw.put(MailKey.payAmount.name(),
@@ -126,6 +129,11 @@ public class CITICTemplate extends AbstractCITICTemplate {
         kw.put(MailKey.transDetail.name(),
                 "\\d{8} \\d{8} \\d{0,4} \\d*\\D* RMB -?\\d+.?\\d+ RMB -?\\d+.?\\d+");
         this.keywords = kw;
+    }
+
+    @Override
+    protected void setCardType() {
+        this.cardType = CardTypeEnum.CITIC_STANDARD;
     }
 
 }
