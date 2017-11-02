@@ -1,11 +1,13 @@
 package com.pay.aile.bill.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import com.baomidou.mybatisplus.annotations.TableField;
+
 import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
-import java.io.Serializable;
+import com.baomidou.mybatisplus.enums.FieldFill;
 
 /**
  * <p>
@@ -20,158 +22,149 @@ public class CreditBill extends Model<CreditBill> {
 
     private static final long serialVersionUID = 1L;
 
-	private String id;
+    private String id;
     /**
      * 到期还款日
      */
-	@TableField("due_date")
-	private String dueDate;
+    @TableField("due_date")
+    private String dueDate;
     /**
      * 本期应还款额
      */
-	@TableField("current_amount")
-	private BigDecimal currentAmount;
+    @TableField("current_amount")
+    private BigDecimal currentAmount;
     /**
      * 信用额度
      */
-	private BigDecimal credits;
+    private BigDecimal credits;
     /**
      * 取现额度
      */
-	private BigDecimal cash;
-	@TableField("last_amount")
-	private BigDecimal lastAmount;
+    private BigDecimal cash;
+    @TableField("last_amount")
+    private BigDecimal lastAmount;
     /**
      * 还款/退货/费用返还
      */
-	private BigDecimal repayment;
+    private BigDecimal repayment;
     /**
      * 消费/取现/其他费用
      */
-	private BigDecimal consumption;
+    private BigDecimal consumption;
     /**
      * 有效标志1有效0无效
      */
-	private Integer status;
+    @TableField(fill = FieldFill.INSERT)
+    private Integer status;
     /**
      * 修改时间
      */
-	@TableField("update_date")
-	private Date updateDate;
+    @TableField(value = "update_date", fill = FieldFill.UPDATE)
+    private Date updateDate;
     /**
      * 创建时间
      */
-	@TableField("create_date")
-	private Date createDate;
+    @TableField(value = "create_date", fill = FieldFill.INSERT)
+    private Date createDate;
 
+    public BigDecimal getCash() {
+        return cash;
+    }
 
-	public String getId() {
-		return id;
-	}
+    public BigDecimal getConsumption() {
+        return consumption;
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public Date getCreateDate() {
+        return createDate;
+    }
 
-	public String getDueDate() {
-		return dueDate;
-	}
+    public BigDecimal getCredits() {
+        return credits;
+    }
 
-	public void setDueDate(String dueDate) {
-		this.dueDate = dueDate;
-	}
+    public BigDecimal getCurrentAmount() {
+        return currentAmount;
+    }
 
-	public BigDecimal getCurrentAmount() {
-		return currentAmount;
-	}
+    public String getDueDate() {
+        return dueDate;
+    }
 
-	public void setCurrentAmount(BigDecimal currentAmount) {
-		this.currentAmount = currentAmount;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public BigDecimal getCredits() {
-		return credits;
-	}
+    public BigDecimal getLastAmount() {
+        return lastAmount;
+    }
 
-	public void setCredits(BigDecimal credits) {
-		this.credits = credits;
-	}
+    public BigDecimal getRepayment() {
+        return repayment;
+    }
 
-	public BigDecimal getCash() {
-		return cash;
-	}
+    public Integer getStatus() {
+        return status;
+    }
 
-	public void setCash(BigDecimal cash) {
-		this.cash = cash;
-	}
+    public Date getUpdateDate() {
+        return updateDate;
+    }
 
-	public BigDecimal getLastAmount() {
-		return lastAmount;
-	}
+    public void setCash(BigDecimal cash) {
+        this.cash = cash;
+    }
 
-	public void setLastAmount(BigDecimal lastAmount) {
-		this.lastAmount = lastAmount;
-	}
+    public void setConsumption(BigDecimal consumption) {
+        this.consumption = consumption;
+    }
 
-	public BigDecimal getRepayment() {
-		return repayment;
-	}
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
 
-	public void setRepayment(BigDecimal repayment) {
-		this.repayment = repayment;
-	}
+    public void setCredits(BigDecimal credits) {
+        this.credits = credits;
+    }
 
-	public BigDecimal getConsumption() {
-		return consumption;
-	}
+    public void setCurrentAmount(BigDecimal currentAmount) {
+        this.currentAmount = currentAmount;
+    }
 
-	public void setConsumption(BigDecimal consumption) {
-		this.consumption = consumption;
-	}
+    public void setDueDate(String dueDate) {
+        this.dueDate = dueDate;
+    }
 
-	public Integer getStatus() {
-		return status;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
+    public void setLastAmount(BigDecimal lastAmount) {
+        this.lastAmount = lastAmount;
+    }
 
-	public Date getUpdateDate() {
-		return updateDate;
-	}
+    public void setRepayment(BigDecimal repayment) {
+        this.repayment = repayment;
+    }
 
-	public void setUpdateDate(Date updateDate) {
-		this.updateDate = updateDate;
-	}
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
-	public Date getCreateDate() {
-		return createDate;
-	}
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
 
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
+    @Override
+    public String toString() {
+        return "CreditBill{" + "id=" + id + ", dueDate=" + dueDate + ", currentAmount=" + currentAmount + ", credits="
+                + credits + ", cash=" + cash + ", lastAmount=" + lastAmount + ", repayment=" + repayment
+                + ", consumption=" + consumption + ", status=" + status + ", updateDate=" + updateDate + ", createDate="
+                + createDate + "}";
+    }
 
-	@Override
-	protected Serializable pkVal() {
-		return this.id;
-	}
-
-	@Override
-	public String toString() {
-		return "CreditBill{" +
-			"id=" + id +
-			", dueDate=" + dueDate +
-			", currentAmount=" + currentAmount +
-			", credits=" + credits +
-			", cash=" + cash +
-			", lastAmount=" + lastAmount +
-			", repayment=" + repayment +
-			", consumption=" + consumption +
-			", status=" + status +
-			", updateDate=" + updateDate +
-			", createDate=" + createDate +
-			"}";
-	}
+    @Override
+    protected Serializable pkVal() {
+        return id;
+    }
 }

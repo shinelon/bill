@@ -1,12 +1,14 @@
 package com.pay.aile.bill.entity;
 
-import com.baomidou.mybatisplus.enums.IdType;
-import java.util.Date;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.activerecord.Model;
-import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
+import java.util.Date;
+
+import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.FieldFill;
+import com.baomidou.mybatisplus.enums.IdType;
 
 /**
  * <p>
@@ -21,107 +23,100 @@ public class CreditEmail extends Model<CreditEmail> {
 
     private static final long serialVersionUID = 1L;
 
-	@TableId(value="id", type= IdType.AUTO)
-	private Long id;
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
     /**
      * 商户编号
      */
-	private String customerNo;
+    private String customerNo;
     /**
      * 邮箱
      */
-	private String email;
+    private String email;
     /**
      * 密码
      */
-	private String password;
+    private String password;
     /**
      * 有效标志1有效0无效
      */
-	private Integer status;
+    @TableField(fill = FieldFill.INSERT)
+    private Integer status;
     /**
      * 修改时间
      */
-	@TableField("update_date")
-	private Date updateDate;
+    @TableField(value = "update_date", fill = FieldFill.UPDATE)
+    private Date updateDate;
     /**
      * 创建时间
      */
-	@TableField("create_date")
-	private Date createDate;
+    @TableField(value = "create_date", fill = FieldFill.INSERT)
+    private Date createDate;
 
+    public Date getCreateDate() {
+        return createDate;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public String getCustomerNo() {
+        return customerNo;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public String getCustomerNo() {
-		return customerNo;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setCustomerNo(String customerNo) {
-		this.customerNo = customerNo;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public Integer getStatus() {
+        return status;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public Date getUpdateDate() {
+        return updateDate;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setCustomerNo(String customerNo) {
+        this.customerNo = customerNo;
+    }
 
-	public Integer getStatus() {
-		return status;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public Date getUpdateDate() {
-		return updateDate;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public void setUpdateDate(Date updateDate) {
-		this.updateDate = updateDate;
-	}
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
-	public Date getCreateDate() {
-		return createDate;
-	}
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
 
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
+    @Override
+    public String toString() {
+        return "CreditEmail{" + "id=" + id + ", customerNo=" + customerNo + ", email=" + email + ", password="
+                + password + ", status=" + status + ", updateDate=" + updateDate + ", createDate=" + createDate + "}";
+    }
 
-	@Override
-	protected Serializable pkVal() {
-		return this.id;
-	}
-
-	@Override
-	public String toString() {
-		return "CreditEmail{" +
-			"id=" + id +
-			", customerNo=" + customerNo +
-			", email=" + email +
-			", password=" + password +
-			", status=" + status +
-			", updateDate=" + updateDate +
-			", createDate=" + createDate +
-			"}";
-	}
+    @Override
+    protected Serializable pkVal() {
+        return id;
+    }
 }
