@@ -62,28 +62,53 @@ public class MongoDownloadUtil {
 	}
 
 	public void saveFile(Message message) throws MailBillException {
-
-		MimeMessage msg = (MimeMessage) message;
-		String subject = MailDecodeUtil.getSubject(msg);
-		String receiveAdd = MailDecodeUtil.getReceiveAddress(msg, null);
-		String senderAdd = MailDecodeUtil.getFrom(msg);
-		String sentDate = MailDecodeUtil.getSentDate(msg, "yyyyMMddHHmmss");
-		logger.debug("subject:{} receiveAdd:{} senderAdd:{} sentData:{}", subject, receiveAdd, senderAdd, sentDate);
 		StringBuffer content = new StringBuffer(20480);
-		MailDecodeUtil.getMailTextContent(msg, content);
-		content = MailDecodeUtil.getUtf8(content);
+		String subject = "";
+		try {
 
-		DB db = mongoTemplate.getDb();
-		// 存储fs的根节点
-		GridFS gridFS = new GridFS(db);
-		// InputStream in = new
-		// ByteArrayInputStream(content.toString().getBytes());
-		// gridFS.createFile(in, formatFileName(subject, sentDate));
-		GridFSInputFile gfs = gridFS.createFile(content.toString().getBytes());
-		gfs.put("fileType", "html");
-		gfs.put("filename", subject);
+			// if (message.isMimeType("multipart/*")) {
+			// Multipart mp = (Multipart) message.getContent();
+			// int mpcount = mp.getCount();
+			// Part part = mp.getBodyPart(0);
+			// String contents = (String) part.getContent();
+			// for (int k = 1; k < mpcount; k ++) {
+			// Part part1=mp.getBodyPart(k);
+			// String fjName = this.encode(part1.getFileName());//得到中文附件名
+			// int fjSize = part1.getSize();//附件大小
+			// //附件路径
+			// File fx = null;
+			// File fl = new File(filepath);
+			// if (fl.exists()==false) fl.mkdir();
+			// this.saveFile(fjName,part1.getInputStream(),filepath);
+			// }
+			//
+			// } else {
+			//
+			// }
+			MimeMessage msg = (MimeMessage) message;
+			subject = MailDecodeUtil.getSubject(msg);
+			String receiveAdd = MailDecodeUtil.getReceiveAddress(msg, null);
+			String senderAdd = MailDecodeUtil.getFrom(msg);
+			String sentDate = MailDecodeUtil.getSentDate(msg, "yyyyMMddHHmmss");
+			logger.debug("subject:{} receiveAdd:{} senderAdd:{} sentData:{}", subject, receiveAdd, senderAdd, sentDate);
 
-		gfs.save();
+			MailDecodeUtil.getMailTextContent(msg, content);
+			content = MailDecodeUtil.getUtf8(content);
+			logger.info(content.toString());
+			DB db = mongoTemplate.getDb();
+			// 存储fs的根节点
+			GridFS gridFS = new GridFS(db);
+			// InputStream in = new
+			// ByteArrayInputStream(content.toString().getBytes());
+			// gridFS.createFile(in, formatFileName(subject, sentDate));
+			GridFSInputFile gfs = gridFS.createFile(content.toString().getBytes());
+			gfs.put("fileType", "html");
+			gfs.put("filename", subject);
+
+			gfs.save();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 
 		logger.info(subject);
 	}
