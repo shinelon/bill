@@ -21,7 +21,7 @@ public class MongoTest {
 	@Test
 	public void downFile() {
 		try {
-			String s = downloadUtil.getFile("光大银行信用卡");
+			String s = downloadUtil.getFile("招商银行信用卡电子账单2017年10月_2017-11-02T10:54:34");
 			System.out.println(s);
 		} catch (MailBillException e) {
 			// TODO Auto-generated catch block

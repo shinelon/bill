@@ -37,13 +37,13 @@ public class MongoDownloadUtil {
 			Criteria criteria = new Criteria("fileName");
 			criteria.is(fileName);
 			Query query = new Query(criteria);
-			mongoTemplate.find(query, EmailFile.class);
+			EmailFile ef = mongoTemplate.findOne(query, EmailFile.class);
+			return ef.getContent();
 		} catch (Exception e) {
 
 			logger.error(e.getMessage());
 			throw new MailBillException(e.getMessage());
 		}
-		return null;
 
 	}
 
