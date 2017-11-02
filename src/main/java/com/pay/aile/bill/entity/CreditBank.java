@@ -1,9 +1,12 @@
 package com.pay.aile.bill.entity;
 
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.activerecord.Model;
-import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
+import java.util.Date;
+
+import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.FieldFill;
 
 /**
  * <p>
@@ -18,79 +21,113 @@ public class CreditBank extends Model<CreditBank> {
 
     private static final long serialVersionUID = 1L;
 
-	private Long id;
+    private Long id;
     /**
      * 银行名称
      */
-	private String name;
+    private String name;
     /**
      * 扩展主题关键字
      */
-	@TableField("ext_keyword")
-	private String extKeyword;
+    @TableField("ext_keyword")
+    private String extKeyword;
     /**
      * 是否支持网银
      */
-	private Integer online;
+    private Integer online;
     /**
      * 是否支持邮件
      */
-	private Integer email;
+    private Integer email;
+    /**
+     * 有效标志1有效0无效
+     */
+    @TableField(fill = FieldFill.INSERT)
+    private Integer status;
+    /**
+     * 修改时间
+     */
+    @TableField(value = "update_date", fill = FieldFill.UPDATE)
+    private Date updateDate;
+    /**
+     * 创建时间
+     */
+    @TableField(value = "create_date", fill = FieldFill.INSERT)
+    private Date createDate;
 
+    public Date getCreateDate() {
+        return createDate;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public Integer getEmail() {
+        return email;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public String getExtKeyword() {
+        return extKeyword;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getExtKeyword() {
-		return extKeyword;
-	}
+    public Integer getOnline() {
+        return online;
+    }
 
-	public void setExtKeyword(String extKeyword) {
-		this.extKeyword = extKeyword;
-	}
+    public Integer getStatus() {
+        return status;
+    }
 
-	public Integer getOnline() {
-		return online;
-	}
+    public Date getUpdateDate() {
+        return updateDate;
+    }
 
-	public void setOnline(Integer online) {
-		this.online = online;
-	}
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
 
-	public Integer getEmail() {
-		return email;
-	}
+    public void setEmail(Integer email) {
+        this.email = email;
+    }
 
-	public void setEmail(Integer email) {
-		this.email = email;
-	}
+    public void setExtKeyword(String extKeyword) {
+        this.extKeyword = extKeyword;
+    }
 
-	@Override
-	protected Serializable pkVal() {
-		return this.id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	@Override
-	public String toString() {
-		return "CreditBank{" +
-			"id=" + id +
-			", name=" + name +
-			", extKeyword=" + extKeyword +
-			", online=" + online +
-			", email=" + email +
-			"}";
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setOnline(Integer online) {
+        this.online = online;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    @Override
+    public String toString() {
+        return "CreditBank{" + "id=" + id + ", name=" + name + ", extKeyword=" + extKeyword + ", online=" + online
+                + ", email=" + email + ", status=" + status + ", updateDate=" + updateDate + ", createDate="
+                + createDate + "}";
+    }
+
+    @Override
+    protected Serializable pkVal() {
+        return id;
+    }
 }

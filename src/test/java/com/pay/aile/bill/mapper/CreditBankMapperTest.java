@@ -30,9 +30,24 @@ public class CreditBankMapperTest {
     private CreditBankMapper CreditBankMapper;
 
     @Test
+    public void testInsert() {
+        CreditBank entity = new CreditBank();
+        entity.setName("test2");
+        CreditBankMapper.insert(entity);
+    }
+
+    @Test
     public void testSelect() {
         List<CreditBank> list = CreditBankMapper.selectList(null);
         logger.info(list.toString());
+    }
+
+    @Test
+    public void testUpdate() {
+        CreditBank entity = new CreditBank();
+        entity.setId(3L);
+        entity.setName("test333");
+        CreditBankMapper.updateById(entity);
     }
 
 }
