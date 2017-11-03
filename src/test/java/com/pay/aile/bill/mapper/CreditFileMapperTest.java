@@ -1,5 +1,9 @@
 package com.pay.aile.bill.mapper;
 
+import java.util.List;
+import java.util.Map;
+
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +19,15 @@ public class CreditFileMapperTest {
     private CreditFileMapper creditFileMapper;
 
     @Test
-    public void updateProcessResult() {
+    public void testUpdateProcessResult() {
         creditFileMapper.updateProcessResult(1, 1L);
     }
 
+    @Test
+    public void testSelectUnAnalyzedList() {
+        List<Map<String, Object>> list = creditFileMapper
+                .selectUnAnalyzedList();
+        Assert.assertNotNull(list);
+        Assert.assertFalse(list.isEmpty());
+    }
 }

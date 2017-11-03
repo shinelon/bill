@@ -5,7 +5,7 @@
 	<!-- 通用查询映射结果 -->
 	<resultMap id="BaseResultMap" type="com.pay.aile.bill.entity.CreditFile">
 		<id column="id" property="id" />
-		<result column="filen_name" property="filenName" />
+		<result column="file_name" property="fileName" />
 		<result column="create_date" property="createDate" />
 		<result column="receive_date" property="receiveDate" />
 		<result column="email_id" property="emailId" />
@@ -19,10 +19,15 @@
     <select id="selectUnAnalyzedList" resultType="java.util.Map">
         select 
         b.email,
-        <include refid="Base_Column_List" />
+        a.id,
+        a.file_name as fileName,
+        a.create_date as createDate,
+        a.receive_date as receiveDate,
+        a.email_id as emailId,
+        a.process_result as processResult
         from credit_file a 
         join credit_email b on a.email_id = b.id
-        where process_result != 1
+        where a.process_result != 1
     </select>
     <update id="updateProcessResult">
        update credit_file 
