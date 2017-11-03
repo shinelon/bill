@@ -27,7 +27,8 @@ import com.pay.aile.bill.service.mail.relation.CreditFileRelation;
 @SpringBootTest(classes = BillApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CreditFileRelationTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(CreditFileRelationTest.class);
+    private static final Logger logger = LoggerFactory
+            .getLogger(CreditFileRelationTest.class);
     @Autowired
     private CreditFileRelation creditFileRelation;
 
@@ -35,13 +36,14 @@ public class CreditFileRelationTest {
     public void testSave() {
         CreditFile creditFile = new CreditFile();
         creditFile.setEmailId(1L);
-        creditFile.setFilenName("testEmailName");
+        creditFile.setFileName("testEmailName");
         creditFileRelation.saveCreditFile(creditFile);
     }
 
     @Test
     public void testSelect() {
-        List<CreditFile> list = creditFileRelation.selectCreditFiles("jinjing_0316@126.com");
+        List<CreditFile> list = creditFileRelation
+                .selectCreditFiles("jinjing_0316@126.com");
         logger.info("list:{}", list);
     }
 
@@ -49,7 +51,7 @@ public class CreditFileRelationTest {
     public void testUpdate() {
         CreditFile creditFile = new CreditFile();
         creditFile.setId(1L);
-        creditFile.setFilenName("testupdate");
+        creditFile.setFileName("testupdate");
         creditFileRelation.updateCreditFile(creditFile);
     }
 }
