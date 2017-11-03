@@ -1,7 +1,7 @@
 package com.pay.aile.bill.mapper;
 
-import com.pay.aile.bill.entity.CreditBillDetail;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.pay.aile.bill.entity.CreditBillDetail;
 
 /**
  * <p>
@@ -12,5 +12,5 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * @since 2017-11-02
  */
 public interface CreditBillDetailMapper extends BaseMapper<CreditBillDetail> {
-
+    Long insertCreditBillDetail(CreditBillDetail detail);
 }

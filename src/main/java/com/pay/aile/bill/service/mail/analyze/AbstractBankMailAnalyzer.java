@@ -5,10 +5,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.pay.aile.bill.entity.CreditBill;
+import com.pay.aile.bill.entity.CreditBillDetail;
+import com.pay.aile.bill.service.CreditBillDetailService;
+import com.pay.aile.bill.service.CreditBillService;
 import com.pay.aile.bill.service.mail.analyze.banktemplate.BaseBankTemplate;
 import com.pay.aile.bill.service.mail.analyze.constant.Constant;
 import com.pay.aile.bill.service.mail.analyze.enums.CardTypeEnum;
@@ -32,6 +38,12 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
      */
     @Autowired
     protected List<T> templates;
+
+    @Resource
+    private CreditBillService creditBillService;
+
+    @Resource
+    private CreditBillDetailService creditBillDetailService;
 
     /**
      * 卡种
@@ -91,6 +103,27 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
         }
         if (apm.success()) {
             //TODO 解析成功，保存账单到数据库
+            CreditBill bill = apm.getResult().getBill();
+            List<CreditBillDetail> billDetails = apm.getResult().getDetail();
+            try {
+                Long billId = bill.getId();
+                if (bill != null) {
+                    creditBillService.saveCreditBill(bill);
+                }
+                if (billDetails != null && !billDetails.isEmpty()) {
+                    billDetails.forEach(detail -> {
+                        try {
+                            detail.setBillId(billId);
+                            creditBillDetailService
+                                    .saveCreditBillDetail(detail);
+                        } catch (Exception e) {
+                            logger.error(e.getMessage(), e);
+                        }
+                    });
+                }
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+            }
         }
         logger.debug("analyze end,useTime={}",
                 System.currentTimeMillis() - startTime);

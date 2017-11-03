@@ -22,7 +22,7 @@ public class CreditBill extends Model<CreditBill> {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    private Long id;
     /**
      * 到期还款日
      */
@@ -91,10 +91,6 @@ public class CreditBill extends Model<CreditBill> {
         return dueDate;
     }
 
-    public String getId() {
-        return id;
-    }
-
     public BigDecimal getLastAmount() {
         return lastAmount;
     }
@@ -135,10 +131,6 @@ public class CreditBill extends Model<CreditBill> {
         this.dueDate = dueDate;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public void setLastAmount(BigDecimal lastAmount) {
         this.lastAmount = lastAmount;
     }
@@ -157,14 +149,24 @@ public class CreditBill extends Model<CreditBill> {
 
     @Override
     public String toString() {
-        return "CreditBill{" + "id=" + id + ", dueDate=" + dueDate + ", currentAmount=" + currentAmount + ", credits="
-                + credits + ", cash=" + cash + ", lastAmount=" + lastAmount + ", repayment=" + repayment
-                + ", consumption=" + consumption + ", status=" + status + ", updateDate=" + updateDate + ", createDate="
-                + createDate + "}";
+        return "CreditBill{" + "id=" + id + ", dueDate=" + dueDate
+                + ", currentAmount=" + currentAmount + ", credits=" + credits
+                + ", cash=" + cash + ", lastAmount=" + lastAmount
+                + ", repayment=" + repayment + ", consumption=" + consumption
+                + ", status=" + status + ", updateDate=" + updateDate
+                + ", createDate=" + createDate + "}";
     }
 
     @Override
     protected Serializable pkVal() {
         return id;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

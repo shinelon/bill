@@ -1,4 +1,4 @@
-package com.pay.aile.bill.service.mail.analyze.impl;
+package com.pay.aile.bill.service.mail.analyze.extract;
 
 import java.io.IOException;
 import java.io.InputStream;
