@@ -107,8 +107,9 @@ public class CITICTemplate extends AbstractCITICTemplate {
                 cbd.setTransactionDate(sa[0]);//交易日期
                 cbd.setBillingDate(sa[1]);//记账日期
                 cbd.setTransactionDescription(sa[3]);//交易描述
-                cbd.setTransactionAmount(sa[4] + sa[5]);//交易货币/金额
-                cbd.setAccountableAmount(sa[6] + sa[7]);//记账货币/金额
+                cbd.setAccountType(sa[4]);
+                cbd.setTransactionAmount(sa[5]);//交易货币/金额
+                cbd.setAccountableAmount(sa[7]);//记账货币/金额
                 detail.add(cbd);
             }
         }
@@ -128,7 +129,7 @@ public class CITICTemplate extends AbstractCITICTemplate {
             rules.setPrepaidCashAmount("预借现金额度 RMB \\d+.?\\d+ RMB \\d+.?\\d+");
             rules.setCash("取现额度 RMB \\d+.?\\d+ RMB \\d+.?\\d+");
             rules.setDetails(
-                    "\\d{8} \\d{8} \\d{0,4} \\d*\\D* RMB -?\\d+.?\\d+ RMB -?\\d+.?\\d+");
+                    "\\d{8} \\d{8} \\d{0,4} \\d*\\D* [A-Za-z]+ -?\\d+.?\\d+ RMB -?\\d+.?\\d+");
         }
     }
 

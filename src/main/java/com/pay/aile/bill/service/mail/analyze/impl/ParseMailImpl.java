@@ -101,7 +101,6 @@ public class ParseMailImpl implements IParseMail {
                 logger.error(e.getMessage(), e);
             }
         });
-
     }
 
 }
