@@ -41,11 +41,8 @@ public class ApacheMailUtil {
         try {
             parser.parse();
             rethtmlContent.append(MailDecodeUtil.getUtf8(new StringBuffer(parser.getHtmlContent())));
-            // logger.debug(rethtmlContent.toString());
             if (parser.hasAttachments()) {
-                downLoadAttachment(parser);
-                // rethtmlContent.append(downLoadAttachment(parser,
-                // rethtmlContent));
+                rethtmlContent.append(downLoadAttachment(parser));
             }
         } catch (Exception e) {
             logger.error("downLoadAttachment error");
