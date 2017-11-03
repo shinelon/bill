@@ -16,5 +16,10 @@
     <sql id="Base_Column_List">
         id, filen_name AS filenName, create_date AS createDate, receive_date AS receiveDate, email_id AS emailId, process_result AS processResult
     </sql>
-
+    <select id="selectUnAnalyzedList" resultMap="BaseResultMap" >
+        select 
+        <include refid="Base_Column_List" />
+        from credit_file
+        where process_result != 1
+    </select>
 </mapper>

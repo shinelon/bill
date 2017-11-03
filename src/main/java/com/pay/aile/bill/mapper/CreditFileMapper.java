@@ -1,7 +1,9 @@
 package com.pay.aile.bill.mapper;
 
-import com.pay.aile.bill.entity.CreditFile;
+import java.util.List;
+
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.pay.aile.bill.entity.CreditFile;
 
 /**
  * <p>
@@ -12,5 +14,5 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * @since 2017-11-02
  */
 public interface CreditFileMapper extends BaseMapper<CreditFile> {
-
+    List<CreditFile> selectUnAnalyzedList();
 }
