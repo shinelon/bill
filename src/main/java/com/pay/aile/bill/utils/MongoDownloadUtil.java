@@ -29,93 +29,64 @@ import com.pay.aile.bill.service.mail.relation.CreditFileRelation;
  */
 @Component
 public class MongoDownloadUtil {
-	private static final Logger logger = LoggerFactory.getLogger(MongoDownloadUtil.class);
-	@Autowired
-	private CreditFileRelation creditFileRelation;
+    private static final Logger logger = LoggerFactory.getLogger(MongoDownloadUtil.class);
+    @Autowired
+    private CreditFileRelation creditFileRelation;
 
-	@Autowired
-	private MongoTemplate mongoTemplate;
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
-	public String getFile(String fileName) throws MailBillException {
+    public String getFile(String fileName) throws MailBillException {
 
-		try {
+        try {
 
-			Criteria criteria = new Criteria("fileName");
-			criteria.is(fileName);
-			Query query = new Query(criteria);
-			EmailFile ef = mongoTemplate.findOne(query, EmailFile.class);
-			return ef.getContent();
-		} catch (Exception e) {
+            Criteria criteria = new Criteria("fileName");
+            criteria.is(fileName);
+            Query query = new Query(criteria);
+            EmailFile ef = mongoTemplate.findOne(query, EmailFile.class);
+            return ef.getContent();
+        } catch (Exception e) {
 
-			logger.error(e.getMessage());
-			throw new MailBillException(e.getMessage());
-		}
+            logger.error(e.getMessage());
+            throw new MailBillException(e.getMessage());
+        }
 
-	}
+    }
 
-	// public void saveFile(Message message) throws MailBillException {
-	// StringBuffer content = new StringBuffer(20480);
-	// String subject = "";
-	// try {
-	// EmailFile ef = new EmailFile();
-	//
-	// MimeMessage msg = (MimeMessage) message;
-	// subject = MailDecodeUtil.getSubject(msg);
-	// String receiveAdd = MailDecodeUtil.getReceiveAddress(msg, null);
-	// String senderAdd = MailDecodeUtil.getFrom(msg);
-	// String sentDate = MailDecodeUtil.getSentDate(msg, "yyyyMMddHHmmss");
-	// logger.debug("subject:{} receiveAdd:{} senderAdd:{} sentData:{}",
-	// subject, receiveAdd, senderAdd, sentDate);
-	//
-	// MailDecodeUtil.getMailTextContent(msg, content);
-	// content = MailDecodeUtil.getUtf8(content);
-	// ef.setSubject(message.getSubject());
-	// ef.setReceiveDate(sentDate);
-	// ef.setContent(content.toString());
-	//
-	// mongoTemplate.insert(ef);
-	//
-	// } catch (Exception e) {
-	// // TODO: handle exception
-	// }
-	//
-	// logger.info(subject);
-	// }
+    public String saveFile(Message message, CreditEmail creditEmail) throws MailBillException {
+        StringBuffer content = new StringBuffer(20480);
+        String subject = "";
+        String fileName = UUID.randomUUID().toString();
+        try {
+            EmailFile ef = new EmailFile();
 
-	public String saveFile(Message message, CreditEmail creditEmail) throws MailBillException {
-		StringBuffer content = new StringBuffer(20480);
-		String subject = "";
-		String fileName = UUID.randomUUID().toString();
-		try {
-			EmailFile ef = new EmailFile();
+            MimeMessage msg = (MimeMessage) message;
+            subject = MailDecodeUtil.getSubject(msg);
+            String receiveAdd = MailDecodeUtil.getReceiveAddress(msg, null);
+            String senderAdd = MailDecodeUtil.getFrom(msg);
+            String sentDate = MailDecodeUtil.getSentDate(msg, "yyyyMMddHHmmss");
+            logger.debug("subject:{} receiveAdd:{} senderAdd:{} sentData:{}", subject, receiveAdd, senderAdd, sentDate);
 
-			MimeMessage msg = (MimeMessage) message;
-			subject = MailDecodeUtil.getSubject(msg);
-			String receiveAdd = MailDecodeUtil.getReceiveAddress(msg, null);
-			String senderAdd = MailDecodeUtil.getFrom(msg);
-			String sentDate = MailDecodeUtil.getSentDate(msg, "yyyyMMddHHmmss");
-			logger.debug("subject:{} receiveAdd:{} senderAdd:{} sentData:{}", subject, receiveAdd, senderAdd, sentDate);
+            // MailDecodeUtil.getMailTextContent(msg, content);
+            content = ApacheMailUtil.getContent(msg);
+            ef.setSubject(message.getSubject());
+            ef.setReceiveDate(sentDate);
+            ef.setContent(content.toString());
+            // 随机生成文件名
+            ef.setFileName(fileName);
+            ef.setEmail(creditEmail.getEmail());
+            mongoTemplate.insert(ef);
 
-			MailDecodeUtil.getMailTextContent(msg, content);
-			content = MailDecodeUtil.getUtf8(content);
-			ef.setSubject(message.getSubject());
-			ef.setReceiveDate(sentDate);
-			ef.setContent(content.toString());
-			// 随机生成文件名
-			ef.setFileName(fileName);
-			ef.setEmail(creditEmail.getEmail());
-			mongoTemplate.insert(ef);
+            // 保存文件关系
+            CreditFile creditFile = new CreditFile();
+            creditFile.setEmailId(creditEmail.getId());
+            creditFile.setFileName(fileName);
+            creditFileRelation.saveCreditFile(creditFile);
+        } catch (Exception e) {
+            // TODO: handle exception
+            logger.error(e.getMessage());
+        }
+        return fileName;
 
-			// 保存文件关系
-			CreditFile creditFile = new CreditFile();
-			creditFile.setEmailId(creditEmail.getId());
-			creditFile.setFileName(fileName);
-			creditFileRelation.saveCreditFile(creditFile);
-		} catch (Exception e) {
-			// TODO: handle exception
-			logger.error(e.getMessage());
-		}
-		return fileName;
-
-	}
+    }
 }
