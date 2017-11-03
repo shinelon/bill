@@ -25,8 +25,8 @@ public class CreditFile extends Model<CreditFile> {
     /**
      * 邮箱对应的内容文件名称
      */
-    @TableField("filen_name")
-    private String filenName;
+    @TableField("file_name")
+    private String fileName;
     /**
      * 邮件收到时间
      */
@@ -66,10 +66,6 @@ public class CreditFile extends Model<CreditFile> {
         return emailId;
     }
 
-    public String getFilenName() {
-        return filenName;
-    }
-
     public Long getId() {
         return id;
     }
@@ -98,10 +94,6 @@ public class CreditFile extends Model<CreditFile> {
         this.emailId = emailId;
     }
 
-    public void setFilenName(String filenName) {
-        this.filenName = filenName;
-    }
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -123,14 +115,24 @@ public class CreditFile extends Model<CreditFile> {
     }
 
     @Override
-    public String toString() {
-        return "CreditFile{" + "id=" + id + ", filenName=" + filenName + ", receiveDate=" + receiveDate + ", emailId="
-                + emailId + ", processResult=" + processResult + ", status=" + status + ", updateDate=" + updateDate
-                + ", createDate=" + createDate + "}";
+    protected Serializable pkVal() {
+        return id;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     @Override
-    protected Serializable pkVal() {
-        return id;
+    public String toString() {
+        return "CreditFile [id=" + id + ", fileName=" + fileName
+                + ", receiveDate=" + receiveDate + ", emailId=" + emailId
+                + ", processResult=" + processResult + ", status=" + status
+                + ", updateDate=" + updateDate + ", createDate=" + createDate
+                + "]";
     }
 }
