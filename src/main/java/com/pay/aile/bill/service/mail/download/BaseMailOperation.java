@@ -74,31 +74,8 @@ public abstract class BaseMailOperation {
 	}
 
 	public void downloadMail(String mailAddr, String password) throws MailBillException {
-		Store store = MailLoginUtil.login(getMailProperties(), mailAddr, password);
-		Folder defaultFolder = null;
-		Folder[] folderArr = null;
-		try {
-			defaultFolder = store.getDefaultFolder();
-			folderArr = defaultFolder.list();
-			for (Folder tempFolder : folderArr) {
-				Folder folder = store.getFolder(tempFolder.getName());
-				folder.open(Folder.READ_ONLY);
-				long startTime = System.currentTimeMillis();
-				Message[] messages = MailSearchUtil.search(getKeywords(), folder);
-				long endTime = System.currentTimeMillis();
-				logger.debug("====搜索到{}封邮件，耗时{}ms", messages.length, endTime - startTime);
-				for (int i = 0; i < messages.length; i++) {
-					Message tmpMessage = messages[i];
-					downloadUtil.saveFile(tmpMessage);
-				}
-				folder.close(true);
-			}
-		} catch (MessagingException | MailBillException e) {
-			logger.error("下载邮件异常");
-			logger.error(e.getMessage(), e);
-		} finally {
-			MailReleaseUtil.releaseFolderAndStore(defaultFolder, store);
-		}
+		CreditEmail creditEmail = new CreditEmail(mailAddr, password);
+		this.downloadMail(creditEmail);
 	}
 
 	public abstract Properties getMailProperties();

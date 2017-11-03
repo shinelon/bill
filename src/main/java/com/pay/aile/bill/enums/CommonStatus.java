@@ -10,12 +10,12 @@ package com.pay.aile.bill.enums;
  */
 public enum CommonStatus {
 
-    AVAILABLE(1), UNAVAILABLE(0);
+	AVAILABLE(1), UNAVAILABLE(0);
 
-    public Integer value;
+	public Integer value;
 
-    CommonStatus(Integer value) {
-        this.value = value;
-    }
+	CommonStatus(Integer value) {
+		this.value = value;
+	}
 
 }

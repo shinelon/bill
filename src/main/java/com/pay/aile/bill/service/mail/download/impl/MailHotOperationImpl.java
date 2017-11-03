@@ -51,48 +51,7 @@ public class MailHotOperationImpl extends BaseMailOperation {
 					folder.open(Folder.READ_ONLY);
 					Message[] messages = MailSearchUtil.search(getKeywords(), folder);
 					for (int i = 0; i < messages.length; i++) {
-						String fileName = downloadUtil.saveFile(messages[i], creditEmail);
-					}
-					folder.close(true);
-				}
-			}
-
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-		} finally {
-			folderArr = null;
-			try {
-				if (defaultFolder.isOpen() && defaultFolder != null) {
-					defaultFolder.close(false);
-				}
-
-				if (store != null) {
-					store.close();
-				}
-			} catch (MessagingException e) {
-				e.printStackTrace();
-			}
-
-			// MailReleaseUtil.releaseFolderAndStore(defaultFolder, store);
-		}
-	}
-
-	@Override
-	public void downloadMail(String mailAddr, String password) {
-		Store store = login(getMailProperties(), mailAddr, password);
-		Folder defaultFolder = null;
-		Folder[] folderArr = null;
-		try {
-			if (store != null && store.isConnected()) {
-				defaultFolder = store.getDefaultFolder();
-
-				folderArr = defaultFolder.list();
-				for (Folder tempFolder : folderArr) {
-					Folder folder = store.getFolder(tempFolder.getName());
-					folder.open(Folder.READ_ONLY);
-					Message[] messages = MailSearchUtil.search(getKeywords(), folder);
-					for (int i = 0; i < messages.length; i++) {
-						downloadUtil.saveFile(messages[i]);
+						downloadUtil.saveFile(messages[i], creditEmail);
 					}
 					folder.close(true);
 				}
@@ -118,6 +77,11 @@ public class MailHotOperationImpl extends BaseMailOperation {
 
 			// MailReleaseUtil.releaseFolderAndStore(defaultFolder, store);
 		}
+	}
+
+	@Override
+	public void downloadMail(String mailAddr, String password) {
+		downloadMail(new CreditEmail(mailAddr, password));
 	}
 
 	/***
