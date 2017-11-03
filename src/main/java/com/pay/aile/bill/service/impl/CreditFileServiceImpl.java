@@ -1,7 +1,6 @@
 package com.pay.aile.bill.service.impl;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.pay.aile.bill.mapper.CreditFileMapper;
 import com.pay.aile.bill.service.CreditFileService;
+import com.pay.aile.bill.service.mail.analyze.model.CreditFileModel;
 
 /**
  * 
@@ -22,7 +22,7 @@ public class CreditFileServiceImpl implements CreditFileService {
     private CreditFileMapper creditFileMapper;
 
     @Override
-    public List<Map<String, Object>> findUnAnalyzedList() {
+    public List<CreditFileModel> findUnAnalyzedList() {
         return creditFileMapper.selectUnAnalyzedList();
     }
 

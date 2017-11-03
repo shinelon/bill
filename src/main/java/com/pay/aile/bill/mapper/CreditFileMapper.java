@@ -1,12 +1,12 @@
 package com.pay.aile.bill.mapper;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.pay.aile.bill.entity.CreditFile;
+import com.pay.aile.bill.service.mail.analyze.model.CreditFileModel;
 
 /**
  * <p>
@@ -17,7 +17,7 @@ import com.pay.aile.bill.entity.CreditFile;
  * @since 2017-11-02
  */
 public interface CreditFileMapper extends BaseMapper<CreditFile> {
-    List<Map<String, Object>> selectUnAnalyzedList();
+    List<CreditFileModel> selectUnAnalyzedList();
 
     Integer updateProcessResult(@Param("result") int result,
             @Param("id") Long id);

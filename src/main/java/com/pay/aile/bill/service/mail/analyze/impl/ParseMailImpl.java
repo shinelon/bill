@@ -1,7 +1,6 @@
 package com.pay.aile.bill.service.mail.analyze.impl;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -16,6 +15,7 @@ import com.pay.aile.bill.service.mail.analyze.BankMailAnalyzer;
 import com.pay.aile.bill.service.mail.analyze.IParseMail;
 import com.pay.aile.bill.service.mail.analyze.MailContentExtractor;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
+import com.pay.aile.bill.service.mail.analyze.model.CreditFileModel;
 
 /**
  * 
@@ -42,19 +42,16 @@ public class ParseMailImpl implements IParseMail {
 
     @Override
     public void execute() {
-        List<Map<String, Object>> fileList = creditFileService
-                .findUnAnalyzedList();
+        List<CreditFileModel> fileList = creditFileService.findUnAnalyzedList();
         if (fileList == null || fileList.isEmpty()) {
             logger.info("未解析邮件账单为空");
             return;
         }
         fileList.forEach(creditFile -> {
             try {
-                Long id = (Long) creditFile.get("id");
-                String fileName = creditFile.get("fileName") == null ? ""
-                        : creditFile.get("fileName").toString();
-                String email = creditFile.get("email") == null ? ""
-                        : creditFile.get("email").toString();
+                Long id = creditFile.getId();
+                String fileName = creditFile.getFileName();
+                String email = creditFile.getEmail();
                 String bankCode = "";
                 String suffix = fileName.substring(fileName.indexOf(".") + 1);
                 String prefix = fileName.substring(0, fileName.indexOf("."));
