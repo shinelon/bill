@@ -28,6 +28,7 @@ public class TextExtractUtil {
         html = html.replaceAll("&nbsp;", ""); // remove &nbsp;
         html = html.replaceAll("\n", "");//remove \n
         html = html.replaceAll("$", "");//去掉美元符号
+        html = html.replaceAll("＄", "");
         html = html.replaceAll("￥", "");//去掉人民币符号
         html = html.replace(",", "");//去掉金额分隔符
         html = html.replaceAll(" {2,}", " ");//去掉多余空格，只留一个

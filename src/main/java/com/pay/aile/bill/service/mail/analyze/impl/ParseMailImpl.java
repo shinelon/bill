@@ -16,6 +16,7 @@ import com.pay.aile.bill.service.mail.analyze.IParseMail;
 import com.pay.aile.bill.service.mail.analyze.MailContentExtractor;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
 import com.pay.aile.bill.service.mail.analyze.model.CreditFileModel;
+import com.pay.aile.bill.utils.MongoDownloadUtil;
 
 /**
  * 
@@ -39,6 +40,9 @@ public class ParseMailImpl implements IParseMail {
 
     @Resource
     private CreditFileService creditFileService;
+
+    @Autowired
+    private MongoDownloadUtil mongoDownloadUtil;
 
     @Override
     public void execute() {
@@ -65,8 +69,9 @@ public class ParseMailImpl implements IParseMail {
                 if (extractor == null) {
                     throw new RuntimeException("no extractors found");
                 }
-                //TODO 从mongodb中获取邮件内容
-                String content = "";//邮件内容
+                //从mongodb中获取邮件内容
+                String content = mongoDownloadUtil.getFile(fileName);
+                ;//邮件内容
                 content = extractor.extract(content); //解析文件
                 if (!StringUtils.hasText(content)) {
                     logger.error("extract error");
