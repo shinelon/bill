@@ -1,18 +1,19 @@
 package com.pay.aile.bill.service.mail.analyze.banktemplate.citic;
 
-import java.util.HashMap;
-import java.util.Iterator;
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import com.pay.aile.bill.entity.CreditBill;
+import com.pay.aile.bill.entity.CreditBillDetail;
+import com.pay.aile.bill.entity.CreditTemplate;
 import com.pay.aile.bill.service.mail.analyze.enums.CardTypeEnum;
-import com.pay.aile.bill.service.mail.analyze.enums.MailKey;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
+import com.pay.aile.bill.service.mail.analyze.model.AnalyzeResult;
 import com.pay.aile.bill.service.mail.analyze.util.PatternMatcherUtil;
 
 /**
@@ -28,107 +29,105 @@ public class CITICTemplate extends AbstractCITICTemplate {
     protected void analyzeInternal(AnalyzeParamsModel apm) {
         logger.info("账单内容：{}", apm);
         String content = apm.getContent();
-        if (keywords == null || keywords.isEmpty()) {
-            throw new RuntimeException("账单关键字未初始化");
+        AnalyzeResult ar = new AnalyzeResult();
+        CreditBill bill = ar.getBill();
+        List<CreditBillDetail> detail = ar.getDetail();
+        if (rules == null) {
+            throw new RuntimeException("账单模板规则未初始化");
         }
-        Iterator<Map.Entry<String, String>> it = keywords.entrySet().iterator();
-
-        while (it.hasNext()) {
-            Entry<String, String> en = it.next();
-            String key = en.getKey();
-            String value = en.getValue();//正则
-            MailKey mailKey = MailKey.getByString(key);
-            if (mailKey == null) {
-                logger.warn("账单关键字未找到,key={}", key);
+        List<String> list = null;
+        String result = "";
+        String[] sa = null;
+        if (StringUtils.hasText(rules.getDueDate())) {
+            //还款日
+            list = PatternMatcherUtil.getMatcher(rules.getDueDate(), content);
+            if (list.isEmpty()) {
+                handleNotMatch("dueDate", rules.getDueDate(), apm);
             }
-            List<String> list = null;
-            String[] sa = null;
-            String result = "";
-            list = PatternMatcherUtil.getMatcher(key, "", value, content);
-            if ((list == null || list.isEmpty()) && mailKey != MailKey.preCash
-                    && mailKey != MailKey.enCash) {
-                logger.error("未匹配到内容,bank={},key={},reg={}", "CITIC", key,
-                        value);
-                throw new RuntimeException("未匹配到内容");
+            result = list.get(0);
+            String date = result.replaceAll("年", "/").replaceAll("月", "/")
+                    .replaceAll("日", "");
+            date = date.split("：")[sa.length - 1];
+            bill.setDueDate(date);
+        }
+        if (StringUtils.hasText(rules.getCurrentAmount())) {
+            //应还款额
+            list = PatternMatcherUtil.getMatcher(rules.getCurrentAmount(),
+                    content);
+            if (list.isEmpty()) {
+                handleNotMatch("currentAmount", rules.getCurrentAmount(), apm);
             }
-            switch (mailKey) {
-            case payDate://还款日
-                result = list.get(0);
-                String date = result.replaceAll("年", "/").replaceAll("月", "/")
-                        .replaceAll("日", "");
-                date = date.split("：")[1];
-                System.out.println("还款日:" + date);
-                break;
-            case payAmount://应还款额
-                result = list.get(0);
-                sa = result.split(" ");
-                String payAmount = sa[sa.length - 1];
-                System.out.println("应还金额:" + payAmount);
-                break;
-            case minAmount://最低还款额
-                result = list.get(0);
-                sa = result.split(" ");
-                String minAmount = sa[sa.length - 1];
-                System.out.println("最低还款额:" + minAmount);
-                break;
-            case limitAmount://额度
-                result = list.get(0);
-                sa = result.split(" ");
-                String limitAmount = sa[sa.length - 1];
-                System.out.println("信用额度:" + limitAmount);
-                break;
-            case preCash://预借现金
-                if (list == null || list.isEmpty()) {
-                    break;
-                }
-                result = list.get(0);
-                sa = result.split(" ");
-                String preCash = sa[sa.length - 1];
-                System.out.println("预借现金额度:" + preCash);
-                break;
-            case enCash://取现
-                if (list == null || list.isEmpty()) {
-                    break;
-                }
+            result = list.get(0);
+            sa = result.split(" ");
+            String currentAmount = sa[sa.length - 1];
+            bill.setCurrentAmount(new BigDecimal(currentAmount));
+        }
+        if (StringUtils.hasText(rules.getCredits())) {
+            //信用额度
+            list = PatternMatcherUtil.getMatcher(rules.getCredits(), content);
+            if (list.isEmpty()) {
+                handleNotMatch("credits", rules.getCredits(), apm);
+            }
+            result = list.get(0);
+            sa = result.split(" ");
+            String credits = sa[sa.length - 1];
+            bill.setCredits(new BigDecimal(credits));
+        }
+        if (StringUtils.hasText(rules.getPrepaidCashAmount())) {
+            //预借现金
+            //            list = PatternMatcherUtil.getMatcher(rules.getPrepaidCashAmount(), content);
+            //            if(!list.isEmpty()){
+            //                result = list.get(0);
+            //                sa = result.split(" ");
+            //                String preCash = sa[sa.length - 1];
+            //                
+            //            }
+        }
+        if (StringUtils.hasText(rules.getCash())) {
+            //取现
+            list = PatternMatcherUtil.getMatcher(rules.getCredits(), content);
+            if (!list.isEmpty()) {
                 result = list.get(0);
                 sa = result.split(" ");
-                String enCash = sa[sa.length - 1];
-                System.out.println("取现额度:" + enCash);
-                break;
-            case transDetail://交易明细
-                System.out.println("交易明细:");
-                System.out.println("交易日  银行记账日 卡号后四位 交易描述 交易货币 金额 记账货币 金额 ");
-                for (int i = 0; i < list.size(); i++) {
-                    String detail = list.get(i);
-                    sa = detail.split(" ");
-                    for (int j = 0; j < sa.length; j++) {
-                        System.out.print(
-                                sa[j] + ((j == sa.length - 1) ? "\n" : " "));
-                    }
-                }
-                break;
-            default:
-                break;
+                String cash = sa[sa.length - 1];
+                bill.setCash(new BigDecimal(cash));
             }
         }
-
+        if (StringUtils.hasText(rules.getDetails())) {
+            //交易明细
+            list = PatternMatcherUtil.getMatcher(rules.getDetails(), content);
+            if (list.isEmpty()) {
+                handleNotMatch("details", rules.getDetails(), apm);
+            }
+            for (int i = 0; i < list.size(); i++) {
+                String s = list.get(i);
+                sa = s.split(" ");
+                CreditBillDetail cbd = new CreditBillDetail();
+                cbd.setTransactionDate(sa[0]);//交易日期
+                cbd.setBillingDate(sa[1]);//记账日期
+                cbd.setTransactionDescription(sa[3]);//交易描述
+                cbd.setTransactionAmount(sa[4] + sa[5]);//交易货币/金额
+                cbd.setAccountableAmount(sa[6] + sa[7]);//记账货币/金额
+                detail.add(cbd);
+            }
+        }
     }
 
     @Override
-    public void initKeywords() {
-        Map<String, String> kw = new HashMap<String, String>();
-        kw.put(MailKey.payDate.name(), "到期还款日：\\d{4}年\\d{2}月\\d{2}日");
-        kw.put(MailKey.payAmount.name(),
-                "到期还款日：\\d{4}年\\d{2}月\\d{2}日 RMB \\d+.?\\d+");
-        kw.put(MailKey.minAmount.name(),
-                "到期还款日：\\d{4}年\\d{2}月\\d{2}日 RMB \\d+.?\\d+ USD \\d+.?\\d+ RMB \\d+.?\\d+");
-        kw.put(MailKey.limitAmount.name(),
-                "到期还款日：\\d{4}年\\d{2}月\\d{2}日 RMB \\d+.?\\d+ USD \\d+.?\\d+ RMB \\d+.?\\d+ USD \\d+.?\\d+ \\d*\\D* RMB \\d+.?\\d+");
-        kw.put(MailKey.preCash.name(), "预借现金额度 RMB \\d+.?\\d+ RMB \\d+.?\\d+");
-        kw.put(MailKey.enCash.name(), "取现额度 RMB \\d+.?\\d+ RMB \\d+.?\\d+");
-        kw.put(MailKey.transDetail.name(),
-                "\\d{8} \\d{8} \\d{0,4} \\d*\\D* RMB -?\\d+.?\\d+ RMB -?\\d+.?\\d+");
-        this.keywords = kw;
+    public void initRules() {
+        super.initRules();
+        if (rules == null) {
+            rules = new CreditTemplate();
+            rules.setDueDate("到期还款日：\\d{4}年\\d{2}月\\d{2}日");
+            rules.setCurrentAmount(
+                    "到期还款日：\\d{4}年\\d{2}月\\d{2}日 RMB \\d+.?\\d+");
+            rules.setCredits(
+                    "到期还款日：\\d{4}年\\d{2}月\\d{2}日 RMB \\d+.?\\d+ USD \\d+.?\\d+ RMB \\d+.?\\d+ USD \\d+.?\\d+ \\d*\\D* RMB \\d+.?\\d+");
+            rules.setPrepaidCashAmount("预借现金额度 RMB \\d+.?\\d+ RMB \\d+.?\\d+");
+            rules.setCash("取现额度 RMB \\d+.?\\d+ RMB \\d+.?\\d+");
+            rules.setDetails(
+                    "\\d{8} \\d{8} \\d{0,4} \\d*\\D* RMB -?\\d+.?\\d+ RMB -?\\d+.?\\d+");
+        }
     }
 
     @Override
@@ -136,4 +135,11 @@ public class CITICTemplate extends AbstractCITICTemplate {
         this.cardType = CardTypeEnum.CITIC_STANDARD;
     }
 
+    private void handleNotMatch(String key, String reg,
+            AnalyzeParamsModel apm) {
+        apm.setResult(null);
+        throw new RuntimeException(String.format(
+                "未找到匹配值,bank=CITIC,cardType=CITIC_STANDARD,key=%s,reg=%s", key,
+                reg));
+    }
 }

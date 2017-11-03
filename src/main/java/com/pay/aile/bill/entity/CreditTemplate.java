@@ -1,7 +1,6 @@
 package com.pay.aile.bill.entity;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.activerecord.Model;
@@ -80,7 +79,7 @@ public class CreditTemplate extends Model<CreditTemplate> {
      * 预借现金额度
      */
     @TableField("prepaid_cash_amount")
-    private BigDecimal prepaidCashAmount;
+    private String prepaidCashAmount;
     /**
      * 账单明细
      */
@@ -154,7 +153,7 @@ public class CreditTemplate extends Model<CreditTemplate> {
         return lastAmount;
     }
 
-    public BigDecimal getPrepaidCashAmount() {
+    public String getPrepaidCashAmount() {
         return prepaidCashAmount;
     }
 
@@ -230,7 +229,7 @@ public class CreditTemplate extends Model<CreditTemplate> {
         this.lastAmount = lastAmount;
     }
 
-    public void setPrepaidCashAmount(BigDecimal prepaidCashAmount) {
+    public void setPrepaidCashAmount(String prepaidCashAmount) {
         this.prepaidCashAmount = prepaidCashAmount;
     }
 
@@ -260,13 +259,18 @@ public class CreditTemplate extends Model<CreditTemplate> {
 
     @Override
     public String toString() {
-        return "CreditTemplate{" + "id=" + id + ", dueDate=" + dueDate + ", currentAmount=" + currentAmount
-                + ", credits=" + credits + ", cash=" + cash + ", lastAmount=" + lastAmount + ", repayment=" + repayment
-                + ", consumption=" + consumption + ", transactionDate=" + transactionDate + ", billingDate="
-                + billingDate + ", transactionDescription=" + transactionDescription + ", transactionAmount="
-                + transactionAmount + ", accountableAmount=" + accountableAmount + ", prepaidCashAmount="
-                + prepaidCashAmount + ", details=" + details + ", cardtypeId=" + cardtypeId + ", status=" + status
-                + ", updateDate=" + updateDate + ", createDate=" + createDate + "}";
+        return "CreditTemplate{" + "id=" + id + ", dueDate=" + dueDate
+                + ", currentAmount=" + currentAmount + ", credits=" + credits
+                + ", cash=" + cash + ", lastAmount=" + lastAmount
+                + ", repayment=" + repayment + ", consumption=" + consumption
+                + ", transactionDate=" + transactionDate + ", billingDate="
+                + billingDate + ", transactionDescription="
+                + transactionDescription + ", transactionAmount="
+                + transactionAmount + ", accountableAmount=" + accountableAmount
+                + ", prepaidCashAmount=" + prepaidCashAmount + ", details="
+                + details + ", cardtypeId=" + cardtypeId + ", status=" + status
+                + ", updateDate=" + updateDate + ", createDate=" + createDate
+                + "}";
     }
 
     @Override

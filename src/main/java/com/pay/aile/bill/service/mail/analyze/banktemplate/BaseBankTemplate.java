@@ -1,12 +1,13 @@
 package com.pay.aile.bill.service.mail.analyze.banktemplate;
 
-import java.util.Map;
-
 import org.springframework.beans.factory.InitializingBean;
 
+import com.pay.aile.bill.entity.CreditTemplate;
 import com.pay.aile.bill.service.mail.analyze.BankMailAnalyzerTemplate;
+import com.pay.aile.bill.service.mail.analyze.constant.Constant;
 import com.pay.aile.bill.service.mail.analyze.enums.CardTypeEnum;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
+import com.pay.aile.bill.service.mail.analyze.util.JedisClusterUtils;
 
 /**
  * 
@@ -27,7 +28,7 @@ public abstract class BaseBankTemplate implements BankMailAnalyzerTemplate,
      * value:规则
      * 根据银行和信用卡类型,从缓存中初始化
      */
-    protected Map<String, String> keywords;
+    protected CreditTemplate rules;
 
     /**
      * 信用卡类型
@@ -48,7 +49,7 @@ public abstract class BaseBankTemplate implements BankMailAnalyzerTemplate,
     @Override
     public void analyze(AnalyzeParamsModel apm) {
         count++;
-        initKeywords();
+        initRules();
         analyzeInternal(apm);
     }
 
@@ -59,10 +60,12 @@ public abstract class BaseBankTemplate implements BankMailAnalyzerTemplate,
     /**
      * 获取模板对应的关键字
      */
-    protected void initKeywords() {
-        //TODO 根据bankCode和cardCode从缓存中获取对应的规则
-        String bankCode = cardType.getBankCode().getBankCode();
+    protected void initRules() {
+        //TODO 根据cardCode从缓存中获取对应的规则
         String cardCode = cardType.getCardCode();
+        rules = JedisClusterUtils.getBean(
+                Constant.redisTemplateRuleCache + cardCode,
+                CreditTemplate.class);
     }
 
     @Override

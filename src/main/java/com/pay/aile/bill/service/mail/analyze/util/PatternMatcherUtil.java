@@ -18,8 +18,7 @@ public class PatternMatcherUtil {
      * @return
      * @description 获取匹配的字符串
      */
-    public static List<String> getMatcher(String key, String bank, String reg,
-            String content) {
+    public static List<String> getMatcher(String reg, String content) {
         Pattern pattern = Pattern.compile(reg);
         Matcher matcher = pattern.matcher(content);
         List<String> result = new ArrayList<String>();

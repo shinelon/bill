@@ -10,8 +10,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.pay.aile.bill.service.mail.analyze.banktemplate.BaseBankTemplate;
+import com.pay.aile.bill.service.mail.analyze.constant.Constant;
 import com.pay.aile.bill.service.mail.analyze.enums.CardTypeEnum;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
+import com.pay.aile.bill.service.mail.analyze.util.JedisClusterUtils;
+import com.pay.aile.bill.utils.SpringContextUtil;
 
 /**
  * 
@@ -96,10 +99,12 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
     /**
      * 
      * @return
-     * TODO 根据用户邮箱和银行编码从缓存中获取对应的模板
+     *  根据用户邮箱和银行编码从缓存中获取对应的模板
      */
     private T getTemplateFromCache(String email, String bankCode) {
-        return null;
+        Class<T> t = (Class<T>) JedisClusterUtils
+                .hashGet(Constant.redisTemplateCache + bankCode, email);
+        return SpringContextUtil.getBean(t);
     }
 
     /**
@@ -107,10 +112,11 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
      * @param email
      * @param bankCode
      * @param template
-     * TODO 将模板存入缓存
+     * 将模板存入缓存
      */
     private void setTemplateToCache(String email, String bankCode, T template) {
-
+        JedisClusterUtils.hashSet(Constant.redisTemplateCache + bankCode, email,
+                template.getClass());
     }
 
     /**

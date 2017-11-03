@@ -127,7 +127,11 @@
             <artifactId>bootstrap</artifactId>
             <version>3.3.7</version>
         </dependency>  
-        
+                <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.33</version>
+        </dependency>
 	</dependencies>
 
 	<build>

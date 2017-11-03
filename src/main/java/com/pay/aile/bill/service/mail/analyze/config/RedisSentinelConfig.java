@@ -9,12 +9,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisClusterConfiguration;
-import org.springframework.data.redis.connection.RedisClusterNode;
 import org.springframework.data.redis.connection.RedisNode;
+import org.springframework.data.redis.connection.RedisSentinelConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
@@ -24,44 +24,65 @@ import redis.clients.jedis.JedisPoolConfig;
 
 @Configuration
 @EnableConfigurationProperties(RedisProperties.class)
-@ConditionalOnProperty(name = "redis.cluster")
-public class RedisClusterConfig {
-    private Logger LOG = LoggerFactory.getLogger(RedisClusterConfig.class);
-
+@ConditionalOnProperty(name = "redis.sentinel")
+public class RedisSentinelConfig {
+    private Logger logger = LoggerFactory.getLogger(RedisSentinelConfig.class);
     @Resource
     private RedisProperties redisProperties;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
+
         JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(
-                redisClusterConfiguration(), jedisPoolConfig());
+                redisSentinelConfiguration(), jedisPoolConfig());
+        logger.info("redisProperties.getPassword()==============="
+                + redisProperties.getPassword());
         if (!StringUtils.isEmpty(redisProperties.getPassword())) {
             jedisConnectionFactory.setPassword(redisProperties.getPassword());
         }
+        // 设置访问的db
+        jedisConnectionFactory.setDatabase(redisProperties.getDatabase());
         return jedisConnectionFactory;
     }
 
     public JedisPoolConfig jedisPoolConfig() {
 
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-        jedisPoolConfig.setMaxIdle(redisProperties.getMaxIdle());
-        jedisPoolConfig.setMaxTotal(redisProperties.getMaxTotal());
-        jedisPoolConfig.setMaxWaitMillis(redisProperties.getMaxWaitMillis());
+        if (redisProperties.getPool() != null) {
+            jedisPoolConfig.setMaxIdle(redisProperties.getPool().getMaxIdle());
+            jedisPoolConfig
+                    .setMaxWaitMillis(redisProperties.getPool().getMaxWait());
+
+        }
+
         return jedisPoolConfig;
 
     }
 
-    public RedisClusterConfiguration redisClusterConfiguration() {
+    public RedisSentinelConfiguration redisSentinelConfiguration() {
 
-        RedisClusterConfiguration redisClusterConfiguration = new RedisClusterConfiguration();
-        String hosts = redisProperties.getHost();
-        String port = redisProperties.getPort();
-        Set<RedisNode> redisNodes = new HashSet<>();
-        redisNodes.add(new RedisClusterNode(hosts, Integer.valueOf(port)));
-        redisClusterConfiguration.setClusterNodes(redisNodes);
-        redisClusterConfiguration
-                .setMaxRedirects(redisProperties.getMaxRedirects());
-        return redisClusterConfiguration;
+        RedisSentinelConfiguration redisSentinelConfiguration = new RedisSentinelConfiguration();
+        // 主
+        redisSentinelConfiguration
+                .setMaster(redisProperties.getSentinel().getMaster());
+        logger.info("redisProperties   getSentinel  getMaster=========="
+                + redisProperties.getSentinel().getMaster());
+        Set<RedisNode> redisNodes = new HashSet<RedisNode>();
+        logger.info("redisProperties   getSentinel  redisNodes=========="
+                + redisProperties.getSentinel().getNodes());
+
+        String[] nodeArray = redisProperties.getSentinel().getNodes()
+                .split(";");
+        for (String nodeStr : nodeArray) {
+            logger.info("nodeStr=========================={}", nodeStr);
+
+            String[] node = nodeStr.split(":");
+            redisNodes.add(new RedisNode(node[0], Integer.valueOf(node[1])));
+        }
+
+        redisSentinelConfiguration.setSentinels(redisNodes);
+
+        return redisSentinelConfiguration;
 
     }
 
@@ -70,6 +91,7 @@ public class RedisClusterConfig {
 
         RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(jedisConnectionFactory());
+
         redisTemplate.setDefaultSerializer(new StringRedisSerializer());
 
         @SuppressWarnings("rawtypes")
@@ -79,7 +101,7 @@ public class RedisClusterConfig {
         redisTemplate.setHashKeySerializer(stringSerializer);
         redisTemplate.setHashValueSerializer(stringSerializer);
 
-        LOG.info("create RedisTemplate success");
+        logger.info("create RedisTemplate success");
         return redisTemplate;
     }
 }

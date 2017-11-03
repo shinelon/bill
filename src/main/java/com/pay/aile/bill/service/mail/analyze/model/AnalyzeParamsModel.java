@@ -10,10 +10,10 @@ public class AnalyzeParamsModel {
     private String content;//邮件内容
     private String email;//用户邮箱
 
-    private Object afterAnalyze;//解析之后的规则数据,暂用Object代替,待实体定以后改为具体的实体
+    private AnalyzeResult result;//解析之后的规则数据
 
     public boolean success() {
-        return afterAnalyze != null;
+        return result != null;
     }
 
     public String getBankCode() {
@@ -40,18 +40,18 @@ public class AnalyzeParamsModel {
         this.email = email;
     }
 
-    public Object getAfterAnalyze() {
-        return afterAnalyze;
+    public AnalyzeResult getResult() {
+        return result;
     }
 
-    public void setAfterAnalyze(Object afterAnalyze) {
-        this.afterAnalyze = afterAnalyze;
+    public void setResult(AnalyzeResult result) {
+        this.result = result;
     }
 
     @Override
     public String toString() {
         return "AnalyzeParamsModel [bankCode=" + bankCode + ", content="
-                + content + ", email=" + email + ", afterAnalyze="
-                + afterAnalyze + "]";
+                + content + ", email=" + email + ", result=" + result + "]";
     }
+
 }
