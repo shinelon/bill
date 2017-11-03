@@ -1,11 +1,11 @@
 package com.pay.aile.bill.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.pay.aile.bill.entity.CreditFile;
 import com.pay.aile.bill.mapper.CreditFileMapper;
 import com.pay.aile.bill.service.CreditFileService;
 
@@ -21,7 +21,7 @@ public class CreditFileServiceImpl implements CreditFileService {
     private CreditFileMapper creditFileMapper;
 
     @Override
-    public List<CreditFile> findUnAnalyzedList() {
+    public List<Map<String, Object>> findUnAnalyzedList() {
         return creditFileMapper.selectUnAnalyzedList();
     }
 

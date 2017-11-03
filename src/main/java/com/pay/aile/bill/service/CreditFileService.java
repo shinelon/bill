@@ -1,8 +1,7 @@
 package com.pay.aile.bill.service;
 
 import java.util.List;
-
-import com.pay.aile.bill.entity.CreditFile;
+import java.util.Map;
 
 /**
  * 
@@ -11,5 +10,5 @@ import com.pay.aile.bill.entity.CreditFile;
  */
 public interface CreditFileService {
 
-    List<CreditFile> findUnAnalyzedList();
+    List<Map<String, Object>> findUnAnalyzedList();
 }

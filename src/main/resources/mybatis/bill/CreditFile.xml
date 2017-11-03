@@ -16,10 +16,17 @@
     <sql id="Base_Column_List">
         id, filen_name AS filenName, create_date AS createDate, receive_date AS receiveDate, email_id AS emailId, process_result AS processResult
     </sql>
-    <select id="selectUnAnalyzedList" resultMap="BaseResultMap" >
+    <select id="selectUnAnalyzedList" resultType="java.util.Map">
         select 
+        b.email,
         <include refid="Base_Column_List" />
-        from credit_file
+        from credit_file a 
+        join credit_email b on a.email_id = b.id
         where process_result != 1
     </select>
+    <update id="updateProcessResult">
+       update credit_file 
+       set process_result = #{result,jdbcType=TINYINT}
+       where id = #{id,jdbcType=BIGINT}
+    </update>
 </mapper>

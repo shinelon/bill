@@ -4,12 +4,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.pay.aile.bill.service.CreditFileService;
 import com.pay.aile.bill.service.mail.analyze.BankMailAnalyzer;
 import com.pay.aile.bill.service.mail.analyze.IParseMail;
 import com.pay.aile.bill.service.mail.analyze.MailContentExtractor;
@@ -35,9 +39,26 @@ public class ParseMailImpl implements IParseMail {
     @Autowired
     private List<BankMailAnalyzer> parsers;
 
+    @Resource
+    private CreditFileService creditFileService;
+
     @Override
     public void execute() {
         //TODO 获取文件/文件名称
+
+        List<Map<String, Object>> fileList = creditFileService
+                .findUnAnalyzedList();
+        if (fileList == null || fileList.isEmpty()) {
+            logger.info("未解析邮件账单为空");
+            return;
+        }
+        fileList.forEach(file -> {
+            String fileName = file.get("fileName") == null ? ""
+                    : file.get("fileName").toString();
+            String email = file.get("email") == null ? ""
+                    : file.get("email").toString();
+        });
+
         File file = new File("D:\\中信银行信用卡电子账单1.html");
         FileInputStream fis = null;
         try {
