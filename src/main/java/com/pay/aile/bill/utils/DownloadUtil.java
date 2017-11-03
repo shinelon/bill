@@ -18,8 +18,10 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 
 import com.pay.aile.bill.entity.CreditEmail;
+import com.pay.aile.bill.entity.CreditFile;
 import com.pay.aile.bill.entity.EmailFile;
 import com.pay.aile.bill.exception.MailBillException;
+import com.pay.aile.bill.service.mail.relation.CreditFileRelation;
 
 /***
  * DownloadUtil.java
@@ -32,6 +34,9 @@ import com.pay.aile.bill.exception.MailBillException;
 @Component
 public class DownloadUtil {
 	private static final Logger logger = LoggerFactory.getLogger(DownloadUtil.class);
+
+	@Autowired
+	private CreditFileRelation creditFileRelation;
 
 	@Autowired
 	private MongoTemplate mongoTemplate;
@@ -58,19 +63,20 @@ public class DownloadUtil {
 		}
 	}
 
-	public void saveFile(Message message) throws MailBillException {
-		MimeMessage msg = (MimeMessage) message;
-		String subject = MailDecodeUtil.getSubject(msg);
-		String receiveAdd = MailDecodeUtil.getReceiveAddress(msg, null);
-		String senderAdd = MailDecodeUtil.getFrom(msg);
-		String sentDate = MailDecodeUtil.getSentDate(msg, "yyyyMMddHHmmss");
-		logger.debug("subject:{} receiveAdd:{} senderAdd:{} sentData:{}", subject, receiveAdd, senderAdd, sentDate);
-		StringBuffer content = new StringBuffer(20480);
-		MailDecodeUtil.getMailTextContent(msg, content);
-		content = MailDecodeUtil.getUtf8(content);
-		createFile(formatFileName(subject, sentDate), content);
-		logger.info("=========================================");
-	}
+	// public void saveFile(Message message) throws MailBillException {
+	// MimeMessage msg = (MimeMessage) message;
+	// String subject = MailDecodeUtil.getSubject(msg);
+	// String receiveAdd = MailDecodeUtil.getReceiveAddress(msg, null);
+	// String senderAdd = MailDecodeUtil.getFrom(msg);
+	// String sentDate = MailDecodeUtil.getSentDate(msg, "yyyyMMddHHmmss");
+	// logger.debug("subject:{} receiveAdd:{} senderAdd:{} sentData:{}",
+	// subject, receiveAdd, senderAdd, sentDate);
+	// StringBuffer content = new StringBuffer(20480);
+	// MailDecodeUtil.getMailTextContent(msg, content);
+	// content = MailDecodeUtil.getUtf8(content);
+	// createFile(formatFileName(subject, sentDate), content);
+	// logger.info("=========================================");
+	// }
 
 	public String saveFile(Message message, CreditEmail creditEmail) throws MailBillException {
 
@@ -95,6 +101,11 @@ public class DownloadUtil {
 		// 随机生成文件名
 		ef.setFileName(fileName);
 		mongoTemplate.insert(ef);
+		// 保存文件关系
+		CreditFile creditFile = new CreditFile();
+		creditFile.setEmailId(creditEmail.getId());
+		creditFile.setFilenName("fileName");
+		creditFileRelation.saveCreditFile(creditFile);
 
 		return fileName;
 

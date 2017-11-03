@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="base/layout">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorator="layout">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
@@ -8,28 +8,34 @@
 </head>
 <body class="layui-layout-body">
     <div layout:fragment="content" style="padding: 15px;">
-        <table class="layui-table" lay-data="{height:313, url:'/demo/table/user/'}">
-		  <thead>
-		    <tr>
-		      <th lay-data="{field:'id', width:80, sort: true}">ID</th>
-		      <th lay-data="{field:'username', width:80}">用户名</th>
-		      <th lay-data="{field:'sex', width:80, sort: true}">性别</th>
-		      <th lay-data="{field:'city', width:80}">城市</th>
-		      <th lay-data="{field:'sign', width:177}">签名</th>
-		      <th lay-data="{field:'experience', width:80, sort: true}">积分</th>
-		      <th lay-data="{field:'score', width:80, sort: true}">评分</th>
-		      <th lay-data="{field:'classify', width:80}">职业</th>
-		      <th lay-data="{field:'wealth', width:135, sort: true}">财富</th>
-		    </tr>
-		  </thead>
-    </table>
+     <table id="emailTable"  class="layui-table" lay-filter="parse-table-demo">
+	  <thead>
+	    <tr>
+	      <th lay-data="{field:'username', width:200}">邮箱</th>
+	      <th lay-data="{field:'joinTime', width:150,toolbar: '#barDemo1'}">密码</th>
+	      <th >操作</th>
+	    </tr> 
+	  </thead>
+	  <tbody >
+	    <tr th:each="e :${emailList}">
+	      <td  th:text="${e.email}">贤心1</td>
+	      <td  th:text="${e.password}">2016-11-28</td>
+	      <td  ><a href="#" th:href="@{/showEmail?(email=${e.email})}">查看账单</a></td>
+	    </tr>
+	  
+	  </tbody>
+	</table>
 	<script>
 	layui.use('table', function(){
 	  var table = layui.table;
-	  
 	});
+	 
+	
 	</script>
-    
+	<script type="text/html" id="barDemo1">
+         <a class="layui-btn layui-btn-mini" lay-event="edit">工具性按钮</a>
+	</script>
+	
     </div>
 </body>
 </html>

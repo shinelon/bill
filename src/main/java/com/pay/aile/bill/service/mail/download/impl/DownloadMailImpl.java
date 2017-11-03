@@ -28,7 +28,7 @@ public class DownloadMailImpl implements DownloadMail {
 	public void execute(CreditEmail creditEmail) throws Exception {
 		String[] mailParms = StringUtils.split(creditEmail.getEmail(), "@");
 		BaseMailOperation mailOperation = SpringContextUtil.getBean(MailType.getMailType(mailParms[1]).getClzz());
-		mailOperation.downloadMail(creditEmail.getEmail(), creditEmail.getPassword());
+		mailOperation.downloadMail(creditEmail);
 
 	}
 
