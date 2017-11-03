@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.pay.aile.bill.entity.CreditEmail;
 import com.pay.aile.bill.exception.MailBillException;
 import com.pay.aile.bill.service.mail.download.BaseMailOperation;
 import com.pay.aile.bill.utils.MailSearchUtil;
@@ -34,6 +35,47 @@ public class MailHotOperationImpl extends BaseMailOperation {
 	private MongoDownloadUtil downloadUtil;
 	final String host = "imap-mail.outlook.com";
 	final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
+
+	@Override
+	public void downloadMail(CreditEmail creditEmail) {
+		Store store = login(getMailProperties(), creditEmail.getEmail(), creditEmail.getPassword());
+		Folder defaultFolder = null;
+		Folder[] folderArr = null;
+		try {
+			if (store != null && store.isConnected()) {
+				defaultFolder = store.getDefaultFolder();
+
+				folderArr = defaultFolder.list();
+				for (Folder tempFolder : folderArr) {
+					Folder folder = store.getFolder(tempFolder.getName());
+					folder.open(Folder.READ_ONLY);
+					Message[] messages = MailSearchUtil.search(getKeywords(), folder);
+					for (int i = 0; i < messages.length; i++) {
+						String fileName = downloadUtil.saveFile(messages[i], creditEmail);
+					}
+					folder.close(true);
+				}
+			}
+
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		} finally {
+			folderArr = null;
+			try {
+				if (defaultFolder.isOpen() && defaultFolder != null) {
+					defaultFolder.close(false);
+				}
+
+				if (store != null) {
+					store.close();
+				}
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			}
+
+			// MailReleaseUtil.releaseFolderAndStore(defaultFolder, store);
+		}
+	}
 
 	@Override
 	public void downloadMail(String mailAddr, String password) {

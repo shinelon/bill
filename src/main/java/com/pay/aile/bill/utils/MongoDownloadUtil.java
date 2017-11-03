@@ -1,5 +1,7 @@
 package com.pay.aile.bill.utils;
 
+import java.util.UUID;
+
 import javax.mail.Message;
 import javax.mail.internet.MimeMessage;
 
@@ -12,6 +14,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
+import com.pay.aile.bill.entity.CreditEmail;
 import com.pay.aile.bill.entity.EmailFile;
 import com.pay.aile.bill.exception.MailBillException;
 
@@ -73,5 +76,36 @@ public class MongoDownloadUtil {
 		}
 
 		logger.info(subject);
+	}
+
+	public String saveFile(Message message, CreditEmail creditEmail) throws MailBillException {
+		StringBuffer content = new StringBuffer(20480);
+		String subject = "";
+		String fileName = UUID.randomUUID().toString();
+		try {
+			EmailFile ef = new EmailFile();
+
+			MimeMessage msg = (MimeMessage) message;
+			subject = MailDecodeUtil.getSubject(msg);
+			String receiveAdd = MailDecodeUtil.getReceiveAddress(msg, null);
+			String senderAdd = MailDecodeUtil.getFrom(msg);
+			String sentDate = MailDecodeUtil.getSentDate(msg, "yyyyMMddHHmmss");
+			logger.debug("subject:{} receiveAdd:{} senderAdd:{} sentData:{}", subject, receiveAdd, senderAdd, sentDate);
+
+			MailDecodeUtil.getMailTextContent(msg, content);
+			content = MailDecodeUtil.getUtf8(content);
+			ef.setSubject(message.getSubject());
+			ef.setReceiveDate(DateUtil.formatAsDatetime(message.getReceivedDate()));
+			ef.setContent(content.toString());
+			// 随机生成文件名
+			ef.setFileName(fileName);
+			ef.setEmail(creditEmail.getEmail());
+			mongoTemplate.insert(ef);
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.error(e.getMessage());
+		}
+		return fileName;
+
 	}
 }
