@@ -36,7 +36,7 @@ public class CreditFile extends Model<CreditFile> {
      * 邮箱id
      */
     @TableField("email_id")
-    private String emailId;
+    private Long emailId;
     /**
      * 0 未处理 1 成功 2 失败
      */
@@ -62,7 +62,7 @@ public class CreditFile extends Model<CreditFile> {
         return createDate;
     }
 
-    public String getEmailId() {
+    public Long getEmailId() {
         return emailId;
     }
 
@@ -94,7 +94,7 @@ public class CreditFile extends Model<CreditFile> {
         this.createDate = createDate;
     }
 
-    public void setEmailId(String emailId) {
+    public void setEmailId(Long emailId) {
         this.emailId = emailId;
     }
 
