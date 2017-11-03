@@ -104,7 +104,7 @@ public class DownloadUtil {
 		// 保存文件关系
 		CreditFile creditFile = new CreditFile();
 		creditFile.setEmailId(creditEmail.getId());
-		creditFile.setFilenName("fileName");
+		creditFile.setFileName("fileName");
 		creditFileRelation.saveCreditFile(creditFile);
 
 		return fileName;

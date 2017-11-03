@@ -15,7 +15,7 @@
 			    
 			      <select  lay-filter="test" name="emailFile" id="emailFile" onchange="getContet()">
 			          <option value="">请选择</option>
-			          <option th:each="f : ${fileList}" th:value="${f.filenName}" th:text="${f.filenName}" ></option>
+			          <option th:each="f : ${fileList}" th:value="${f.fileName}" th:text="${f.fileName}" ></option>
 
 			      </select>
 			    </div>

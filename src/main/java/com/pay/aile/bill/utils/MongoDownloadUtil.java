@@ -109,7 +109,7 @@ public class MongoDownloadUtil {
 			// 保存文件关系
 			CreditFile creditFile = new CreditFile();
 			creditFile.setEmailId(creditEmail.getId());
-			creditFile.setFilenName(fileName);
+			creditFile.setFileName(fileName);
 			creditFileRelation.saveCreditFile(creditFile);
 		} catch (Exception e) {
 			// TODO: handle exception
