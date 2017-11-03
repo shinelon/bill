@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.pay.aile.bill.mapper.CreditFileMapper;
 import com.pay.aile.bill.service.CreditFileService;
@@ -23,6 +24,12 @@ public class CreditFileServiceImpl implements CreditFileService {
     @Override
     public List<Map<String, Object>> findUnAnalyzedList() {
         return creditFileMapper.selectUnAnalyzedList();
+    }
+
+    @Transactional
+    @Override
+    public Integer updateProcessResult(int result, Long id) {
+        return creditFileMapper.updateProcessResult(result, id);
     }
 
 }

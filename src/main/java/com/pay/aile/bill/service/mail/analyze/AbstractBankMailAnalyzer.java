@@ -15,6 +15,7 @@ import com.pay.aile.bill.entity.CreditBill;
 import com.pay.aile.bill.entity.CreditBillDetail;
 import com.pay.aile.bill.service.CreditBillDetailService;
 import com.pay.aile.bill.service.CreditBillService;
+import com.pay.aile.bill.service.CreditFileService;
 import com.pay.aile.bill.service.mail.analyze.banktemplate.BaseBankTemplate;
 import com.pay.aile.bill.service.mail.analyze.constant.Constant;
 import com.pay.aile.bill.service.mail.analyze.enums.CardTypeEnum;
@@ -44,6 +45,9 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
 
     @Resource
     private CreditBillDetailService creditBillDetailService;
+
+    @Resource
+    private CreditFileService creditFileService;
 
     /**
      * 卡种
@@ -102,7 +106,7 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
             }
         }
         if (apm.success()) {
-            //TODO 解析成功，保存账单到数据库
+            //TODO 解析成功，保存账单到数据库,更新文件解析状态
             CreditBill bill = apm.getResult().getBill();
             List<CreditBillDetail> billDetails = apm.getResult().getDetail();
             try {

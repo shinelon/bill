@@ -1,13 +1,8 @@
 package com.pay.aile.bill.service.mail.analyze.extract;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
 
 import com.pay.aile.bill.service.mail.analyze.MailContentExtractor;
@@ -33,12 +28,10 @@ public class TextExtractor implements MailContentExtractor {
     }
 
     @Override
-    public String extract(InputStream is) {
+    public String extract(String content) {
         try {
-            String content = StreamUtils.copyToString(is,
-                    Charset.forName("utf-8"));
             return TextExtractUtil.parseHtml(content);
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return null;
         }

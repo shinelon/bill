@@ -11,4 +11,6 @@ import java.util.Map;
 public interface CreditFileService {
 
     List<Map<String, Object>> findUnAnalyzedList();
+
+    Integer updateProcessResult(int result, Long id);
 }
