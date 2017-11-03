@@ -19,7 +19,7 @@
         id, due_date AS dueDate, current_amount AS currentAmount, credits, cash, last_amount AS lastAmount, repayment, consumption
     </sql>
     
-    <insert id="insertCreditBill" parameterType="com.pay.aile.bill.entity.CreditBill" >
+    <insert id="insertCreditBill" parameterType="com.pay.aile.bill.entity.CreditBill" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into credit_bill
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="dueDate != null" >

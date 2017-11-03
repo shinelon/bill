@@ -106,20 +106,20 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
             CreditBill bill = apm.getResult().getBill();
             List<CreditBillDetail> billDetails = apm.getResult().getDetail();
             try {
-                Long billId = bill.getId();
                 if (bill != null) {
                     creditBillService.saveCreditBill(bill);
                 }
+                Long billId = bill.getId();
                 if (billDetails != null && !billDetails.isEmpty()) {
-                    billDetails.forEach(detail -> {
+                    for (CreditBillDetail creditBillDetail : billDetails) {
                         try {
-                            detail.setBillId(billId);
+                            creditBillDetail.setBillId(billId);
                             creditBillDetailService
-                                    .saveCreditBillDetail(detail);
+                                    .saveCreditBillDetail(creditBillDetail);
                         } catch (Exception e) {
                             logger.error(e.getMessage(), e);
                         }
-                    });
+                    }
                 }
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);

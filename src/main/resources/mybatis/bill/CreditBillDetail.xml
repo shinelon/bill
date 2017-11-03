@@ -18,7 +18,7 @@
     <sql id="Base_Column_List">
         id, bill_id AS billId, transaction_date AS transactionDate, billing_date AS billingDate, transaction_description AS transactionDescription, transaction_amount AS transactionAmount, accountable_amount AS accountableAmount, account_type AS accountType
     </sql>
-    <insert id="insertCreditBillDetail" parameterType="com.pay.aile.bill.entity.CreditBillDetail" >
+    <insert id="insertCreditBillDetail" parameterType="com.pay.aile.bill.entity.CreditBillDetail"  useGeneratedKeys="true" keyProperty="id" keyColumn="id">
         insert into credit_bill_detail
         <trim prefix="(" suffix=")" suffixOverrides="," >
           <if test="billId != null" >

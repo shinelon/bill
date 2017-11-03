@@ -47,7 +47,8 @@ public class CITICTemplate extends AbstractCITICTemplate {
             result = list.get(0);
             String date = result.replaceAll("年", "/").replaceAll("月", "/")
                     .replaceAll("日", "");
-            date = date.split("：")[sa.length - 1];
+            sa = date.split("：");
+            date = sa[sa.length - 1];
             bill.setDueDate(date);
         }
         if (StringUtils.hasText(rules.getCurrentAmount())) {
@@ -111,6 +112,7 @@ public class CITICTemplate extends AbstractCITICTemplate {
                 detail.add(cbd);
             }
         }
+        apm.setResult(ar);
     }
 
     @Override
