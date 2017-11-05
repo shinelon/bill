@@ -107,7 +107,7 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
             List<CreditBillDetail> billDetails = apm.getResult().getDetail();
             try {
                 if (bill != null) {
-                    creditBillService.saveCreditBill(bill);
+                    creditBillService.saveOrUpdateCreditBill(bill);
                 }
                 Long billId = bill.getId();
                 if (billDetails != null && !billDetails.isEmpty()) {

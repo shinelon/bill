@@ -12,6 +12,9 @@
 		<result column="transaction_amount" property="transactionAmount" />
 		<result column="accountable_amount" property="accountableAmount" />
 		<result column="account_type" property="accountType" />
+        <result column="status" property="status" />
+        <result column="create_date" property="createDate" />
+        <result column="update_date" property="updateDate" />
 	</resultMap>
 
     <!-- 通用查询结果列 -->
@@ -42,6 +45,15 @@
           <if test="accountType != null" >
             account_type,
           </if>
+          <if test="status != null" >
+            status,
+          </if>
+          <if test="createDate != null" >
+            create_date,
+          </if>
+          <if test="updateDate != null" >
+            update_date,
+          </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
           <if test="billId != null" >
@@ -64,6 +76,15 @@
           </if>
           <if test="accountType != null" >
             #{accountType,jdbcType=DECIMAL},
+          </if>
+          <if test="status != null" >
+            #{status,jdbcType=INTEGER},
+          </if>
+          <if test="createDate != null" >
+            #{createDate,jdbcType=DATE},
+          </if>
+          <if test="updateDate != null" >
+            #{updateDate,jdbcType=DATE},
           </if>
         </trim>
     </insert>

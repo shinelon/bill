@@ -9,5 +9,7 @@ import com.pay.aile.bill.entity.CreditBill;
  */
 public interface CreditBillService {
 
-    public Long saveCreditBill(CreditBill bill);
+    public Long saveOrUpdateCreditBill(CreditBill bill);
+
+    public CreditBill findCreditBillByTransDate(CreditBill bill);
 }

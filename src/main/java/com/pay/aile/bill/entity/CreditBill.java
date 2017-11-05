@@ -67,6 +67,19 @@ public class CreditBill extends Model<CreditBill> {
     @TableField(value = "create_date", fill = FieldFill.INSERT)
     private Date createDate;
 
+    /**
+     * 用户邮箱id
+     */
+    @TableField(value = "email_id")
+    private Long emailId;
+    @TableField(value = "cardtype_id")
+    private Long cardtypeId;
+    /**
+     * 邮件的接收日期
+     */
+    @TableField(value = "receive_date")
+    private Date receiveDate;
+
     public BigDecimal getCash() {
         return cash;
     }
@@ -149,12 +162,14 @@ public class CreditBill extends Model<CreditBill> {
 
     @Override
     public String toString() {
-        return "CreditBill{" + "id=" + id + ", dueDate=" + dueDate
+        return "CreditBill [id=" + id + ", dueDate=" + dueDate
                 + ", currentAmount=" + currentAmount + ", credits=" + credits
                 + ", cash=" + cash + ", lastAmount=" + lastAmount
                 + ", repayment=" + repayment + ", consumption=" + consumption
                 + ", status=" + status + ", updateDate=" + updateDate
-                + ", createDate=" + createDate + "}";
+                + ", createDate=" + createDate + ", emailId=" + emailId
+                + ", cardtypeId=" + cardtypeId + ", receiveDate=" + receiveDate
+                + "]";
     }
 
     @Override
@@ -168,5 +183,29 @@ public class CreditBill extends Model<CreditBill> {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getEmailId() {
+        return emailId;
+    }
+
+    public void setEmailId(Long emailId) {
+        this.emailId = emailId;
+    }
+
+    public Long getCardtypeId() {
+        return cardtypeId;
+    }
+
+    public void setCardtypeId(Long cardtypeId) {
+        this.cardtypeId = cardtypeId;
+    }
+
+    public Date getReceiveDate() {
+        return receiveDate;
+    }
+
+    public void setReceiveDate(Date receiveDate) {
+        this.receiveDate = receiveDate;
     }
 }

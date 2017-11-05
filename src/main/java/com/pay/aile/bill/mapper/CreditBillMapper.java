@@ -14,4 +14,6 @@ import com.pay.aile.bill.entity.CreditBill;
 public interface CreditBillMapper extends BaseMapper<CreditBill> {
 
     Long insertCreditBill(CreditBill bill);
+
+    void updateCreditBill(CreditBill bill);
 }
