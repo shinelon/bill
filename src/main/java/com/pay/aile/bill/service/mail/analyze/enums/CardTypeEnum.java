@@ -8,7 +8,8 @@ package com.pay.aile.bill.service.mail.analyze.enums;
 public enum CardTypeEnum {
     CITIC_STANDARD("CITIC_STANDARD", BankCodeEnum.CITIC,
             "中信银行标准卡IC信用卡"), CMB_YOUNG("CMB_YOUNG", BankCodeEnum.CMB,
-                    "招商银行YOUNG卡");
+                    "招商银行YOUNG卡"), CMB_UNIONPAY("CMB_UNIONPAY",
+                            BankCodeEnum.CMB, "招商银行银联单币卡");
 
     private BankCodeEnum bankCode;
     private String cardCode;

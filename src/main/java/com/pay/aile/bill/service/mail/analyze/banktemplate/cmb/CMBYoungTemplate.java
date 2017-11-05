@@ -115,7 +115,7 @@ public class CMBYoungTemplate extends AbstractCMBTemplate {
 
     @Override
     protected void setCardType() {
-        this.cardType = CardTypeEnum.CITIC_STANDARD;
+        this.cardType = CardTypeEnum.CMB_YOUNG;
     }
 
 }
