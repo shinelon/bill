@@ -17,6 +17,7 @@ import com.pay.aile.bill.service.mail.analyze.enums.AccountTypeEnum;
 import com.pay.aile.bill.service.mail.analyze.enums.CardTypeEnum;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeResult;
+import com.pay.aile.bill.service.mail.analyze.util.DateUtil;
 import com.pay.aile.bill.service.mail.analyze.util.PatternMatcherUtil;
 
 /**
@@ -48,7 +49,9 @@ public class CMBYoungTemplate extends AbstractCMBTemplate {
             Calendar c = Calendar.getInstance();
             c.setTime(new Date());
             int year = c.get(Calendar.YEAR);
-            bill.setDueDate(String.valueOf(year) + "/" + result);
+            Date date = DateUtil.parseDateFromString(
+                    String.valueOf(year) + "/" + result, "yyyy/MM/dd");
+            bill.setDueDate(date);
         }
         if (StringUtils.hasText(rules.getCurrentAmount())) {
             //应还款额
@@ -77,8 +80,10 @@ public class CMBYoungTemplate extends AbstractCMBTemplate {
                 String s = list.get(i);
                 sa = s.split(" ");
                 CreditBillDetail cbd = new CreditBillDetail();
-                cbd.setTransactionDate(sa[1] + sa[2]);//交易日期
-                cbd.setBillingDate(sa[1] + sa[2]);//记账日期
+                cbd.setTransactionDate(
+                        DateUtil.parseDateFromString(sa[1], "yyyyMMdd"));//交易日期
+                cbd.setBillingDate(
+                        DateUtil.parseDateFromString(sa[1], "yyyyMMdd"));//记账日期
                 AccountTypeEnum t = AccountTypeEnum.getByCnName(sa[3]);
                 cbd.setAccountType(
                         t == null ? AccountTypeEnum.RMB.name() : t.name());
@@ -88,7 +93,7 @@ public class CMBYoungTemplate extends AbstractCMBTemplate {
                 detail.add(cbd);
             }
         }
-        if (!StringUtils.hasText(bill.getDueDate()) && detail.isEmpty()) {
+        if (bill.getDueDate() != null && detail.isEmpty()) {
             throw new RuntimeException("CMB YOUNG 解析失败!");
         }
         apm.setResult(ar);

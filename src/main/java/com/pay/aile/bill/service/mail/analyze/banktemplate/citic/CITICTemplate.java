@@ -14,6 +14,7 @@ import com.pay.aile.bill.entity.CreditTemplate;
 import com.pay.aile.bill.service.mail.analyze.enums.CardTypeEnum;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeResult;
+import com.pay.aile.bill.service.mail.analyze.util.DateUtil;
 import com.pay.aile.bill.service.mail.analyze.util.PatternMatcherUtil;
 
 /**
@@ -45,11 +46,11 @@ public class CITICTemplate extends AbstractCITICTemplate {
                 handleNotMatch("dueDate", rules.getDueDate(), apm);
             }
             result = list.get(0);
-            String date = result.replaceAll("年", "/").replaceAll("月", "/")
+            String date = result.replaceAll("年", "-").replaceAll("月", "-")
                     .replaceAll("日", "");
             sa = date.split("：");
             date = sa[sa.length - 1];
-            bill.setDueDate(date);
+            bill.setDueDate(DateUtil.parseDateFromString(date, null));
         }
         if (StringUtils.hasText(rules.getCurrentAmount())) {
             //应还款额
@@ -104,8 +105,10 @@ public class CITICTemplate extends AbstractCITICTemplate {
                 String s = list.get(i);
                 sa = s.split(" ");
                 CreditBillDetail cbd = new CreditBillDetail();
-                cbd.setTransactionDate(sa[0]);//交易日期
-                cbd.setBillingDate(sa[1]);//记账日期
+                cbd.setTransactionDate(
+                        DateUtil.parseDateFromString(sa[0], "yyyyMMdd"));//交易日期
+                cbd.setBillingDate(
+                        DateUtil.parseDateFromString(sa[1], "yyyyMMdd"));//记账日期
                 cbd.setTransactionDescription(sa[3]);//交易描述
                 cbd.setAccountType(sa[4]);
                 cbd.setTransactionAmount(sa[5]);//交易货币/金额

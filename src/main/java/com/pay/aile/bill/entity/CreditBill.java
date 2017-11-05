@@ -27,7 +27,7 @@ public class CreditBill extends Model<CreditBill> {
      * 到期还款日
      */
     @TableField("due_date")
-    private String dueDate;
+    private Date dueDate;
     /**
      * 本期应还款额
      */
@@ -100,7 +100,7 @@ public class CreditBill extends Model<CreditBill> {
         return currentAmount;
     }
 
-    public String getDueDate() {
+    public Date getDueDate() {
         return dueDate;
     }
 
@@ -140,7 +140,7 @@ public class CreditBill extends Model<CreditBill> {
         this.currentAmount = currentAmount;
     }
 
-    public void setDueDate(String dueDate) {
+    public void setDueDate(Date dueDate) {
         this.dueDate = dueDate;
     }
 

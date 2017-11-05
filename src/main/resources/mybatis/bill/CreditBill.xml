@@ -70,7 +70,7 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="dueDate != null" >
-        #{dueDate,jdbcType=INTEGER},
+        #{dueDate,jdbcType=DATE},
       </if>
       <if test="currentAmount != null" >
         #{currentAmount,jdbcType=VARCHAR},

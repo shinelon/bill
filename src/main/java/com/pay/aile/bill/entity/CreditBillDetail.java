@@ -31,12 +31,12 @@ public class CreditBillDetail extends Model<CreditBillDetail> {
      * 交易日期
      */
     @TableField("transaction_date")
-    private String transactionDate;
+    private Date transactionDate;
     /**
      * 记账日志
      */
     @TableField("billing_date")
-    private String billingDate;
+    private Date billingDate;
     /**
      * 交易说明
      */
@@ -82,7 +82,7 @@ public class CreditBillDetail extends Model<CreditBillDetail> {
         return billId;
     }
 
-    public String getBillingDate() {
+    public Date getBillingDate() {
         return billingDate;
     }
 
@@ -102,7 +102,7 @@ public class CreditBillDetail extends Model<CreditBillDetail> {
         return transactionAmount;
     }
 
-    public String getTransactionDate() {
+    public Date getTransactionDate() {
         return transactionDate;
     }
 
@@ -126,7 +126,7 @@ public class CreditBillDetail extends Model<CreditBillDetail> {
         this.billId = billId;
     }
 
-    public void setBillingDate(String billingDate) {
+    public void setBillingDate(Date billingDate) {
         this.billingDate = billingDate;
     }
 
@@ -146,7 +146,7 @@ public class CreditBillDetail extends Model<CreditBillDetail> {
         this.transactionAmount = transactionAmount;
     }
 
-    public void setTransactionDate(String transactionDate) {
+    public void setTransactionDate(Date transactionDate) {
         this.transactionDate = transactionDate;
     }
 
@@ -160,11 +160,14 @@ public class CreditBillDetail extends Model<CreditBillDetail> {
 
     @Override
     public String toString() {
-        return "CreditBillDetail{" + "id=" + id + ", billId=" + billId + ", transactionDate=" + transactionDate
-                + ", billingDate=" + billingDate + ", transactionDescription=" + transactionDescription
-                + ", transactionAmount=" + transactionAmount + ", accountableAmount=" + accountableAmount
-                + ", accountType=" + accountType + ", status=" + status + ", updateDate=" + updateDate + ", createDate="
-                + createDate + "}";
+        return "CreditBillDetail{" + "id=" + id + ", billId=" + billId
+                + ", transactionDate=" + transactionDate + ", billingDate="
+                + billingDate + ", transactionDescription="
+                + transactionDescription + ", transactionAmount="
+                + transactionAmount + ", accountableAmount=" + accountableAmount
+                + ", accountType=" + accountType + ", status=" + status
+                + ", updateDate=" + updateDate + ", createDate=" + createDate
+                + "}";
     }
 
     @Override

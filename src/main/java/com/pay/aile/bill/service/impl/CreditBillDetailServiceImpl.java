@@ -22,6 +22,10 @@ public class CreditBillDetailServiceImpl implements CreditBillDetailService {
     @Transactional
     @Override
     public Long saveCreditBillDetail(CreditBillDetail billDetail) {
+        Long billId = billDetail.getBillId();
+        if (billId == null || billId == 0) {
+
+        }
         return creditBillDetailMapper.insertCreditBillDetail(billDetail);
     }
 

@@ -102,27 +102,35 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
             }
         }
         if (apm.success()) {
-            //TODO 解析成功，保存账单到数据库,更新文件解析状态
+            //解析成功，保存账单到数据库
             CreditBill bill = apm.getResult().getBill();
             List<CreditBillDetail> billDetails = apm.getResult().getDetail();
-            try {
-                if (bill != null) {
-                    creditBillService.saveOrUpdateCreditBill(bill);
-                }
-                Long billId = bill.getId();
-                if (billDetails != null && !billDetails.isEmpty()) {
-                    for (CreditBillDetail creditBillDetail : billDetails) {
-                        try {
-                            creditBillDetail.setBillId(billId);
-                            creditBillDetailService
-                                    .saveCreditBillDetail(creditBillDetail);
-                        } catch (Exception e) {
-                            logger.error(e.getMessage(), e);
+            Long billId = null;
+            if (bill != null) {
+                creditBillService.saveOrUpdateCreditBill(bill);
+                billId = bill.getId();
+            }
+            billId = bill.getId();
+            if (billDetails != null && !billDetails.isEmpty()) {
+                for (CreditBillDetail creditBillDetail : billDetails) {
+                    try {
+                        if (billId == null) {
+                            bill.setReceiveDate(
+                                    creditBillDetail.getTransactionDate());
+                            bill = creditBillService
+                                    .findCreditBillByTransDate(bill);
+                            if (bill == null) {
+                                logger.warn("未查询到明细对应的账单,result={}", apm);
+                                throw new RuntimeException("未查询到明细对应的账单");
+                            }
                         }
+                        creditBillDetail.setBillId(billId);
+                        creditBillDetailService
+                                .saveCreditBillDetail(creditBillDetail);
+                    } catch (Exception e) {
+                        logger.error(e.getMessage(), e);
                     }
                 }
-            } catch (Exception e) {
-                logger.error(e.getMessage(), e);
             }
         }
         logger.debug("analyze end,useTime={}",

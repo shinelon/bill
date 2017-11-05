@@ -60,10 +60,10 @@
             #{billId,jdbcType=INTEGER},
           </if>
           <if test="transactionDate != null" >
-            #{transactionDate,jdbcType=VARCHAR},
+            #{transactionDate,jdbcType=DATE},
           </if>
           <if test="billingDate != null" >
-            #{billingDate,jdbcType=VARCHAR},
+            #{billingDate,jdbcType=DATE},
           </if>
           <if test="transactionDescription != null" >
             #{transactionDescription,jdbcType=VARCHAR},
