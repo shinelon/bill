@@ -66,6 +66,7 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
         String content = apm.getContent();
         String email = apm.getEmail();
         String bankCode = apm.getBankCode();
+        Long emailId = apm.getEmailId();
         preAnalyze(content);
         T template = null;
         //根据用户邮箱和银行编码从redis中获取缓存的对应的模板
@@ -107,6 +108,8 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
             List<CreditBillDetail> billDetails = apm.getResult().getDetail();
             Long billId = null;
             if (bill != null) {
+                bill.setEmailId(emailId);
+                bill.setCardtypeId(apm.getCardtypeId());
                 creditBillService.saveOrUpdateCreditBill(bill);
                 billId = bill.getId();
             }

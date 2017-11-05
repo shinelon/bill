@@ -4,8 +4,10 @@ import org.springframework.beans.factory.InitializingBean;
 
 import com.pay.aile.bill.entity.CreditTemplate;
 import com.pay.aile.bill.service.mail.analyze.BankMailAnalyzerTemplate;
+import com.pay.aile.bill.service.mail.analyze.constant.Constant;
 import com.pay.aile.bill.service.mail.analyze.enums.CardTypeEnum;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
+import com.pay.aile.bill.service.mail.analyze.util.JedisClusterUtils;
 
 /**
  * 
@@ -48,6 +50,9 @@ public abstract class BaseBankTemplate implements BankMailAnalyzerTemplate,
     public void analyze(AnalyzeParamsModel apm) {
         count++;
         initRules();
+        if (rules != null) {
+            apm.setCardtypeId(rules.getCardtypeId());
+        }
         analyzeInternal(apm);
     }
 
@@ -59,11 +64,12 @@ public abstract class BaseBankTemplate implements BankMailAnalyzerTemplate,
      * 获取模板对应的关键字
      */
     protected void initRules() {
-        //        //TODO 根据cardCode从缓存中获取对应的规则
-        //        String cardCode = cardType.getCardCode();
-        //        rules = JedisClusterUtils.getBean(
-        //                Constant.redisTemplateRuleCache + cardCode,
-        //                CreditTemplate.class);
+        //TODO 根据cardCode从缓存中获取对应的规则
+        String cardCode = cardType.getCardCode();
+        rules = JedisClusterUtils.getBean(
+                Constant.redisTemplateRuleCache + cardCode,
+                CreditTemplate.class);
+
     }
 
     @Override

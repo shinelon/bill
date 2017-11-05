@@ -10,6 +10,7 @@ public class AnalyzeParamsModel {
     private String content;//邮件内容
     private String email;//用户邮箱
     private Long emailId;
+    private Long cardtypeId;
 
     private AnalyzeResult result;//解析之后的规则数据
 
@@ -53,7 +54,7 @@ public class AnalyzeParamsModel {
     public String toString() {
         return "AnalyzeParamsModel [bankCode=" + bankCode + ", content="
                 + content + ", email=" + email + ", emailId=" + emailId
-                + ", result=" + result + "]";
+                + ", cardtypeId=" + cardtypeId + ", result=" + result + "]";
     }
 
     public Long getEmailId() {
@@ -62,6 +63,14 @@ public class AnalyzeParamsModel {
 
     public void setEmailId(Long emailId) {
         this.emailId = emailId;
+    }
+
+    public Long getCardtypeId() {
+        return cardtypeId;
+    }
+
+    public void setCardtypeId(Long cardtypeId) {
+        this.cardtypeId = cardtypeId;
     }
 
 }

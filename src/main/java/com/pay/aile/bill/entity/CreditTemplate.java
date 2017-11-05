@@ -88,7 +88,7 @@ public class CreditTemplate extends Model<CreditTemplate> {
      * 卡类型
      */
     @TableField("cardtype_id")
-    private String cardtypeId;
+    private Long cardtypeId;
     /**
      * 有效标志1有效0无效
      */
@@ -113,7 +113,7 @@ public class CreditTemplate extends Model<CreditTemplate> {
         return billingDate;
     }
 
-    public String getCardtypeId() {
+    public Long getCardtypeId() {
         return cardtypeId;
     }
 
@@ -189,7 +189,7 @@ public class CreditTemplate extends Model<CreditTemplate> {
         this.billingDate = billingDate;
     }
 
-    public void setCardtypeId(String cardtypeId) {
+    public void setCardtypeId(Long cardtypeId) {
         this.cardtypeId = cardtypeId;
     }
 
