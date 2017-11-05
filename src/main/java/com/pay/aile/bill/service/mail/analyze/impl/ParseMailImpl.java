@@ -56,7 +56,7 @@ public class ParseMailImpl implements IParseMail {
                 Long id = creditFile.getId();
                 String fileName = creditFile.getFileName();
                 String email = creditFile.getEmail();
-                String bankCode = "";
+                String bankCode = fileName.substring(0, fileName.indexOf("_"));
                 String suffix = fileName.substring(fileName.indexOf(".") + 1);
                 String prefix = fileName.substring(0, fileName.indexOf("."));
                 MailContentExtractor extractor = null;
