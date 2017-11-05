@@ -9,7 +9,7 @@ public class CreditFileModel implements Serializable {
 
     private Long id;
     private String fileName;
-    private Long receiveDate;
+    private Date receiveDate;
     private Long emailId;
     private Integer processResult;
     private Integer status;
@@ -33,11 +33,11 @@ public class CreditFileModel implements Serializable {
         this.fileName = fileName;
     }
 
-    public Long getReceiveDate() {
+    public Date getReceiveDate() {
         return receiveDate;
     }
 
-    public void setReceiveDate(Long receiveDate) {
+    public void setReceiveDate(Date receiveDate) {
         this.receiveDate = receiveDate;
     }
 

@@ -1,5 +1,6 @@
 package com.pay.aile.bill.service.mail.analyze.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -56,6 +57,8 @@ public class ParseMailImpl implements IParseMail {
                 Long id = creditFile.getId();
                 String fileName = creditFile.getFileName();
                 String email = creditFile.getEmail();
+                Long emailId = creditFile.getEmailId();
+                Date receiveDate = creditFile.getReceiveDate();//邮件日期 
                 String bankCode = fileName.substring(0, fileName.indexOf("_"));
                 String suffix = fileName.substring(fileName.indexOf(".") + 1);
                 String prefix = fileName.substring(0, fileName.indexOf("."));
@@ -93,6 +96,8 @@ public class ParseMailImpl implements IParseMail {
                     apm.setEmail(email);
                     apm.setContent(content);
                     apm.setBankCode(bankCode);
+                    apm.setEmailId(emailId);
+                    apm.setReceiveDate(receiveDate);
                     parser.analyze(apm);
                 } catch (Exception e) {
                     //TODO 解析错误,发送信息告知

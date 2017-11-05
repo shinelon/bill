@@ -11,8 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.pay.aile.bill.entity.CreditBill;
-import com.pay.aile.bill.entity.CreditBillDetail;
 import com.pay.aile.bill.service.CreditBillDetailService;
 import com.pay.aile.bill.service.CreditBillService;
 import com.pay.aile.bill.service.mail.analyze.banktemplate.BaseBankTemplate;
@@ -66,7 +64,6 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
         String content = apm.getContent();
         String email = apm.getEmail();
         String bankCode = apm.getBankCode();
-        Long emailId = apm.getEmailId();
         preAnalyze(content);
         T template = null;
         //根据用户邮箱和银行编码从redis中获取缓存的对应的模板
@@ -103,38 +100,8 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
             }
         }
         if (apm.success()) {
-            //解析成功，保存账单到数据库
-            CreditBill bill = apm.getResult().getBill();
-            List<CreditBillDetail> billDetails = apm.getResult().getDetail();
-            Long billId = null;
-            if (bill != null) {
-                bill.setEmailId(emailId);
-                bill.setCardtypeId(apm.getCardtypeId());
-                creditBillService.saveOrUpdateCreditBill(bill);
-                billId = bill.getId();
-            }
-            billId = bill.getId();
-            if (billDetails != null && !billDetails.isEmpty()) {
-                for (CreditBillDetail creditBillDetail : billDetails) {
-                    try {
-                        if (billId == null) {
-                            bill.setReceiveDate(
-                                    creditBillDetail.getTransactionDate());
-                            bill = creditBillService
-                                    .findCreditBillByTransDate(bill);
-                            if (bill == null) {
-                                logger.warn("未查询到明细对应的账单,result={}", apm);
-                                throw new RuntimeException("未查询到明细对应的账单");
-                            }
-                        }
-                        creditBillDetail.setBillId(billId);
-                        creditBillDetailService
-                                .saveCreditBillDetail(creditBillDetail);
-                    } catch (Exception e) {
-                        logger.error(e.getMessage(), e);
-                    }
-                }
-            }
+            //解析成功，处理解析结果
+            template.handleResult(apm);
         }
         logger.debug("analyze end,useTime={}",
                 System.currentTimeMillis() - startTime);

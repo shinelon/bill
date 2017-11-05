@@ -17,4 +17,11 @@ public interface BankMailAnalyzerTemplate {
      */
     public void analyze(AnalyzeParamsModel apm);
 
+    /**
+     * 
+     * @param apm
+     * 处理解析结果
+     */
+    public void handleResult(AnalyzeParamsModel apm);
+
 }

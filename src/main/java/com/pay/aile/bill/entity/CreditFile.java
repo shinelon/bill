@@ -31,7 +31,7 @@ public class CreditFile extends Model<CreditFile> {
      * 邮件收到时间
      */
     @TableField("receive_date")
-    private Long receiveDate;
+    private Date receiveDate;
     /**
      * 邮箱id
      */
@@ -74,7 +74,7 @@ public class CreditFile extends Model<CreditFile> {
         return processResult;
     }
 
-    public Long getReceiveDate() {
+    public Date getReceiveDate() {
         return receiveDate;
     }
 
@@ -102,7 +102,7 @@ public class CreditFile extends Model<CreditFile> {
         this.processResult = processResult;
     }
 
-    public void setReceiveDate(Long receiveDate) {
+    public void setReceiveDate(Date receiveDate) {
         this.receiveDate = receiveDate;
     }
 

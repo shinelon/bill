@@ -1,5 +1,7 @@
 package com.pay.aile.bill.service.mail.analyze.model;
 
+import java.util.Date;
+
 /**
  * 
  * @author Charlie
@@ -11,6 +13,7 @@ public class AnalyzeParamsModel {
     private String email;//用户邮箱
     private Long emailId;
     private Long cardtypeId;
+    private Date receiveDate;//邮件日期
 
     private AnalyzeResult result;//解析之后的规则数据
 
@@ -54,7 +57,8 @@ public class AnalyzeParamsModel {
     public String toString() {
         return "AnalyzeParamsModel [bankCode=" + bankCode + ", content="
                 + content + ", email=" + email + ", emailId=" + emailId
-                + ", cardtypeId=" + cardtypeId + ", result=" + result + "]";
+                + ", cardtypeId=" + cardtypeId + ", receiveDate=" + receiveDate
+                + ", result=" + result + "]";
     }
 
     public Long getEmailId() {
@@ -71,6 +75,14 @@ public class AnalyzeParamsModel {
 
     public void setCardtypeId(Long cardtypeId) {
         this.cardtypeId = cardtypeId;
+    }
+
+    public Date getReceiveDate() {
+        return receiveDate;
+    }
+
+    public void setReceiveDate(Date receiveDate) {
+        this.receiveDate = receiveDate;
     }
 
 }
