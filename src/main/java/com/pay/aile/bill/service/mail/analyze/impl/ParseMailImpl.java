@@ -92,6 +92,7 @@ public class ParseMailImpl implements IParseMail {
                     AnalyzeParamsModel apm = new AnalyzeParamsModel();
                     apm.setEmail(email);
                     apm.setContent(content);
+                    apm.setBankCode(bankCode);
                     parser.analyze(apm);
                 } catch (Exception e) {
                     //TODO 解析错误,发送信息告知
