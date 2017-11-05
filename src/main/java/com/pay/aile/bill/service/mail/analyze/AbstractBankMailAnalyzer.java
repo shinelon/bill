@@ -135,9 +135,24 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
      *  根据用户邮箱和银行编码从缓存中获取对应的模板
      */
     private T getTemplateFromCache(String email, String bankCode) {
-        Class<T> t = (Class<T>) JedisClusterUtils
+        Object o = JedisClusterUtils
                 .hashGet(Constant.redisTemplateCache + bankCode, email);
-        return SpringContextUtil.getBean(t);
+        if (o == null) {
+            return null;
+        } else {
+            String className = o.toString();
+            Class<T> t = null;
+            try {
+                t = (Class<T>) Class.forName(className);
+            } catch (ClassNotFoundException e) {
+                logger.error("get class error!" + e.getMessage(), e);
+            }
+            if (t != null) {
+                return SpringContextUtil.getBean(t);
+            } else {
+                return null;
+            }
+        }
     }
 
     /**
@@ -149,7 +164,7 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
      */
     private void setTemplateToCache(String email, String bankCode, T template) {
         JedisClusterUtils.hashSet(Constant.redisTemplateCache + bankCode, email,
-                template.getClass());
+                template.getClass().getName());
     }
 
     /**

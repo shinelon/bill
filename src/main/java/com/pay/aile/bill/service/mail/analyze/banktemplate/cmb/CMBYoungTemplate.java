@@ -22,7 +22,7 @@ import com.pay.aile.bill.service.mail.analyze.util.PatternMatcherUtil;
 /**
  * 
  * @author Charlie
- * @description 招商银行解析模板
+ * @description 招商银行YOUNG卡解析模板
  */
 @Service
 public class CMBYoungTemplate extends AbstractCMBTemplate {

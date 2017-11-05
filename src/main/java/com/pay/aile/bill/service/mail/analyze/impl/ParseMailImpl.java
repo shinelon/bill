@@ -71,7 +71,7 @@ public class ParseMailImpl implements IParseMail {
                 }
                 //从mongodb中获取邮件内容
                 String content = mongoDownloadUtil.getFile(fileName);
-                ;//邮件内容
+                //邮件内容
                 content = extractor.extract(content); //解析文件
                 if (!StringUtils.hasText(content)) {
                     logger.error("extract error");
@@ -96,7 +96,7 @@ public class ParseMailImpl implements IParseMail {
                 } catch (Exception e) {
                     //TODO 解析错误,发送信息告知
                     error = e;
-                    logger.error(e.getMessage());
+                    logger.error(e.getMessage(), e);
                 }
                 if (error == null) {
                     //更新解析状态
