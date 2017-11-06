@@ -102,7 +102,7 @@ public class CMBYoungTemplate extends AbstractCMBTemplate {
                 }
             }
         }
-        if (bill.getDueDate() != null && detail.isEmpty()) {
+        if (bill.getDueDate() == null && detail.isEmpty()) {
             throw new RuntimeException("CMB YOUNG 解析失败!");
         }
         apm.setResult(ar);

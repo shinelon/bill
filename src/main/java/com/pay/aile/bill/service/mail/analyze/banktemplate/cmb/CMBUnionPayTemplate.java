@@ -103,7 +103,7 @@ public class CMBUnionPayTemplate extends AbstractCMBTemplate {
                 }
             }
         }
-        if (bill.getDueDate() != null && detail.isEmpty()) {
+        if (bill.getDueDate() == null && detail.isEmpty()) {
             throw new RuntimeException("CMB UnionPay card 解析失败!");
         }
         apm.setResult(ar);
