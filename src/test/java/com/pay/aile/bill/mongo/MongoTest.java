@@ -10,9 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.util.StreamUtils;
 
 import com.pay.aile.bill.BillApplication;
-import com.pay.aile.bill.Main;
 import com.pay.aile.bill.entity.EmailFile;
 import com.pay.aile.bill.exception.MailBillException;
 import com.pay.aile.bill.utils.MongoDownloadUtil;
@@ -46,7 +46,7 @@ public class MongoTest {
             FileInputStream fis = new FileInputStream(new File(
                     "D:\\下载邮件html版本\\CMB_招商银行信用卡电子账单――账单分期最高送100元还款金！-20151017051832.html"));
 
-            String sb = Main.copyToString(fis, Charset.forName("utf-8"));
+            String sb = StreamUtils.copyToString(fis, Charset.forName("utf-8"));
 
             EmailFile ef = new EmailFile();
             ef.setSubject("subject1");
