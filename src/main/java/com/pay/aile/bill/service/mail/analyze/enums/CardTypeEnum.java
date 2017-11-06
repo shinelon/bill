@@ -9,7 +9,9 @@ public enum CardTypeEnum {
     CITIC_STANDARD("CITIC_STANDARD", BankCodeEnum.CITIC,
             "中信银行标准卡IC信用卡"), CMB_YOUNG("CMB_YOUNG", BankCodeEnum.CMB,
                     "招商银行YOUNG卡"), CMB_UNIONPAY("CMB_UNIONPAY",
-                            BankCodeEnum.CMB, "招商银行银联单币卡");
+                            BankCodeEnum.CMB,
+                            "招商银行银联单币卡"), CEB_CREDITCARD("CEB_CREDITCARD",
+                                    BankCodeEnum.CMB, "光大银行信用卡");
 
     private BankCodeEnum bankCode;
     private String cardCode;

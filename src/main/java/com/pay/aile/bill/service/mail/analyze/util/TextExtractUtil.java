@@ -45,6 +45,10 @@ public class TextExtractUtil {
         pdf = pdf.replaceAll(",", "");//去掉金额分隔符
         pdf = pdf.replaceAll("￥", "");//去掉人民币符号
         pdf = pdf.replaceAll("$", "");//去掉美元符号
+        pdf = pdf.replaceAll("([\\u4e00-\\u9fa5]+) +([\\u4e00-\\u9fa5]+)",
+                "$1$2");//去掉中文之间空格 
+        pdf = pdf.replaceAll("([\\u4e00-\\u9fa5]+) +(\\()", "$1$2");//去掉中文与(之间空格
+        pdf = pdf.replaceAll("(\\(\\S+) +(\\S*\\))", "$1$2");
         pdf = pdf.replaceAll("\r", " ");//remove \r
         pdf = pdf.replaceAll("\n", " ");//remove \n
         pdf = pdf.replaceAll(" {2,}", " ");//去掉多余空格，只留一个

@@ -28,7 +28,7 @@ public class CITICTemplate extends AbstractCITICTemplate {
 
     @Override
     protected void analyzeInternal(AnalyzeParamsModel apm) {
-        logger.info("账单内容：{}", apm);
+        logger.debug("账单内容：{}", apm);
         String content = apm.getContent();
         AnalyzeResult ar = new AnalyzeResult();
         CreditBill bill = ar.getBill();
