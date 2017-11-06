@@ -79,6 +79,11 @@ public class CreditBill extends Model<CreditBill> {
      */
     @TableField(value = "receive_date")
     private Date receiveDate;
+    /**
+     * 银行编码
+     */
+    @TableField(value = "bank_code")
+    private String bankCode;
 
     public BigDecimal getCash() {
         return cash;
@@ -169,7 +174,7 @@ public class CreditBill extends Model<CreditBill> {
                 + ", status=" + status + ", updateDate=" + updateDate
                 + ", createDate=" + createDate + ", emailId=" + emailId
                 + ", cardtypeId=" + cardtypeId + ", receiveDate=" + receiveDate
-                + "]";
+                + ", bankCode=" + bankCode + "]";
     }
 
     @Override
@@ -207,5 +212,13 @@ public class CreditBill extends Model<CreditBill> {
 
     public void setReceiveDate(Date receiveDate) {
         this.receiveDate = receiveDate;
+    }
+
+    public String getBankCode() {
+        return bankCode;
+    }
+
+    public void setBankCode(String bankCode) {
+        this.bankCode = bankCode;
     }
 }

@@ -80,6 +80,9 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
             List<Exception> analyzeErrors = new ArrayList<Exception>();
             Collections.sort(templates);
             for (int i = 0; i < templates.size(); i++) {
+                if (template == templates.get(i)) {
+                    break;
+                }
                 template = templates.get(i);
                 try {
                     template.analyze(apm);

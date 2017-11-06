@@ -23,59 +23,60 @@ import com.pay.aile.bill.service.CreditBillService;
 @Service
 public class CreditBillServiceImpl implements CreditBillService {
 
-	@Autowired
-	private CreditBillMapper creditBillMapper;
+    @Autowired
+    private CreditBillMapper creditBillMapper;
 
-	/**
-	 * 根据给定的交易日期查询此次交易所属的账单 交易日期 < 账单的的接收日期 <= (交易日期+一个月)
-	 */
-	@Override
-	public CreditBill findCreditBillByTransDate(CreditBill bill) {
-		Wrapper<CreditBill> wrapper = Condition.create();
-		Date transDate = bill.getReceiveDate();
-		Calendar d = Calendar.getInstance();
-		d.setTime(transDate);
-		d.add(Calendar.MONTH, 1);
-		Date nextMonth = d.getTime();
-		wrapper.addFilter(" receive_date > {0} and receive_date <= {1}", transDate, nextMonth);
-		wrapper.addFilter(" email_id={0}", bill.getEmailId());
-		wrapper.addFilter(" cardtype_id={0}", bill.getCardtypeId());
-		wrapper.orderBy("receive_date", true);
-		List<CreditBill> list = creditBillMapper.selectList(wrapper);
-		if (list == null || list.isEmpty()) {
-			return null;
-		} else {
-			return list.get(0);
-		}
-	}
+    /**
+     * 根据给定的交易日期查询此次交易所属的账单 交易日期 < 账单的的接收日期 <= (交易日期+一个月)
+     */
+    @Override
+    public CreditBill findCreditBillByTransDate(CreditBill bill) {
+        Wrapper<CreditBill> wrapper = Condition.create();
+        Date transDate = bill.getReceiveDate();
+        Calendar d = Calendar.getInstance();
+        d.setTime(transDate);
+        d.add(Calendar.MONTH, 1);
+        Date nextMonth = d.getTime();
+        wrapper.addFilter(" receive_date > {0} and receive_date <= {1}",
+                transDate, nextMonth);
+        wrapper.addFilter(" email_id={0}", bill.getEmailId());
+        wrapper.addFilter(" bank_code={0}", bill.getBankCode());
+        wrapper.orderBy("receive_date", true);
+        List<CreditBill> list = creditBillMapper.selectList(wrapper);
+        if (list == null || list.isEmpty()) {
+            return null;
+        } else {
+            return list.get(0);
+        }
+    }
 
-	@Override
-	public List<CreditBill> getBillList(CreditBill bill) {
-		Wrapper<CreditBill> wrapper = new EntityWrapper<CreditBill>();
-		return creditBillMapper.selectList(wrapper);
-	}
+    @Override
+    public List<CreditBill> getBillList(CreditBill bill) {
+        Wrapper<CreditBill> wrapper = new EntityWrapper<CreditBill>();
+        return creditBillMapper.selectList(wrapper);
+    }
 
-	@Transactional
-	@Override
-	public Long saveCreditBill(CreditBill bill) {
-		return creditBillMapper.insertCreditBill(bill);
-	}
+    @Transactional
+    @Override
+    public Long saveCreditBill(CreditBill bill) {
+        return creditBillMapper.insertCreditBill(bill);
+    }
 
-	@Transactional
-	@Override
-	public Long saveOrUpdateCreditBill(CreditBill bill) {
-		CreditBill billParam = new CreditBill();
-		billParam.setId(bill.getId());
-		billParam.setDueDate(bill.getDueDate());
-		billParam.setEmailId(bill.getEmailId());
-		billParam = creditBillMapper.selectOne(billParam);
-		if (billParam == null) {
-			return creditBillMapper.insertCreditBill(bill);
-		} else {
-			bill.setId(billParam.getId());
-			creditBillMapper.updateById(bill);
-			return bill.getId();
-		}
-	}
+    @Transactional
+    @Override
+    public Long saveOrUpdateCreditBill(CreditBill bill) {
+        CreditBill billParam = new CreditBill();
+        billParam.setId(bill.getId());
+        billParam.setDueDate(bill.getDueDate());
+        billParam.setEmailId(bill.getEmailId());
+        billParam = creditBillMapper.selectOne(billParam);
+        if (billParam == null) {
+            return creditBillMapper.insertCreditBill(bill);
+        } else {
+            bill.setId(billParam.getId());
+            creditBillMapper.updateById(bill);
+            return bill.getId();
+        }
+    }
 
 }
