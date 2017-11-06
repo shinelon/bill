@@ -1,19 +1,14 @@
 package com.pay.aile.bill.service.mail.analyze.config;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.annotation.Resource;
-
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisNode;
 import org.springframework.data.redis.connection.RedisSentinelConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -23,74 +18,54 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import redis.clients.jedis.JedisPoolConfig;
 
 @Configuration
-@EnableConfigurationProperties(RedisProperties.class)
-@ConditionalOnProperty(name = "redis.sentinel")
 public class RedisSentinelConfig {
     private Logger logger = LoggerFactory.getLogger(RedisSentinelConfig.class);
-    @Resource
-    private RedisProperties redisProperties;
+    @Value("${redis.host}")
+    private String host;
+    @Value("${redis.password}")
+    private String password;
+    @Value("${redis.masterName}")
+    private String masterName;
+    @Value("${redis.dbIndex}")
+    private Integer dbIndex;
+    private int timeout = 4000;
 
     @Bean
-    public JedisConnectionFactory jedisConnectionFactory() {
-
-        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(
-                redisSentinelConfiguration(), jedisPoolConfig());
-        logger.info("redisProperties.getPassword()==============="
-                + redisProperties.getPassword());
-        if (!StringUtils.isEmpty(redisProperties.getPassword())) {
-            jedisConnectionFactory.setPassword(redisProperties.getPassword());
-        }
-        // 设置访问的db
-        jedisConnectionFactory.setDatabase(redisProperties.getDatabase());
+    public JedisConnectionFactory initJedisConnectionFactory() {
+        Set<String> sentinels = new HashSet<String>();
+        sentinels.addAll(Arrays.asList(host.split(";")));
+        RedisSentinelConfiguration rscfg = new RedisSentinelConfiguration(masterName, sentinels);
+        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(rscfg, initJedisPoolConfig());
+        jedisConnectionFactory.setDatabase(dbIndex);
+        jedisConnectionFactory.setPassword(password);
+        jedisConnectionFactory.setTimeout(timeout);
         return jedisConnectionFactory;
     }
 
-    public JedisPoolConfig jedisPoolConfig() {
-
+    @Bean
+    public JedisPoolConfig initJedisPoolConfig() {
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-        if (redisProperties.getPool() != null) {
-            jedisPoolConfig.setMaxIdle(redisProperties.getPool().getMaxIdle());
-            jedisPoolConfig
-                    .setMaxWaitMillis(redisProperties.getPool().getMaxWait());
-
-        }
-
+        jedisPoolConfig.setMaxTotal(500);
+        jedisPoolConfig.setMinIdle(5);
+        jedisPoolConfig.setMaxIdle(200);
+        jedisPoolConfig.setMaxWaitMillis(3000);
+        jedisPoolConfig.setBlockWhenExhausted(true);
+        jedisPoolConfig.setTestOnBorrow(true);
+        jedisPoolConfig.setTestOnReturn(true);
+        jedisPoolConfig.setTestWhileIdle(true);
+        jedisPoolConfig.setMinEvictableIdleTimeMillis(60000);
+        jedisPoolConfig.setTimeBetweenEvictionRunsMillis(30000);
+        jedisPoolConfig.setNumTestsPerEvictionRun(-1);
+        jedisPoolConfig.setSoftMinEvictableIdleTimeMillis(-1);
+        jedisPoolConfig.setLifo(false);
         return jedisPoolConfig;
-
-    }
-
-    public RedisSentinelConfiguration redisSentinelConfiguration() {
-
-        RedisSentinelConfiguration redisSentinelConfiguration = new RedisSentinelConfiguration();
-        // 主
-        redisSentinelConfiguration
-                .setMaster(redisProperties.getSentinel().getMaster());
-        logger.info("redisProperties   getSentinel  getMaster=========="
-                + redisProperties.getSentinel().getMaster());
-        Set<RedisNode> redisNodes = new HashSet<RedisNode>();
-        logger.info("redisProperties   getSentinel  redisNodes=========="
-                + redisProperties.getSentinel().getNodes());
-
-        String[] nodeArray = redisProperties.getSentinel().getNodes()
-                .split(";");
-        for (String nodeStr : nodeArray) {
-            logger.info("nodeStr=========================={}", nodeStr);
-
-            String[] node = nodeStr.split(":");
-            redisNodes.add(new RedisNode(node[0], Integer.valueOf(node[1])));
-        }
-
-        redisSentinelConfiguration.setSentinels(redisNodes);
-
-        return redisSentinelConfiguration;
-
     }
 
     @Bean
     public RedisTemplate<String, String> redisTemplate() {
 
         RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(jedisConnectionFactory());
+        redisTemplate.setConnectionFactory(initJedisConnectionFactory());
 
         redisTemplate.setDefaultSerializer(new StringRedisSerializer());
 
