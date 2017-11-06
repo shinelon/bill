@@ -1,28 +1,38 @@
 package com.pay.aile.bill.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.pay.aile.bill.entity.CreditBill;
 import com.pay.aile.bill.mapper.CreditBillMapper;
 import com.pay.aile.bill.service.CreditBillService;
 
 /**
- * 
+ *
  * @author Charlie
  * @description
  */
 @Service
 public class CreditBillServiceImpl implements CreditBillService {
 
-    @Autowired
-    private CreditBillMapper creditBillMapper;
+	@Autowired
+	private CreditBillMapper creditBillMapper;
 
-    @Transactional
-    @Override
-    public Long saveCreditBill(CreditBill bill) {
-        return creditBillMapper.insertCreditBill(bill);
-    }
+	@Override
+	public List<CreditBill> getBillList(CreditBill bill) {
+		Wrapper<CreditBill> wrapper = new EntityWrapper<CreditBill>();
+		return creditBillMapper.selectList(wrapper);
+	}
+
+	@Transactional
+	@Override
+	public Long saveCreditBill(CreditBill bill) {
+		return creditBillMapper.insertCreditBill(bill);
+	}
 
 }

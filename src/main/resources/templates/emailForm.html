@@ -8,26 +8,26 @@
 </head>
 <body class="layui-layout-body">
     <div layout:fragment="content" style="padding: 15px;">
-        <form class="layui-form" action="#" th:action="@{/getBill}" th:object="${message}" method="post">
+        <form class="layui-form" action="#" th:action="@{/getBill}"  method="post">
              <div class="layui-form-item">
-			    <label class="layui-form-label">邮箱</label>
-			    <div class="layui-input-block">
-			    
-			      <select name="emailKey" >
-			          <option value="">请选择</option>
-			          <option th:each="email : ${T(com.pay.aile.bill.enums.EmailEnum).values()}" th:value="${email.key}" th:text="${email.value}"></option>
+                <label class="layui-form-label">邮箱</label>
+                <div class="layui-input-block">
+                
+                  <select name="emailKey" >
+                      <option value="">请选择</option>
+                      <option th:each="email : ${T(com.pay.aile.bill.enums.EmailEnum).values()}" th:value="${email.key}" th:text="${email.value}"></option>
 
-			      </select>
-			    </div>
-			  </div>
-			        
+                  </select>
+                </div>
+              </div>
+                    
             <div class="layui-form-item">
-			    <label class="layui-form-label">邮箱地址</label>
-			    <div class="layui-input-block">
-			      <input type="text" name="email" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input" />
-			    </div>
-			 </div>
-			 <div class="layui-form-item">
+                <label class="layui-form-label">邮箱地址</label>
+                <div class="layui-input-block">
+                  <input type="text" name="email" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input" />
+                </div>
+             </div>
+             <div class="layui-form-item">
                 <label class="layui-form-label">密码</label>
                 <div class="layui-input-block">
                   <input type="text" name="password" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input"/>
@@ -35,11 +35,11 @@
              </div>
              
              <div class="layui-form-item">
-				 <div class="layui-input-block">
-			      <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
-			      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-			    </div>
-			  </div>
+                 <div class="layui-input-block">
+                  <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                  <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+              </div>
         </form>
     <script>
        layui.use('form', function(){
