@@ -45,52 +45,61 @@ public class CMBYoungTemplate extends AbstractCMBTemplate {
         if (StringUtils.hasText(rules.getDueDate())) {
             //还款日
             list = PatternMatcherUtil.getMatcher(rules.getDueDate(), content);
-            result = list.get(0);
-            Calendar c = Calendar.getInstance();
-            c.setTime(new Date());
-            int year = c.get(Calendar.YEAR);
-            Date date = DateUtil.parseDateFromString(
-                    String.valueOf(year) + "/" + result, "yyyy/MM/dd");
-            bill.setDueDate(date);
+            if (!list.isEmpty()) {
+
+                result = list.get(0);
+                Calendar c = Calendar.getInstance();
+                c.setTime(new Date());
+                int year = c.get(Calendar.YEAR);
+                Date date = DateUtil.parseDateFromString(
+                        String.valueOf(year) + "/" + result, "yyyy/MM/dd");
+                bill.setDueDate(date);
+            }
         }
         if (StringUtils.hasText(rules.getCurrentAmount())) {
             //应还款额
             list = PatternMatcherUtil.getMatcher(rules.getCurrentAmount(),
                     content);
-            result = list.get(0);
-            sa = result.split(" ");
-            String currentAmount = sa[sa.length - 1];
-            bill.setCurrentAmount(new BigDecimal(currentAmount));
+            if (!list.isEmpty()) {
+                result = list.get(0);
+                sa = result.split(" ");
+                String currentAmount = sa[sa.length - 1];
+                bill.setCurrentAmount(new BigDecimal(currentAmount));
+            }
         }
         if (StringUtils.hasText(rules.getCredits())) {
             //信用额度
             list = PatternMatcherUtil.getMatcher(rules.getCredits(), content);
-            result = list.get(0);
-            sa = result.split(" ");
-            String used = sa[0];
-            String notUse = sa[1];
-            BigDecimal credits = new BigDecimal(used)
-                    .add(new BigDecimal(notUse));
-            bill.setCredits(credits);
+            if (!list.isEmpty()) {
+                result = list.get(0);
+                sa = result.split(" ");
+                String used = sa[0];
+                String notUse = sa[1];
+                BigDecimal credits = new BigDecimal(used)
+                        .add(new BigDecimal(notUse));
+                bill.setCredits(credits);
+            }
         }
         if (StringUtils.hasText(rules.getDetails())) {
             //交易明细
             list = PatternMatcherUtil.getMatcher(rules.getDetails(), content);
-            for (int i = 0; i < list.size(); i++) {
-                String s = list.get(i);
-                sa = s.split(" ");
-                CreditBillDetail cbd = new CreditBillDetail();
-                cbd.setTransactionDate(
-                        DateUtil.parseDateFromString(sa[1], "yyyyMMdd"));//交易日期
-                cbd.setBillingDate(
-                        DateUtil.parseDateFromString(sa[1], "yyyyMMdd"));//记账日期
-                AccountTypeEnum t = AccountTypeEnum.getByCnName(sa[3]);
-                cbd.setAccountType(
-                        t == null ? AccountTypeEnum.RMB.name() : t.name());
-                cbd.setTransactionDescription(sa[4]);//交易描述
-                cbd.setTransactionAmount(sa[5]);//交易货币/金额
-                cbd.setAccountableAmount(sa[5]);//记账货币/金额
-                detail.add(cbd);
+            if (!list.isEmpty()) {
+                for (int i = 0; i < list.size(); i++) {
+                    String s = list.get(i);
+                    sa = s.split(" ");
+                    CreditBillDetail cbd = new CreditBillDetail();
+                    cbd.setTransactionDate(
+                            DateUtil.parseDateFromString(sa[1], "yyyyMMdd"));//交易日期
+                    cbd.setBillingDate(
+                            DateUtil.parseDateFromString(sa[1], "yyyyMMdd"));//记账日期
+                    AccountTypeEnum t = AccountTypeEnum.getByCnName(sa[3]);
+                    cbd.setAccountType(
+                            t == null ? AccountTypeEnum.RMB.name() : t.name());
+                    cbd.setTransactionDescription(sa[4]);//交易描述
+                    cbd.setTransactionAmount(sa[5]);//交易货币/金额
+                    cbd.setAccountableAmount(sa[5]);//记账货币/金额
+                    detail.add(cbd);
+                }
             }
         }
         if (bill.getDueDate() != null && detail.isEmpty()) {
