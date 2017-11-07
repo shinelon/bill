@@ -15,11 +15,13 @@
         <result column="status" property="status" />
         <result column="create_date" property="createDate" />
         <result column="update_date" property="updateDate" />
+         <result column="transaction_currency" property="transactionCurrency" />
+        
 	</resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, bill_id AS billId, transaction_date AS transactionDate, billing_date AS billingDate, transaction_description AS transactionDescription, transaction_amount AS transactionAmount, accountable_amount AS accountableAmount, account_type AS accountType
+        id, bill_id AS billId, transaction_date AS transactionDate, billing_date AS billingDate, transaction_description AS transactionDescription, transaction_amount AS transactionAmount, accountable_amount AS accountableAmount, account_type AS accountType,transaction_currency AS transactionCurrency 
     </sql>
     <insert id="insertCreditBillDetail" parameterType="com.pay.aile.bill.entity.CreditBillDetail"  useGeneratedKeys="true" keyProperty="id" keyColumn="id">
         insert into credit_bill_detail
@@ -54,6 +56,10 @@
           <if test="updateDate != null" >
             update_date,
           </if>
+          <if test="transactionCurrency != null" >
+            transaction_currency,
+          </if>
+          
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
           <if test="billId != null" >
@@ -85,6 +91,10 @@
           </if>
           <if test="updateDate != null" >
             #{updateDate,jdbcType=DATE},
+          </if>
+          
+          <if test="transactionCurrency != null" >
+            #{transactionCurrency,jdbcType=VARCHAR},
           </if>
         </trim>
     </insert>
