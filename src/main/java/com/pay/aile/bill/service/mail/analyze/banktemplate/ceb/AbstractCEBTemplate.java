@@ -18,7 +18,8 @@ public abstract class AbstractCEBTemplate extends BaseBankTemplate {
         if (StringUtils.hasText(content)) {
             content = content.replaceAll("([\\u4e00-\\u9fa5]+) +(\\()", "$1$2");//去掉中文与(之间空格
             content = content.replaceAll("(\\(\\S+) +(\\S*\\))", "$1$2");//去掉()中的空格
-            content = content.replaceAll("(存入)", " ");
+            content = content.replaceAll("\\(存入\\)", " ");
+            apm.setContent(content);
         }
     }
 

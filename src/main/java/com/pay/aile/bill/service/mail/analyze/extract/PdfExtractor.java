@@ -16,7 +16,7 @@ public class PdfExtractor implements MailContentExtractor {
 
     @Override
     public boolean support(String suffix) {
-        return StringUtils.hasText(suffix) && "pdf".equals(suffix);
+        return StringUtils.hasText(suffix) && "pdf".equalsIgnoreCase(suffix);
     }
 
     @Override

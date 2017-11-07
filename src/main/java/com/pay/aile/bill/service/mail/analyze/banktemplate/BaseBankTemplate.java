@@ -293,9 +293,9 @@ public abstract class BaseBankTemplate implements BankMailAnalyzerTemplate,
     protected void handleNotMatch(String key, String reg,
             AnalyzeParamsModel apm) {
         apm.setResult(null);
-        throw new RuntimeException(String.format(
-                "未找到匹配值,bank=CITIC,cardType=CITIC_STANDARD,key=%s,reg=%s", key,
-                reg));
+        throw new RuntimeException(
+                String.format("未找到匹配值,bank=%s,cardType=%s,key=%s,reg=%s",
+                        apm.getBankCode(), cardType.getCardCode(), key, reg));
     }
 
     @Transactional
