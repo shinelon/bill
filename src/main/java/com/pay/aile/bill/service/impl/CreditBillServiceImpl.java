@@ -32,7 +32,7 @@ public class CreditBillServiceImpl implements CreditBillService {
     @Override
     public CreditBill findCreditBillByTransDate(CreditBill bill) {
         Wrapper<CreditBill> wrapper = Condition.create();
-        Date transDate = bill.getReceiveDate();
+        Date transDate = bill.getSentDate();
         Calendar d = Calendar.getInstance();
         d.setTime(transDate);
         d.add(Calendar.MONTH, 1);

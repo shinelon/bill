@@ -16,6 +16,7 @@ public enum BankCodeEnum {
     private String bankCode;
 
     private BankCodeEnum(String bankCode, String name) {
+        this.bankCode = bankCode;
         this.bankName = name;
     }
 

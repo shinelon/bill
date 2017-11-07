@@ -9,7 +9,9 @@ public class CreditFileModel implements Serializable {
 
     private Long id;
     private String fileName;
-    private Date receiveDate;
+    private Date sentDate;
+    private String subject;
+    private String mailType;
     private Long emailId;
     private Integer processResult;
     private Integer status;
@@ -31,14 +33,6 @@ public class CreditFileModel implements Serializable {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
-    }
-
-    public Date getReceiveDate() {
-        return receiveDate;
-    }
-
-    public void setReceiveDate(Date receiveDate) {
-        this.receiveDate = receiveDate;
     }
 
     public Long getEmailId() {
@@ -89,12 +83,38 @@ public class CreditFileModel implements Serializable {
         this.email = email;
     }
 
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public String getMailType() {
+        return mailType;
+    }
+
+    public void setMailType(String mailType) {
+        this.mailType = mailType;
+    }
+
+    public Date getSentDate() {
+        return sentDate;
+    }
+
+    public void setSentDate(Date sentDate) {
+        this.sentDate = sentDate;
+    }
+
     @Override
     public String toString() {
         return "CreditFileModel [id=" + id + ", fileName=" + fileName
-                + ", receiveDate=" + receiveDate + ", emailId=" + emailId
+                + ", sentDate=" + sentDate + ", subject=" + subject
+                + ", mailType=" + mailType + ", emailId=" + emailId
                 + ", processResult=" + processResult + ", status=" + status
                 + ", updateDate=" + updateDate + ", createDate=" + createDate
                 + ", email=" + email + "]";
     }
+
 }

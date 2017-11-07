@@ -13,7 +13,7 @@ public class AnalyzeParamsModel {
     private String email;//用户邮箱
     private Long emailId;
     private Long cardtypeId;
-    private Date receiveDate;//邮件日期
+    private Date sentDate;//邮件发送日期
 
     private AnalyzeResult result;//解析之后的规则数据
 
@@ -53,14 +53,6 @@ public class AnalyzeParamsModel {
         this.result = result;
     }
 
-    @Override
-    public String toString() {
-        return "AnalyzeParamsModel [bankCode=" + bankCode + ", content="
-                + content + ", email=" + email + ", emailId=" + emailId
-                + ", cardtypeId=" + cardtypeId + ", receiveDate=" + receiveDate
-                + ", result=" + result + "]";
-    }
-
     public Long getEmailId() {
         return emailId;
     }
@@ -77,12 +69,20 @@ public class AnalyzeParamsModel {
         this.cardtypeId = cardtypeId;
     }
 
-    public Date getReceiveDate() {
-        return receiveDate;
+    public Date getSentDate() {
+        return sentDate;
     }
 
-    public void setReceiveDate(Date receiveDate) {
-        this.receiveDate = receiveDate;
+    public void setSentDate(Date sentDate) {
+        this.sentDate = sentDate;
+    }
+
+    @Override
+    public String toString() {
+        return "AnalyzeParamsModel [bankCode=" + bankCode + ", content="
+                + content + ", email=" + email + ", emailId=" + emailId
+                + ", cardtypeId=" + cardtypeId + ", sentDate=" + sentDate
+                + ", result=" + result + "]";
     }
 
 }

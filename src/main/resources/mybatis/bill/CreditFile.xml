@@ -7,17 +7,21 @@
 		<id column="id" property="id" />
 		<result column="file_name" property="fileName" />
 		<result column="create_date" property="createDate" />
-		<result column="receive_date" property="receiveDate" />
+		<result column="sent_date" property="sentDate" />
+        <result column="subject" property="subject" />
+        <result column="mail_type" property="mailType" />
 		<result column="email_id" property="emailId" />
 		<result column="process_result" property="processResult" />
 	</resultMap>
     <resultMap id="UnAnalyzedResultMap" type="com.pay.aile.bill.service.mail.analyze.model.CreditFileModel">
         <id column="id" property="id" />
-        <result column="file_name" property="fileName" />
-        <result column="create_date" property="createDate" />
-        <result column="receive_date" property="receiveDate" />
-        <result column="email_id" property="emailId" />
-        <result column="process_result" property="processResult" />
+		<result column="file_name" property="fileName" />
+		<result column="create_date" property="createDate" />
+		<result column="sent_date" property="sentDate" />
+        <result column="subject" property="subject" />
+        <result column="mail_type" property="mailType" />
+		<result column="email_id" property="emailId" />
+		<result column="process_result" property="processResult" />
         <result column="email" property="email" />
     </resultMap>
 
@@ -31,7 +35,9 @@
         a.id,
         a.file_name,
         a.create_date,
-        a.receive_date,
+        a.sent_date,
+        a.subject,
+        a.mail_type,
         a.email_id,
         a.process_result
         from credit_file a 

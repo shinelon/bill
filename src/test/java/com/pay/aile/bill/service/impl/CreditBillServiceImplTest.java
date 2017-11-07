@@ -36,7 +36,7 @@ public class CreditBillServiceImplTest {
         bill.setDueDate(DateUtil.parseDateFromString("2017-09-06", null));
         bill.setEmailId(1L);
         bill.setCardtypeId(1L);
-        bill.setReceiveDate(new Date());
+        bill.setSentDate(new Date());
         creditBillService.findCreditBillByTransDate(bill);
     }
 

@@ -75,10 +75,10 @@ public class CreditBill extends Model<CreditBill> {
     @TableField(value = "cardtype_id")
     private Long cardtypeId;
     /**
-     * 邮件的接收日期
+     * 邮件的发送日期
      */
-    @TableField(value = "receive_date")
-    private Date receiveDate;
+    @TableField(value = "sent_date")
+    private Date sentDate;
     /**
      * 银行编码
      */
@@ -166,18 +166,6 @@ public class CreditBill extends Model<CreditBill> {
     }
 
     @Override
-    public String toString() {
-        return "CreditBill [id=" + id + ", dueDate=" + dueDate
-                + ", currentAmount=" + currentAmount + ", credits=" + credits
-                + ", cash=" + cash + ", lastAmount=" + lastAmount
-                + ", repayment=" + repayment + ", consumption=" + consumption
-                + ", status=" + status + ", updateDate=" + updateDate
-                + ", createDate=" + createDate + ", emailId=" + emailId
-                + ", cardtypeId=" + cardtypeId + ", receiveDate=" + receiveDate
-                + ", bankCode=" + bankCode + "]";
-    }
-
-    @Override
     protected Serializable pkVal() {
         return id;
     }
@@ -206,14 +194,6 @@ public class CreditBill extends Model<CreditBill> {
         this.cardtypeId = cardtypeId;
     }
 
-    public Date getReceiveDate() {
-        return receiveDate;
-    }
-
-    public void setReceiveDate(Date receiveDate) {
-        this.receiveDate = receiveDate;
-    }
-
     public String getBankCode() {
         return bankCode;
     }
@@ -221,4 +201,25 @@ public class CreditBill extends Model<CreditBill> {
     public void setBankCode(String bankCode) {
         this.bankCode = bankCode;
     }
+
+    public Date getSentDate() {
+        return sentDate;
+    }
+
+    public void setSentDate(Date sentDate) {
+        this.sentDate = sentDate;
+    }
+
+    @Override
+    public String toString() {
+        return "CreditBill [id=" + id + ", dueDate=" + dueDate
+                + ", currentAmount=" + currentAmount + ", credits=" + credits
+                + ", cash=" + cash + ", lastAmount=" + lastAmount
+                + ", repayment=" + repayment + ", consumption=" + consumption
+                + ", status=" + status + ", updateDate=" + updateDate
+                + ", createDate=" + createDate + ", emailId=" + emailId
+                + ", cardtypeId=" + cardtypeId + ", sentDate=" + sentDate
+                + ", bankCode=" + bankCode + "]";
+    }
+
 }

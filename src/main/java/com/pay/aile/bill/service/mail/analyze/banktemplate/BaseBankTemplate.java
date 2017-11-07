@@ -308,7 +308,7 @@ public abstract class BaseBankTemplate implements BankMailAnalyzerTemplate,
         if (bill != null) {
             bill.setEmailId(emailId);
             bill.setCardtypeId(apm.getCardtypeId());
-            bill.setReceiveDate(apm.getReceiveDate());
+            bill.setSentDate(apm.getSentDate());
             creditBillService.saveOrUpdateCreditBill(bill);
             billId = bill.getId();
         }
@@ -317,8 +317,7 @@ public abstract class BaseBankTemplate implements BankMailAnalyzerTemplate,
             for (CreditBillDetail creditBillDetail : billDetails) {
                 try {
                     if (billId == null) {
-                        bill.setReceiveDate(
-                                creditBillDetail.getTransactionDate());
+                        bill.setSentDate(creditBillDetail.getTransactionDate());
                         bill = creditBillService
                                 .findCreditBillByTransDate(bill);
                         if (bill == null) {
