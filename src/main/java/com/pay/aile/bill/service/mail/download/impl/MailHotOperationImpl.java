@@ -127,4 +127,10 @@ public class MailHotOperationImpl extends BaseMailOperation {
 		}
 		return null;
 	}
+
+	@Override
+	protected String getKeywords() {
+
+		return "华夏";
+	}
 }
