@@ -31,7 +31,8 @@ import com.pay.aile.bill.utils.MongoDownloadUtil;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = BillApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class EmlToMongoUtilTest {
-    private static final Logger logger = LoggerFactory.getLogger(EmlToMongoUtilTest.class);
+    private static final Logger logger = LoggerFactory
+            .getLogger(EmlToMongoUtilTest.class);
     @Autowired
     private MongoDownloadUtil MongoDownloadUtil;
 
@@ -41,11 +42,10 @@ public class EmlToMongoUtilTest {
 
         Properties props = new Properties();
         Session session = Session.getDefaultInstance(props, null);
-        InputStream inMsg = new FileInputStream(
-                "C:\\Users\\syq\\Desktop\\银行账单eml文件\\邮件eml\\平安信用卡电子账单-201711071001.eml");
+        InputStream inMsg = new FileInputStream("D:\\光大银行信用卡电子对账单20171008.eml");
         Message msg = new MimeMessage(session, inMsg);
         CreditEmail creditEmail = new CreditEmail();
-        creditEmail.setEmail("123456@163.com");
+        creditEmail.setEmail("123@qq.com");
         creditEmail.setId(1L);
         MongoDownloadUtil.saveFile(msg, creditEmail);
     }
