@@ -7,14 +7,15 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Store;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import com.pay.aile.bill.contant.BankKeywordContants;
 import com.pay.aile.bill.entity.CreditEmail;
 import com.pay.aile.bill.exception.MailBillException;
+import com.pay.aile.bill.service.CreditBankService;
 import com.pay.aile.bill.utils.MailLoginUtil;
 import com.pay.aile.bill.utils.MailReleaseUtil;
 import com.pay.aile.bill.utils.MailSearchUtil;
@@ -35,9 +36,8 @@ public abstract class BaseMailOperation {
     public static final String STROE_IMAP = "imap";
     @Autowired
     private MongoDownloadUtil downloadUtil;
-
     @Autowired
-    private ThreadPoolTaskExecutor taskExecutor;
+    private CreditBankService creditBankService;
 
     /***
      * 下载邮件
@@ -90,7 +90,9 @@ public abstract class BaseMailOperation {
      * @return
      */
     protected String getKeywords() {
-
+        if (StringUtils.isEmpty(BankKeywordContants.ALL_BANK_KEYWORDS)) {
+            creditBankService.initKeywords();
+        }
         return BankKeywordContants.ALL_BANK_KEYWORDS;
     }
 
