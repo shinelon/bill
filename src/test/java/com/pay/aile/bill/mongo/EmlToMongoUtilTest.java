@@ -43,7 +43,7 @@ public class EmlToMongoUtilTest {
         Properties props = new Properties();
         Session session = Session.getDefaultInstance(props, null);
         InputStream inMsg = new FileInputStream(
-                "D:\\银行账单eml文件\\邮件eml\\兴业银行信用卡10月电子账单-.eml");
+                "D:\\银行账单eml文件\\邮件eml\\交通银行信用卡电子账单-.eml");
         Message msg = new MimeMessage(session, inMsg);
         CreditEmail creditEmail = new CreditEmail();
         creditEmail.setEmail("123@qq.com");

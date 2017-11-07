@@ -4,22 +4,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.pay.aile.bill.service.mail.analyze.AbstractBankMailAnalyzer;
-import com.pay.aile.bill.service.mail.analyze.banktemplate.cib.AbstractCIBTemplate;
+import com.pay.aile.bill.service.mail.analyze.banktemplate.bcm.AbstractBCMTemplate;
 import com.pay.aile.bill.service.mail.analyze.enums.BankCodeEnum;
 
 /**
  *
  * @author Charlie
- * @description 兴业银行
+ * @description 交通银行
  */
 @Service
-public class CIBAnalyzer extends AbstractBankMailAnalyzer<AbstractCIBTemplate> {
+public class BCMAnalyzer extends AbstractBankMailAnalyzer<AbstractBCMTemplate> {
 
     @Override
     public boolean support(String name) {
         return StringUtils.hasText(name)
-                && (name.contains(BankCodeEnum.CIB.getBankCode())
-                        || name.contains(BankCodeEnum.CIB.getBankName()));
+                && (name.contains(BankCodeEnum.BCM.getBankCode())
+                        || name.contains(BankCodeEnum.BCM.getBankName()));
     }
 
     @Override

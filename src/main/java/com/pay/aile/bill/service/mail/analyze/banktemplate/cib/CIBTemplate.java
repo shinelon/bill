@@ -13,7 +13,7 @@ import com.pay.aile.bill.service.mail.analyze.enums.CardTypeEnum;
  * @description 兴业银行解析模板
  */
 @Service
-public class CIBTemplate extends AbstractCIBemplate {
+public class CIBTemplate extends AbstractCIBTemplate {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
