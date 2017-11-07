@@ -10,7 +10,7 @@ import com.pay.aile.bill.service.mail.analyze.enums.BankCodeEnum;
 /**
  *
  * @author Charlie
- * @description
+ * @description 建设银行
  */
 @Service("CCBAnalyzer")
 public class CCBAnalyzer extends AbstractBankMailAnalyzer<AbstractCCBTemplate> {

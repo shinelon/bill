@@ -10,7 +10,7 @@ import com.pay.aile.bill.service.mail.analyze.enums.BankCodeEnum;
 /**
  * 
  * @author Charlie
- * @description 
+ * @description 光大银行
  */
 @Service
 public class CEBAnalyzer extends AbstractBankMailAnalyzer<AbstractCEBTemplate> {
