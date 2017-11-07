@@ -3,6 +3,8 @@ package com.pay.aile.bill.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
@@ -30,8 +32,18 @@ public class CreditFile extends Model<CreditFile> {
     /**
      * 邮件收到时间
      */
-    @TableField("receive_date")
-    private Date receiveDate;
+    @TableField("sent_date")
+    private Date sentDate;
+    /***
+     * 主题
+     */
+    @TableField("subject")
+    private String subject;
+    /***
+     * 邮件类型
+     */
+    @TableField("mail_type")
+    private String mailType;
     /**
      * 邮箱id
      */
@@ -66,20 +78,32 @@ public class CreditFile extends Model<CreditFile> {
         return emailId;
     }
 
+    public String getFileName() {
+        return fileName;
+    }
+
     public Long getId() {
         return id;
+    }
+
+    public String getMailType() {
+        return mailType;
     }
 
     public Integer getProcessResult() {
         return processResult;
     }
 
-    public Date getReceiveDate() {
-        return receiveDate;
+    public Date getSentDate() {
+        return sentDate;
     }
 
     public Integer getStatus() {
         return status;
+    }
+
+    public String getSubject() {
+        return subject;
     }
 
     public Date getUpdateDate() {
@@ -94,20 +118,32 @@ public class CreditFile extends Model<CreditFile> {
         this.emailId = emailId;
     }
 
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public void setMailType(String mailType) {
+        this.mailType = mailType;
     }
 
     public void setProcessResult(Integer processResult) {
         this.processResult = processResult;
     }
 
-    public void setReceiveDate(Date receiveDate) {
-        this.receiveDate = receiveDate;
+    public void setSentDate(Date sentDate) {
+        this.sentDate = sentDate;
     }
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
     public void setUpdateDate(Date updateDate) {
@@ -115,24 +151,12 @@ public class CreditFile extends Model<CreditFile> {
     }
 
     @Override
-    protected Serializable pkVal() {
-        return id;
-    }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 
     @Override
-    public String toString() {
-        return "CreditFile [id=" + id + ", fileName=" + fileName
-                + ", receiveDate=" + receiveDate + ", emailId=" + emailId
-                + ", processResult=" + processResult + ", status=" + status
-                + ", updateDate=" + updateDate + ", createDate=" + createDate
-                + "]";
+    protected Serializable pkVal() {
+        return id;
     }
 }

@@ -2,6 +2,8 @@ package com.pay.aile.bill.entity;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 /**
  *
  * @ClassName: EmailFile
@@ -30,11 +32,19 @@ public class EmailFile implements Serializable {
     // 文件名称 主键
     private String fileName;
 
-    // 接收时间
-    private String receiveDate;
+    // 发送时间
+    private String sentDate;
 
     // 邮件主题
     private String subject;
+    // 附件
+    private String attachment;
+    // 邮件类型
+    private String mailType;
+
+    public String getAttachment() {
+        return attachment;
+    }
 
     public String getContent() {
         return content;
@@ -52,12 +62,20 @@ public class EmailFile implements Serializable {
         return fileName;
     }
 
-    public String getReceiveDate() {
-        return receiveDate;
+    public String getMailType() {
+        return mailType;
+    }
+
+    public String getSentDate() {
+        return sentDate;
     }
 
     public String getSubject() {
         return subject;
+    }
+
+    public void setAttachment(String attachment) {
+        this.attachment = attachment;
     }
 
     public void setContent(String content) {
@@ -76,11 +94,20 @@ public class EmailFile implements Serializable {
         this.fileName = fileName;
     }
 
-    public void setReceiveDate(String receiveDate) {
-        this.receiveDate = receiveDate;
+    public void setMailType(String mailType) {
+        this.mailType = mailType;
+    }
+
+    public void setSentDate(String sentDate) {
+        this.sentDate = sentDate;
     }
 
     public void setSubject(String subject) {
         this.subject = subject;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

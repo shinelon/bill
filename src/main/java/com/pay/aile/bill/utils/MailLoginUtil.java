@@ -32,14 +32,14 @@ public class MailLoginUtil {
      * @return
      * @throws MailBillException
      */
-    public static Store login(Properties mailProps, final String mailAddrWithoutSuffix, final String password)
-            throws MailBillException {
+    public static Store login(Properties mailProps, String storeType, final String mailAddrWithoutSuffix,
+            final String password) throws MailBillException {
         logger.info("begin landing user mail:{}", mailAddrWithoutSuffix);
         // 创建Session实例对象
         Session session = Session.getInstance(mailProps);
         // 创建pop3协议的Store对象
         try {
-            Store store = session.getStore("pop3");
+            Store store = session.getStore(storeType);
             store.connect(mailAddrWithoutSuffix, password);
             boolean connected = store.isConnected();
             logger.info("mail:{} \tis connected:{}", mailAddrWithoutSuffix, connected);

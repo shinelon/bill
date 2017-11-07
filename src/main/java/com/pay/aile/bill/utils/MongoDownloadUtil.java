@@ -1,9 +1,6 @@
 package com.pay.aile.bill.utils;
 
-import java.util.UUID;
-
 import javax.mail.Message;
-import javax.mail.internet.MimeMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,39 +51,23 @@ public class MongoDownloadUtil {
     }
 
     public String saveFile(Message message, CreditEmail creditEmail) throws MailBillException {
-        StringBuffer content = new StringBuffer(20480);
-        String subject = "";
-        String fileName = UUID.randomUUID().toString();
+        EmailFile emailFile = new EmailFile();
         try {
-            EmailFile ef = new EmailFile();
-
-            MimeMessage msg = (MimeMessage) message;
-            subject = MailDecodeUtil.getSubject(msg);
-            String receiveAdd = MailDecodeUtil.getReceiveAddress(msg, null);
-            String senderAdd = MailDecodeUtil.getFrom(msg);
-            String sentDate = MailDecodeUtil.getSentDate(msg, "yyyyMMddHHmmss");
-            logger.debug("subject:{} receiveAdd:{} senderAdd:{} sentData:{}", subject, receiveAdd, senderAdd, sentDate);
-
-            // MailDecodeUtil.getMailTextContent(msg, content);
-            content = ApacheMailUtil.getContent(msg);
-            ef.setSubject(message.getSubject());
-            ef.setReceiveDate(sentDate);
-            ef.setContent(content.toString());
-            // 随机生成文件名
-            ef.setFileName(fileName);
-            ef.setEmail(creditEmail.getEmail());
-            mongoTemplate.insert(ef);
-
+            emailFile = ApacheMailUtil.getEmailFile(message, creditEmail);
+            mongoTemplate.insert(emailFile);
             // 保存文件关系
             CreditFile creditFile = new CreditFile();
             creditFile.setEmailId(creditEmail.getId());
-            creditFile.setFileName(fileName);
+            creditFile.setFileName(emailFile.getFileName());
+            creditFile.setSubject(emailFile.getSubject());
+            creditFile.setMailType(emailFile.getMailType());
+            creditFile.setSentDate(message.getSentDate());
+            creditFile.setProcessResult(0);
             creditFileRelation.saveCreditFile(creditFile);
         } catch (Exception e) {
-            // TODO: handle exception
             logger.error(e.getMessage());
         }
-        return fileName;
+        return emailFile.getFileName();
 
     }
 }
