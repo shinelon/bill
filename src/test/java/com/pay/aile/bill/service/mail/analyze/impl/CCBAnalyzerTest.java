@@ -39,15 +39,15 @@ public class CCBAnalyzerTest {
 		}
 
 		// CreditTemplate rules = creditTemplateMapper.selectById(3);
-		content = TextExtractUtil.parseHtml(content);
-		String ruleValue = "Credit Limit CNY \\d+.?\\d";
+		content = TextExtractUtil.parseHtml(content, "font");
+		String ruleValue = "CreditLimit CNY\\d+.?\\d";
 		//
 		// System.out.println(rules.getDueDate().equals(ruleValue));
 		// List<String> list = PatternMatcherUtil.getMatcher(ruleValue,
 		// content);
 		//
 		// System.out.print(list.size());
-
+		System.out.println(content);
 		AnalyzeParamsModel amp = new AnalyzeParamsModel();
 		amp.setContent(content);
 		amp.setBankCode("CCB");

@@ -24,6 +24,7 @@ public class CCBTemplate extends AbstractCCBTemplate {
 		if (rules == null) {
 			rules = creditTemplateMapper.selectById(3);
 		}
+		super.initDetail();
 	}
 
 	@Override

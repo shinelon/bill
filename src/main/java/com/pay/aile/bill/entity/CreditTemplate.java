@@ -89,11 +89,19 @@ public class CreditTemplate extends Model<CreditTemplate> {
 	 */
 	@TableField(fill = FieldFill.INSERT)
 	private Integer status;
+
 	/**
-	 * 交易币种/金额
+	 * 交易金额
 	 */
 	@TableField("transaction_amount")
 	private String transactionAmount;
+
+	/**
+	 * 交易币种
+	 */
+	@TableField("transaction_currency")
+	private String transactionCurrency;
+
 	/**
 	 * 交易日期
 	 */
@@ -182,6 +190,10 @@ public class CreditTemplate extends Model<CreditTemplate> {
 		return transactionAmount;
 	}
 
+	public String getTransactionCurrency() {
+		return transactionCurrency;
+	}
+
 	public String getTransactionDate() {
 		return transactionDate;
 	}
@@ -264,6 +276,10 @@ public class CreditTemplate extends Model<CreditTemplate> {
 
 	public void setTransactionAmount(String transactionAmount) {
 		this.transactionAmount = transactionAmount;
+	}
+
+	public void setTransactionCurrency(String transactionCurrency) {
+		this.transactionCurrency = transactionCurrency;
 	}
 
 	public void setTransactionDate(String transactionDate) {

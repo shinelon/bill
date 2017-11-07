@@ -19,159 +19,171 @@ import com.baomidou.mybatisplus.enums.FieldFill;
 @TableName("credit_bill_detail")
 public class CreditBillDetail extends Model<CreditBillDetail> {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private Long id;
-    /**
-     * 到期还款日
-     */
-    @TableField("bill_id")
-    private Long billId;
-    /**
-     * 交易日期
-     */
-    @TableField("transaction_date")
-    private Date transactionDate;
-    /**
-     * 记账日志
-     */
-    @TableField("billing_date")
-    private Date billingDate;
-    /**
-     * 交易说明
-     */
-    @TableField("transaction_description")
-    private String transactionDescription;
-    /**
-     * 交易币种/金额
-     */
-    @TableField("transaction_amount")
-    private String transactionAmount;
-    /**
-     * 入账币种/金额
-     */
-    @TableField("accountable_amount")
-    private String accountableAmount;
-    @TableField("account_type")
-    private String accountType;
-    /**
-     * 有效标志1有效0无效
-     */
-    @TableField(fill = FieldFill.INSERT)
-    private Integer status;
-    /**
-     * 修改时间
-     */
-    @TableField(value = "update_date", fill = FieldFill.UPDATE)
-    private Date updateDate;
-    /**
-     * 创建时间
-     */
-    @TableField(value = "create_date", fill = FieldFill.INSERT)
-    private Date createDate;
+	/**
+	 * 入账币种/金额
+	 */
+	@TableField("accountable_amount")
+	private String accountableAmount;
+	@TableField("account_type")
+	private String accountType;
+	/**
+	 * 到期还款日
+	 */
+	@TableField("bill_id")
+	private Long billId;
+	/**
+	 * 记账日志
+	 */
+	@TableField("billing_date")
+	private Date billingDate;
+	/**
+	 * 创建时间
+	 */
+	@TableField(value = "create_date", fill = FieldFill.INSERT)
+	private Date createDate;
+	private Long id;
+	/**
+	 * 有效标志1有效0无效
+	 */
+	@TableField(fill = FieldFill.INSERT)
+	private Integer status;
+	/**
+	 * 交易币种/金额
+	 */
+	@TableField("transaction_amount")
+	private String transactionAmount;
+	/**
+	 * 交易币种
+	 */
+	@TableField("transaction_currency")
+	private String transactionCurrency;
 
-    public String getAccountableAmount() {
-        return accountableAmount;
-    }
+	/**
+	 * 交易日期
+	 */
+	@TableField("transaction_date")
+	private Date transactionDate;
+	/**
+	 * 交易说明
+	 */
+	@TableField("transaction_description")
+	private String transactionDescription;
 
-    public String getAccountType() {
-        return accountType;
-    }
+	/**
+	 * 修改时间
+	 */
+	@TableField(value = "update_date", fill = FieldFill.UPDATE)
+	private Date updateDate;
 
-    public Long getBillId() {
-        return billId;
-    }
+	public String getAccountableAmount() {
+		return accountableAmount;
+	}
 
-    public Date getBillingDate() {
-        return billingDate;
-    }
+	public String getAccountType() {
+		return accountType;
+	}
 
-    public Date getCreateDate() {
-        return createDate;
-    }
+	public Long getBillId() {
+		return billId;
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public Date getBillingDate() {
+		return billingDate;
+	}
 
-    public Integer getStatus() {
-        return status;
-    }
+	public Date getCreateDate() {
+		return createDate;
+	}
 
-    public String getTransactionAmount() {
-        return transactionAmount;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public Date getTransactionDate() {
-        return transactionDate;
-    }
+	public Integer getStatus() {
+		return status;
+	}
 
-    public String getTransactionDescription() {
-        return transactionDescription;
-    }
+	public String getTransactionAmount() {
+		return transactionAmount;
+	}
 
-    public Date getUpdateDate() {
-        return updateDate;
-    }
+	public String getTransactionCurrency() {
+		return transactionCurrency;
+	}
 
-    public void setAccountableAmount(String accountableAmount) {
-        this.accountableAmount = accountableAmount;
-    }
+	public Date getTransactionDate() {
+		return transactionDate;
+	}
 
-    public void setAccountType(String accountType) {
-        this.accountType = accountType;
-    }
+	public String getTransactionDescription() {
+		return transactionDescription;
+	}
 
-    public void setBillId(Long billId) {
-        this.billId = billId;
-    }
+	public Date getUpdateDate() {
+		return updateDate;
+	}
 
-    public void setBillingDate(Date billingDate) {
-        this.billingDate = billingDate;
-    }
+	public void setAccountableAmount(String accountableAmount) {
+		this.accountableAmount = accountableAmount;
+	}
 
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
+	public void setAccountType(String accountType) {
+		this.accountType = accountType;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setBillId(Long billId) {
+		this.billId = billId;
+	}
 
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
+	public void setBillingDate(Date billingDate) {
+		this.billingDate = billingDate;
+	}
 
-    public void setTransactionAmount(String transactionAmount) {
-        this.transactionAmount = transactionAmount;
-    }
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
 
-    public void setTransactionDate(Date transactionDate) {
-        this.transactionDate = transactionDate;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setTransactionDescription(String transactionDescription) {
-        this.transactionDescription = transactionDescription;
-    }
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
 
-    public void setUpdateDate(Date updateDate) {
-        this.updateDate = updateDate;
-    }
+	public void setTransactionAmount(String transactionAmount) {
+		this.transactionAmount = transactionAmount;
+	}
 
-    @Override
-    public String toString() {
-        return "CreditBillDetail{" + "id=" + id + ", billId=" + billId
-                + ", transactionDate=" + transactionDate + ", billingDate="
-                + billingDate + ", transactionDescription="
-                + transactionDescription + ", transactionAmount="
-                + transactionAmount + ", accountableAmount=" + accountableAmount
-                + ", accountType=" + accountType + ", status=" + status
-                + ", updateDate=" + updateDate + ", createDate=" + createDate
-                + "}";
-    }
+	public void setTransactionCurrency(String transactionCurrency) {
+		this.transactionCurrency = transactionCurrency;
+	}
 
-    @Override
-    protected Serializable pkVal() {
-        return id;
-    }
+	public void setTransactionDate(Date transactionDate) {
+		this.transactionDate = transactionDate;
+	}
+
+	public void setTransactionDescription(String transactionDescription) {
+		this.transactionDescription = transactionDescription;
+	}
+
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
+	}
+
+	@Override
+	public String toString() {
+		return "CreditBillDetail{" + "id=" + id + ", billId=" + billId + ", transactionDate=" + transactionDate
+				+ ", billingDate=" + billingDate + ", transactionDescription=" + transactionDescription
+				+ ", transactionAmount=" + transactionAmount + ", accountableAmount=" + accountableAmount
+				+ ", accountType=" + accountType + ", status=" + status + ", updateDate=" + updateDate + ", createDate="
+				+ createDate + "}";
+	}
+
+	@Override
+	protected Serializable pkVal() {
+		return id;
+	}
 }
