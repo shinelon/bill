@@ -35,4 +35,13 @@ public enum BankCodeEnum {
         }
         return null;
     }
+
+    public static BankCodeEnum getByBankName(String bankName) {
+        for (BankCodeEnum c : values()) {
+            if (bankName.equals(c.bankName)) {
+                return c;
+            }
+        }
+        return null;
+    }
 }

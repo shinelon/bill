@@ -5,14 +5,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.pay.aile.bill.service.CreditBillDetailService;
-import com.pay.aile.bill.service.CreditBillService;
 import com.pay.aile.bill.service.mail.analyze.banktemplate.BaseBankTemplate;
 import com.pay.aile.bill.service.mail.analyze.constant.Constant;
 import com.pay.aile.bill.service.mail.analyze.enums.CardTypeEnum;
@@ -36,12 +32,6 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
      */
     @Autowired
     protected List<T> templates;
-
-    @Resource
-    private CreditBillService creditBillService;
-
-    @Resource
-    private CreditBillDetailService creditBillDetailService;
 
     /**
      * 卡种
