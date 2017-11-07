@@ -26,16 +26,20 @@ public class CreditTemplate extends Model<CreditTemplate> {
 	 */
 	@TableField("accountable_amount")
 	private String accountableAmount;
+	@TableField(value = "bill_day")
+	private Date billDay;
 	/**
 	 * 记账日志
 	 */
 	@TableField("billing_date")
 	private String billingDate;
+
 	/**
 	 * 卡类型
 	 */
 	@TableField("cardtype_id")
 	private Long cardtypeId;
+
 	/**
 	 * 取现额度
 	 */
@@ -58,6 +62,7 @@ public class CreditTemplate extends Model<CreditTemplate> {
 	 */
 	@TableField("current_amount")
 	private String currentAmount;
+	private String cycle;
 	/**
 	 * 账单明细
 	 */
@@ -109,6 +114,10 @@ public class CreditTemplate extends Model<CreditTemplate> {
 		return accountableAmount;
 	}
 
+	public Date getBillDay() {
+		return billDay;
+	}
+
 	public String getBillingDate() {
 		return billingDate;
 	}
@@ -135,6 +144,10 @@ public class CreditTemplate extends Model<CreditTemplate> {
 
 	public String getCurrentAmount() {
 		return currentAmount;
+	}
+
+	public String getCycle() {
+		return cycle;
 	}
 
 	public String getDetails() {
@@ -185,6 +198,10 @@ public class CreditTemplate extends Model<CreditTemplate> {
 		this.accountableAmount = accountableAmount;
 	}
 
+	public void setBillDay(Date billDay) {
+		this.billDay = billDay;
+	}
+
 	public void setBillingDate(String billingDate) {
 		this.billingDate = billingDate;
 	}
@@ -211,6 +228,10 @@ public class CreditTemplate extends Model<CreditTemplate> {
 
 	public void setCurrentAmount(String currentAmount) {
 		this.currentAmount = currentAmount;
+	}
+
+	public void setCycle(String cycle) {
+		this.cycle = cycle;
 	}
 
 	public void setDetails(String details) {
