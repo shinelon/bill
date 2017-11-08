@@ -15,17 +15,13 @@ import com.pay.aile.bill.service.mail.analyze.enums.BankCodeEnum;
 @Service
 public class CITICAnalyzer
         extends AbstractBankMailAnalyzer<AbstractCITICTemplate> {
+    public static final BankCodeEnum bankCode = BankCodeEnum.CITIC;
 
     @Override
     public boolean support(String name) {
         return StringUtils.hasText(name)
                 && (name.contains(BankCodeEnum.CITIC.getBankCode())
                         || name.contains(BankCodeEnum.CITIC.getBankName()));
-    }
-
-    @Override
-    protected void preAnalyze(String content) {
-
     }
 
 }

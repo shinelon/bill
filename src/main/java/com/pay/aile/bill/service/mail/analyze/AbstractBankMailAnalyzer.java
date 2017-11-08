@@ -26,17 +26,11 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
         implements BankMailAnalyzer {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
-
     /**
      * 当前银行包含的卡种解析模板
      */
     @Autowired
     protected List<T> templates;
-
-    /**
-     * 卡种
-     */
-    protected CardTypeEnum cardType;
     /**
      * 当前银行卡种解析模板缓存
      * key:区分不同卡的标识
@@ -51,10 +45,8 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
     public void analyze(AnalyzeParamsModel apm) {
         long startTime = System.currentTimeMillis();
         logger.debug("analyze start,params={}", apm);
-        String content = apm.getContent();
         String email = apm.getEmail();
         String bankCode = apm.getBankCode();
-        preAnalyze(content);
         T template = null;
         //根据用户邮箱和银行编码从redis中获取缓存的对应的模板
         template = getTemplateFromCache(email, bankCode);
@@ -136,15 +128,6 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
     private void setTemplateToCache(String email, String bankCode, T template) {
         JedisClusterUtils.hashSet(Constant.redisTemplateCache + bankCode, email,
                 template.getClass().getName());
-    }
-
-    /**
-     * 解析之前，由子类实现进行特殊处理 
-     * 比如可以从content中找出能判断卡种的标识
-     * @param content
-     */
-    protected void preAnalyze(String content) {
-
     }
 
 }

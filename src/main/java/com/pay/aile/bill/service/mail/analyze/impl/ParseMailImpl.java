@@ -61,7 +61,7 @@ public class ParseMailImpl implements IParseMail {
                 Long emailId = creditFile.getEmailId();
                 Date sentDate = creditFile.getSentDate();//邮件日期 
                 String subject = creditFile.getSubject();//邮件主题
-                String bankCode = this.getBankCode(subject);
+                BankCodeEnum bankCode = BankCodeEnum.getByString(subject);
                 String type = creditFile.getMailType();
                 MailContentExtractor extractor = null;
                 for (MailContentExtractor mailContentExtractor : extractors) {
@@ -82,7 +82,7 @@ public class ParseMailImpl implements IParseMail {
                 }
                 BankMailAnalyzer parser = null;
                 for (BankMailAnalyzer p : parsers) {
-                    if (p.support(bankCode)) {
+                    if (p.support(subject)) {
                         parser = p;
                         break;
                     }
@@ -96,7 +96,8 @@ public class ParseMailImpl implements IParseMail {
                     AnalyzeParamsModel apm = new AnalyzeParamsModel();
                     apm.setEmail(email);
                     apm.setContent(content);
-                    apm.setBankCode(bankCode);
+                    apm.setBankCode(
+                            bankCode == null ? "" : bankCode.getBankCode());
                     apm.setEmailId(emailId);
                     apm.setSentDate(sentDate);
                     parser.analyze(apm);
@@ -115,12 +116,4 @@ public class ParseMailImpl implements IParseMail {
         });
     }
 
-    private String getBankCode(String subject) {
-        String bankName = subject.substring(0, subject.indexOf("银行") + 2);
-        BankCodeEnum bank = BankCodeEnum.getByBankName(bankName);
-        if (bank == null) {
-            throw new RuntimeException("未查到银行,bankName=" + bankName);
-        }
-        return bank.getBankCode();
-    }
 }

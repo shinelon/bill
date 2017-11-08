@@ -6,11 +6,10 @@ package com.pay.aile.bill.service.mail.analyze.enums;
  * @description 银行编码
  */
 public enum BankCodeEnum {
-    ABC("ABC", "中国农业银行"), BCM("BCM", "交通银行"), BOB("BOB", "北京银行"), BOC("BOC",
-            "中国银行"), CCB("CCB", "中国建设银行"), CEB("CEB", "光大银行"), CIB("CIB",
-                    "兴业银行"), CITIC("CITIC", "中信银行"), CMB("CMB", "招商银行"), CMBC(
-                            "CMBC", "中国民生银行"), GDB("GDB", "广东发展银行"), ICBC(
-                                    "ICBC", "中国工商银行"), SDB("SDB", "深圳发展银行");
+    ABC("ABC", "农业"), BCM("BCM", "交通"), BOB("BOB", "北京"), BOC("BOC", "中国"), CCB(
+            "CCB", "建设"), CEB("CEB", "光大"), CIB("CIB", "兴业"), CITIC("CITIC",
+                    "中信"), CMB("CMB", "招商"), CMBC("CMBC", "民生"), GDB("GDB",
+                            "广发"), ICBC("ICBC", "工商"), SDB("SDB", "深圳发展");
 
     private String bankName;
     private String bankCode;
@@ -40,6 +39,15 @@ public enum BankCodeEnum {
     public static BankCodeEnum getByBankName(String bankName) {
         for (BankCodeEnum c : values()) {
             if (bankName.equals(c.bankName)) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    public static BankCodeEnum getByString(String str) {
+        for (BankCodeEnum c : values()) {
+            if (str.contains(c.getBankName())) {
                 return c;
             }
         }

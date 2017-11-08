@@ -14,17 +14,13 @@ import com.pay.aile.bill.service.mail.analyze.enums.BankCodeEnum;
  */
 @Service
 public class CEBAnalyzer extends AbstractBankMailAnalyzer<AbstractCEBTemplate> {
+    public static final BankCodeEnum bankCode = BankCodeEnum.CEB;
 
     @Override
     public boolean support(String name) {
         return StringUtils.hasText(name)
                 && (name.contains(BankCodeEnum.CEB.getBankCode())
                         || name.contains(BankCodeEnum.CEB.getBankName()));
-    }
-
-    @Override
-    protected void preAnalyze(String content) {
-
     }
 
 }

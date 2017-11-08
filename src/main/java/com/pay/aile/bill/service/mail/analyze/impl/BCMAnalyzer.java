@@ -22,9 +22,4 @@ public class BCMAnalyzer extends AbstractBankMailAnalyzer<AbstractBCMTemplate> {
                         || name.contains(BankCodeEnum.BCM.getBankName()));
     }
 
-    @Override
-    protected void preAnalyze(String content) {
-
-    }
-
 }

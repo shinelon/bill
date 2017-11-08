@@ -24,4 +24,5 @@ public interface BankMailAnalyzer {
      * 解析邮件内容
      */
     public void analyze(AnalyzeParamsModel apm);
+
 }
