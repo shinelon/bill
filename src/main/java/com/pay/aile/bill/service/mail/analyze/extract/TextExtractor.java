@@ -30,7 +30,7 @@ public class TextExtractor implements MailContentExtractor {
     @Override
     public String extract(String content) {
         try {
-            return TextExtractUtil.parseHtml(content);
+            return TextExtractUtil.parseHtml(content, "td");
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return null;

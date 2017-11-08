@@ -72,6 +72,7 @@ public abstract class BaseBankTemplate implements BankMailAnalyzerTemplate,
     public void analyze(AnalyzeParamsModel apm) {
         count++;
         initRules();
+        initDetail();
         if (rules != null) {
             apm.setCardtypeId(rules.getCardtypeId());
         }
@@ -110,8 +111,8 @@ public abstract class BaseBankTemplate implements BankMailAnalyzerTemplate,
 
             String cash = getValueByPattern("cash", content, rules.getCash(),
                     apm, " ");
-            cash = PatternMatcherUtil.getMatcherString("\\d+.?\\d", cash);
-            bill.setCurrentAmount(new BigDecimal(cash));
+            cash = PatternMatcherUtil.getMatcherString("\\d+.?\\d*", cash);
+            bill.setCash(new BigDecimal(cash));
         }
     }
 
@@ -351,7 +352,6 @@ public abstract class BaseBankTemplate implements BankMailAnalyzerTemplate,
         rules = JedisClusterUtils.getBean(
                 Constant.redisTemplateRuleCache + cardCode,
                 CreditTemplate.class);
-        initDetail();
     }
 
     /**
@@ -380,10 +380,16 @@ public abstract class BaseBankTemplate implements BankMailAnalyzerTemplate,
                     logger.error(e.getMessage());
                 }
 
+            } else {
+                setField(cbd, i, detailArray[i]);
             }
 
         }
         return cbd;
+
+    }
+
+    protected void setField(CreditBillDetail cbd, int index, String value) {
 
     }
 }
