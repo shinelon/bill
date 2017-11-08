@@ -18,11 +18,6 @@ import com.pay.aile.bill.service.mail.download.BaseMailOperation;
 public class MailQQOperationImpl extends BaseMailOperation {
 
     @Override
-    public String getKeywords() {
-        return "验证码";
-    }
-
-    @Override
     public Properties getMailProperties() {
         Properties props = new Properties();
         props.setProperty("mail.pop3.socketFactory.class", "javax.net.ssl.SSLSocketFactory");

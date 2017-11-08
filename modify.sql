@@ -7,3 +7,11 @@ alter table `bill`.`credit_file`
    
 alter table `bill`.`credit_file` 
    change `receive_date` `sent_date` datetime NULL  comment '邮件发送时间'
+   
+   
+alter table `bill`.`credit_bank` 
+   add column `for_short` varchar(20) NULL COMMENT '简称' after `name`
+   
+   
+alter table `bill`.`credit_email` 
+   add column `download_date` datetime NULL COMMENT '最近下载时间' after `password`   

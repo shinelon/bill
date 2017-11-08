@@ -1,17 +1,19 @@
 package com.pay.aile.bill.utils;
 
-import java.util.UUID;
+import java.text.ParseException;
 
 import javax.activation.DataSource;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.mail.util.MimeMessageParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.pay.aile.bill.entity.CreditEmail;
+import com.pay.aile.bill.entity.CreditFile;
 import com.pay.aile.bill.entity.EmailFile;
 import com.pay.aile.bill.enums.DwonloadMailType;
 import com.pay.aile.bill.exception.MailBillException;
@@ -27,10 +29,24 @@ import com.pay.aile.bill.exception.MailBillException;
 public class ApacheMailUtil {
     private static final Logger logger = LoggerFactory.getLogger(ApacheMailUtil.class);
 
+    public static CreditFile getCreditFile(EmailFile emailFile, CreditEmail creditEmail) {
+        CreditFile creditFile = new CreditFile();
+        creditFile.setEmail(creditEmail.getEmail());
+        creditFile.setFileName(emailFile.getFileName());
+        creditFile.setSubject(emailFile.getSubject());
+        creditFile.setMailType(emailFile.getMailType());
+        try {
+            creditFile.setSentDate(DateUtils.parseDate(emailFile.getSentDate(), "yyyyMMddHHmmss"));
+        } catch (ParseException e) {
+            logger.error(e.getMessage(), e);
+        }
+        creditFile.setProcessResult(0);
+        return creditFile;
+    }
+
     public static EmailFile getEmailFile(Message message, CreditEmail creditEmail)
             throws MailBillException, MessagingException {
         EmailFile emailFile = new EmailFile();
-        String fileName = UUID.randomUUID().toString();
         MimeMessage msg = (MimeMessage) message;
         String subject = MailDecodeUtil.getSubject(msg);
         String receiveAdd = MailDecodeUtil.getReceiveAddress(msg, null);
@@ -39,8 +55,6 @@ public class ApacheMailUtil {
         logger.debug("subject:{} receiveAdd:{} senderAdd:{} sentData:{}", subject, receiveAdd, senderAdd, sentDate);
         emailFile.setSubject(message.getSubject());
         emailFile.setSentDate(sentDate);
-        // 随机生成文件名
-        emailFile.setFileName(fileName);
         emailFile.setEmail(creditEmail.getEmail());
         emailFile.setMailType(DwonloadMailType.HTML.toString());
         emailFile = getContentAndAttachment(msg, emailFile);
@@ -49,7 +63,7 @@ public class ApacheMailUtil {
 
     /**
      * 获取内容和附件，支持一个PDF附件，若有PDF则修改mailType
-     * 
+     *
      * @param message
      * @param emailFile
      * @return

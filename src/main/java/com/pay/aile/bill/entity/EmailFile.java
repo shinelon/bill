@@ -29,7 +29,7 @@ public class EmailFile implements Serializable {
     // 邮件 地址
     private String email;
 
-    // 文件名称 主键
+    // 文件名称
     private String fileName;
 
     // 发送时间

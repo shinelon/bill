@@ -68,4 +68,14 @@
        set process_result = #{result,jdbcType=TINYINT}
        where id = #{id,jdbcType=BIGINT}
     </update>
+    
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert credit_file (file_name, subject, sent_date, mail_type, email,
+             process_result, status, update_date, create_date)
+        values
+        <foreach collection="list" item="item" index="index" separator="," >  
+        (#{item.fileName},#{item.subject},#{item.sentDate},#{item.mailType},#{item.email},
+            #{item.processResult},#{item.status},#{item.updateDate},#{item.createDate})          
+         </foreach>
+    </insert>
 </mapper>

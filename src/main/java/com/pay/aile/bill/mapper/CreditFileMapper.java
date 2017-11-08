@@ -17,9 +17,25 @@ import com.pay.aile.bill.service.mail.analyze.model.CreditFileModel;
  * @since 2017-11-02
  */
 public interface CreditFileMapper extends BaseMapper<CreditFile> {
-	List<CreditFileModel> selectUnAnalyzedList();
+    /***
+     * 批量插入
+     *
+     * @param creditFileList
+     */
+    void batchInsert(List<CreditFile> creditFileList);
 
-	List<CreditFileModel> selectUnAnalyzedListByEmail(String email);
+    /***
+     * 查询文件列表
+     *
+     * @param email
+     * @param fileName
+     * @return
+     */
+    List<CreditFile> selectCreditFiles(String email, String fileName);
 
-	Integer updateProcessResult(@Param("result") int result, @Param("id") Long id);
+    List<CreditFileModel> selectUnAnalyzedList();
+
+    List<CreditFileModel> selectUnAnalyzedListByEmail(String email);
+
+    Integer updateProcessResult(@Param("result") int result, @Param("id") Long id);
 }

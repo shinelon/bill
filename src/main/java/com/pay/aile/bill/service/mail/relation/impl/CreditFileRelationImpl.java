@@ -1,6 +1,7 @@
 package com.pay.aile.bill.service.mail.relation.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,14 +31,38 @@ public class CreditFileRelationImpl implements CreditFileRelation {
 
     @Override
     public void saveCreditFile(CreditFile creditFile) {
-        creditFileMapper.insert(creditFile);
+        List<CreditFile> list = creditFileMapper
+                .selectList(new EntityWrapper<CreditFile>().eq("file_name", creditFile.getFileName()));
+        if (list.size() < 1) {
+            creditFileMapper.insert(creditFile);
+        }
+
+    }
+
+    @Override
+    public void saveNotExitsCreditFile(List<CreditFile> creditFileList) {
+        List<String> fileNames = creditFileList.stream().map(e -> e.getFileName()).collect(Collectors.toList());
+        List<CreditFile> exitslist = creditFileMapper
+                .selectList(new EntityWrapper<CreditFile>().in("file_name", fileNames));
+        List<String> exitsfileNames = exitslist.stream().map(e -> e.getFileName()).collect(Collectors.toList());
+        List<CreditFile> insertList = creditFileList.stream().filter(e -> !exitsfileNames.contains(e.getFileName()))
+                .collect(Collectors.toList());
+        if (insertList.size() > 0) {
+            creditFileMapper.batchInsert(insertList);
+        }
+
     }
 
     @Override
     public List<CreditFile> selectCreditFiles(String emailAddr) {
-        String sqlWhere = "email_id = (SELECT id FROM credit_email WHERE STATUS = {0} AND email = {1})";
-        return creditFileMapper
-                .selectList(new EntityWrapper<CreditFile>().where(sqlWhere, CommonStatus.AVAILABLE.value, emailAddr));
+        return creditFileMapper.selectList(
+                new EntityWrapper<CreditFile>().eq("email", emailAddr).eq("status", CommonStatus.AVAILABLE.value));
+    }
+
+    @Override
+    public List<CreditFile> selectCreditFiles(String email, String fileName) {
+        return creditFileMapper.selectList(new EntityWrapper<CreditFile>().eq("email", email).eq("file_name", fileName)
+                .eq("status", CommonStatus.AVAILABLE.value));
     }
 
     @Override

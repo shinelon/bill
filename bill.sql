@@ -106,9 +106,9 @@ CREATE TABLE `credit_email` (
 
 CREATE TABLE `credit_file` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `email_id` varchar(50) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '邮箱id',
   `filen_name` varchar(100) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '邮箱对应的内容文件名称',
   `receive_date` bigint(20) DEFAULT NULL COMMENT '邮件收到时间',
-  `email_id` varchar(50) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '邮箱id',
   `process_result` tinyint(4) DEFAULT NULL COMMENT '0 未处理 1 成功 2 失败',
   `status` tinyint(4) DEFAULT NULL COMMENT '有效标志1有效0无效',
   `update_date` datetime DEFAULT NULL COMMENT '修改时间',
