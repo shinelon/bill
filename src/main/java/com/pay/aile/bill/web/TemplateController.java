@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.pay.aile.bill.entity.CreditBank;
 import com.pay.aile.bill.entity.CreditCardtype;
+import com.pay.aile.bill.entity.CreditEmail;
 import com.pay.aile.bill.entity.CreditTemplate;
 import com.pay.aile.bill.service.CreditBankService;
 import com.pay.aile.bill.service.CreditCardtypeService;
@@ -23,6 +25,13 @@ public class TemplateController {
 
 	@Autowired
 	private CreditTemplateService creditTemplateService;
+
+	@RequestMapping(value = "/analyze")
+	@ResponseBody
+	public String analyze(CreditEmail creditEmail, Model model) {
+
+		return "";
+	}
 
 	@RequestMapping(value = "/templateList")
 	public String gotoTemplateList(CreditTemplate creditTemplate, Model model) {
