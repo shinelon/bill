@@ -1,5 +1,6 @@
 package com.pay.aile.bill.mail.relation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
@@ -27,12 +28,25 @@ import com.pay.aile.bill.service.mail.relation.CreditFileRelation;
 @SpringBootTest(classes = BillApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CreditFileRelationTest {
 
-    private static final Logger logger = LoggerFactory
-            .getLogger(CreditFileRelationTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(CreditFileRelationTest.class);
     @Autowired
     private CreditFileRelation creditFileRelation;
 
     @Test
+    public void testBatchInsert() {
+        CreditFile creditFile1 = new CreditFile();
+        creditFile1.setFileName("fecdcfd5-e999-4162-9b3c-784301054332");
+        creditFile1.setMailType("HTML");
+        CreditFile creditFile2 = new CreditFile();
+        creditFile2.setFileName("fecdcfd5-123");
+        creditFile2.setMailType("pdf");
+        List<CreditFile> creditFileList = new ArrayList<>();
+        creditFileList.add(creditFile1);
+        creditFileList.add(creditFile2);
+        creditFileRelation.saveNotExitsCreditFile(creditFileList);
+    }
+
+    // @Test
     public void testSave() {
         CreditFile creditFile = new CreditFile();
         creditFile.setEmailId(1L);
@@ -40,18 +54,18 @@ public class CreditFileRelationTest {
         creditFileRelation.saveCreditFile(creditFile);
     }
 
-    @Test
+    // @Test
     public void testSelect() {
-        List<CreditFile> list = creditFileRelation
-                .selectCreditFiles("jinjing_0316@126.com");
+        List<CreditFile> list = creditFileRelation.selectCreditFiles("jinjing_0316@126.com");
         logger.info("list:{}", list);
     }
 
-    @Test
+    // @Test
     public void testUpdate() {
         CreditFile creditFile = new CreditFile();
         creditFile.setId(1L);
         creditFile.setFileName("testupdate");
         creditFileRelation.updateCreditFile(creditFile);
     }
+
 }

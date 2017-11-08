@@ -17,7 +17,12 @@ import com.pay.aile.bill.service.mail.analyze.model.CreditFileModel;
  * @since 2017-11-02
  */
 public interface CreditFileMapper extends BaseMapper<CreditFile> {
-	List<CreditFileModel> selectUnAnalyzedList();
+    /***
+     * 批量插入
+     * 
+     * @param creditFileList
+     */
+    void batchInsert(List<CreditFile> creditFileList);
 
 	List<CreditFileModel> selectUnAnalyzedListByEmail(String email);
 
