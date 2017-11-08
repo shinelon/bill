@@ -85,6 +85,12 @@ public class CreditBill extends Model<CreditBill> {
     @TableField(value = "bank_code")
     private String bankCode;
 
+    /**
+     * 账户类型
+     */
+    @TableField(value = "account_type")
+    private String accountType;
+
     public BigDecimal getCash() {
         return cash;
     }
@@ -219,7 +225,16 @@ public class CreditBill extends Model<CreditBill> {
                 + ", status=" + status + ", updateDate=" + updateDate
                 + ", createDate=" + createDate + ", emailId=" + emailId
                 + ", cardtypeId=" + cardtypeId + ", sentDate=" + sentDate
-                + ", bankCode=" + bankCode + "]";
+                + ", bankCode=" + bankCode + ", accountType=" + accountType
+                + "]";
+    }
+
+    public String getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(String accountType) {
+        this.accountType = accountType;
     }
 
 }
