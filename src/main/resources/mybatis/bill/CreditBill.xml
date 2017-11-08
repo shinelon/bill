@@ -19,6 +19,7 @@
         <result column="create_date" property="createDate" />
         <result column="update_date" property="updateDate" />
         <result column="bank_code" property="bankCode" />
+        <result column="account_type" property="accountType" />
 	</resultMap>
 
     <!-- 通用查询结果列 -->
@@ -71,6 +72,9 @@
       <if test="bankCode != null" >
         bank_code,
       </if>
+      <if test="accountType != null" >
+        account_type,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="dueDate != null" >
@@ -114,6 +118,9 @@
       </if>
       <if test="bankCode != null" >
         #{bankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="accountType != null" >
+        #{accountType,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
