@@ -3,7 +3,6 @@ package com.pay.aile.bill.entity;
 import java.io.Serializable;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.springframework.data.annotation.Id;
 
 /**
  *
@@ -30,8 +29,7 @@ public class EmailFile implements Serializable {
     // 邮件 地址
     private String email;
 
-    // 文件名称 主键
-    @Id
+    // 文件名称
     private String fileName;
 
     // 发送时间

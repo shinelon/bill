@@ -22,7 +22,7 @@ public interface CreditFileRelation {
 
     /***
      * 批量插入数据，排除file_name重复数据
-     * 
+     *
      * @param creditFileList
      */
     void saveNotExitsCreditFile(List<CreditFile> creditFileList);
@@ -34,6 +34,15 @@ public interface CreditFileRelation {
      * @return
      */
     List<CreditFile> selectCreditFiles(String emailAddr);
+
+    /***
+     * 查询邮件关系
+     *
+     * @param email
+     * @param fileName
+     * @return
+     */
+    List<CreditFile> selectCreditFiles(String email, String fileName);
 
     /***
      * 更新邮件关系

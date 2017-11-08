@@ -49,7 +49,7 @@ public class CreditFileRelationTest {
     // @Test
     public void testSave() {
         CreditFile creditFile = new CreditFile();
-        creditFile.setEmailId(1L);
+        creditFile.setEmail("1l");
         creditFile.setFileName("testEmailName");
         creditFileRelation.saveCreditFile(creditFile);
     }

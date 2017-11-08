@@ -47,14 +47,22 @@ public class CreditFileRelationImpl implements CreditFileRelation {
         List<String> exitsfileNames = exitslist.stream().map(e -> e.getFileName()).collect(Collectors.toList());
         List<CreditFile> insertList = creditFileList.stream().filter(e -> !exitsfileNames.contains(e.getFileName()))
                 .collect(Collectors.toList());
-        creditFileMapper.batchInsert(insertList);
+        if (insertList.size() > 0) {
+            creditFileMapper.batchInsert(insertList);
+        }
+
     }
 
     @Override
     public List<CreditFile> selectCreditFiles(String emailAddr) {
-        String sqlWhere = "email_id = (SELECT id FROM credit_email WHERE STATUS = {0} AND email = {1})";
-        return creditFileMapper
-                .selectList(new EntityWrapper<CreditFile>().where(sqlWhere, CommonStatus.AVAILABLE.value, emailAddr));
+        return creditFileMapper.selectList(
+                new EntityWrapper<CreditFile>().eq("email", emailAddr).eq("status", CommonStatus.AVAILABLE.value));
+    }
+
+    @Override
+    public List<CreditFile> selectCreditFiles(String email, String fileName) {
+        return creditFileMapper.selectList(new EntityWrapper<CreditFile>().eq("email", email).eq("file_name", fileName)
+                .eq("status", CommonStatus.AVAILABLE.value));
     }
 
     @Override
