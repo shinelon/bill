@@ -47,6 +47,22 @@
         join credit_email b on a.email_id = b.id
         where a.process_result != 1
     </select>
+    <select id="findUnAnalyzedListByEmail" parameterType="string" resultMap="UnAnalyzedResultMap">
+        select 
+        b.email,
+        a.id,
+        a.file_name,
+        a.create_date,
+        a.sent_date,
+        a.subject,
+        a.mail_type,
+        a.email_id,
+        a.status,
+        a.process_result
+        from credit_file a 
+        join credit_email b on a.email_id = b.id
+        where a.process_result != 1 and email = #{value}
+    </select>
     <update id="updateProcessResult">
        update credit_file 
        set process_result = #{result,jdbcType=TINYINT}

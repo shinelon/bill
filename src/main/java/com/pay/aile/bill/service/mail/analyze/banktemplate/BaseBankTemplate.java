@@ -249,8 +249,8 @@ public abstract class BaseBankTemplate
 			bill.setEmailId(emailId);
 			bill.setCardtypeId(apm.getCardtypeId());
 			bill.setSentDate(apm.getSentDate());
-			creditBillService.saveOrUpdateCreditBill(bill);
-			billId = bill.getId();
+			billId = creditBillService.saveOrUpdateCreditBill(bill);
+			// billId = bill.getId();
 		}
 		billId = bill.getId();
 		if (billDetails != null && !billDetails.isEmpty()) {

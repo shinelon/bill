@@ -2,6 +2,7 @@ package com.pay.aile.bill.service.mail.analyze.util;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
@@ -13,10 +14,10 @@ public class TextExtractUtil {
 
 	/**
 	 * 抽取网页正文
-	 * 
+	 *
 	 * @param html
 	 *            网页HTML字符串
-	 * 
+	 *
 	 * @return 网页正文string
 	 */
 	public static String parseHtml(String html, String... tagName) {
@@ -25,16 +26,34 @@ public class TextExtractUtil {
 		if (tagName != null && tagName.length > 0) {
 			for (int i = 0; i < tagName.length; i++) {
 				Elements elements = document.getElementsByTag(tagName[i]);
-				elements.forEach(e -> {
-					String text = e.text();
+
+				for (int j = 0; j < elements.size(); j++) {
+					Element element = elements.get(j);
+					// elements.forEach(e -> {
+
+					// td需要特殊处理
+					if ("td".equals(tagName[i])) {
+
+						Elements childElements = element.getElementsByTag(tagName[i]);
+
+						if (childElements != null && childElements.size() > 1) {
+							continue;
+						}
+					}
+
+					String text = element.text();
+
 					text = text.replaceAll("\\s+", "");
-					e.text(text);
-				});
+					element.text(text);
+
+					// });
+				}
 			}
 
 		}
 
 		html = document.toString();
+		System.out.println(html);
 		html = html.replaceAll("(?is)<!DOCTYPE.*?>", ""); // remove html top
 															// infomation
 		html = html.replaceAll("(?is)<!--.*?-->", ""); // remove html comment
@@ -54,7 +73,7 @@ public class TextExtractUtil {
 
 	/**
 	 * 去除pdf正文中的无用字符 格式化pdf正文
-	 * 
+	 *
 	 * @param pdf
 	 * @return
 	 */
@@ -68,5 +87,19 @@ public class TextExtractUtil {
 		pdf = pdf.replaceAll(" {2,}", " ");// 去掉多余空格，只留一个
 		return pdf;
 	}
+
+	// public static void removeSpace(Element element) {
+	//
+	// if (element.getel.children() != null && element.childNodeSize() > 0) {
+	// element.children().forEach(e -> {
+	// removeSpace(e);
+	// });
+	// } else {
+	// String text = element.text();
+	// text = text.replaceAll("\\s+", "");
+	// element.text(text);
+	// }
+	//
+	// }
 
 }
