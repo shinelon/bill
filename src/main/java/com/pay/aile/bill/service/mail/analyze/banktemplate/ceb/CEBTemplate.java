@@ -1,11 +1,11 @@
 package com.pay.aile.bill.service.mail.analyze.banktemplate.ceb;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.pay.aile.bill.entity.CreditBillDetail;
 import com.pay.aile.bill.entity.CreditTemplate;
 import com.pay.aile.bill.service.mail.analyze.enums.CardTypeEnum;
+import com.pay.aile.bill.service.mail.analyze.util.DateUtil;
 
 /**
  *
@@ -14,7 +14,6 @@ import com.pay.aile.bill.service.mail.analyze.enums.CardTypeEnum;
  */
 @Service
 public class CEBTemplate extends AbstractCEBTemplate {
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public void initRules() {
@@ -26,7 +25,7 @@ public class CEBTemplate extends AbstractCEBTemplate {
             rules.setCurrentAmount("人民币本期应还款额 \\d+.?\\d*");
             rules.setCredits("信用额度 \\d+.?\\d*");
             rules.setDetails(
-                    "\\d{4}/\\d{2}/\\d{2} \\d{4}/\\d{2}/\\d{2} \\d{4} \\S+ \\d+.?\\d*");
+                    "\\d{4}/\\d{2}/\\d{2} \\d{4}/\\d{2}/\\d{2} \\d{4} .*\\n");
         }
     }
 
@@ -34,4 +33,20 @@ public class CEBTemplate extends AbstractCEBTemplate {
     protected void setCardType() {
         cardType = CardTypeEnum.CEB_DEFAULT;
     }
+
+    @Override
+    protected CreditBillDetail setCreditBillDetail(String detail) {
+        CreditBillDetail cbd = new CreditBillDetail();
+        String[] sa = detail.split(" ");
+        cbd.setTransactionDate(DateUtil.parseDate(sa[0]));
+        cbd.setBillingDate(DateUtil.parseDate(sa[1]));
+        cbd.setTransactionAmount(sa[sa.length - 1].replaceAll("\\n", ""));
+        String desc = "";
+        for (int i = 3; i < sa.length - 1; i++) {
+            desc = desc + sa[i];
+        }
+        cbd.setTransactionDescription(desc);
+        return cbd;
+    }
+
 }
