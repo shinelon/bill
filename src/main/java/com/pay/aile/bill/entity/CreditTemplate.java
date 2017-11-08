@@ -26,8 +26,11 @@ public class CreditTemplate extends Model<CreditTemplate> {
 	 */
 	@TableField("accountable_amount")
 	private String accountableAmount;
+	/**
+	 * 账单日
+	 */
 	@TableField(value = "bill_day")
-	private Date billDay;
+	private String billDay;
 	/**
 	 * 记账日志
 	 */
@@ -122,7 +125,7 @@ public class CreditTemplate extends Model<CreditTemplate> {
 		return accountableAmount;
 	}
 
-	public Date getBillDay() {
+	public String getBillDay() {
 		return billDay;
 	}
 
@@ -210,7 +213,7 @@ public class CreditTemplate extends Model<CreditTemplate> {
 		this.accountableAmount = accountableAmount;
 	}
 
-	public void setBillDay(Date billDay) {
+	public void setBillDay(String billDay) {
 		this.billDay = billDay;
 	}
 
