@@ -158,9 +158,12 @@ public abstract class BaseBankTemplate implements BankMailAnalyzerTemplate,
 
             String currentAmount = getValueByPattern("currentAmount", content,
                     rules.getCurrentAmount(), apm, " ");
-            currentAmount = PatternMatcherUtil.getMatcherString("\\d+\\.?\\d*",
-                    currentAmount);
+            currentAmount = PatternMatcherUtil
+                    .getMatcherString("-?\\d+\\.?\\d*", currentAmount);
             if (StringUtils.hasText(currentAmount)) {
+                if (currentAmount.startsWith("-")) {
+                    currentAmount = currentAmount.replaceAll("-", "");
+                }
                 bill.setCurrentAmount(new BigDecimal(currentAmount));
             }
         }

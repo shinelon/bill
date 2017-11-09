@@ -54,14 +54,13 @@ public class EmlToMongoUtilTest {
 
         Properties props = new Properties();
         Session session = Session.getDefaultInstance(props, null);
-        InputStream inMsg = new FileInputStream(
-                "D:\\中国工商银行客户对账 单(ICBC Peony Card Bank Statement).eml");
+        InputStream inMsg = new FileInputStream("D:\\中国农业银行金穗信用卡电子对账单.eml");
         Message msg = new MimeMessage(session, inMsg);
         CreditEmail creditEmail = new CreditEmail();
         creditEmail.setEmail("123@qq.com");
         creditEmail.setId(1L);
         EmailFile emailFile = ApacheMailUtil.getEmailFile(msg, creditEmail);
-        emailFile.setFileName("中国工商银行客户对账单");
+        emailFile.setFileName("中国农业银行金穗信用卡电子对账单");
         CreditFile creditFile = ApacheMailUtil.getCreditFile(emailFile,
                 creditEmail);
 

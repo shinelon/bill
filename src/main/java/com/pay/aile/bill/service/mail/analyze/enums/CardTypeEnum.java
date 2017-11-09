@@ -6,17 +6,28 @@ package com.pay.aile.bill.service.mail.analyze.enums;
  * @description 信用卡类别
  */
 public enum CardTypeEnum {
-    BCM_DEFAULT("BCM_DEFAULT", BankCodeEnum.BCM, "交通银行信用卡"),
-    CIB_DEFAULT("CIB_DEFAULT", BankCodeEnum.CIB, "兴业银行信用卡"),
-    CEB_GOLD("CEB_GOLD",BankCodeEnum.CCB, "光大信用卡金卡"),
-    CEB_DEFAULT("CEB_DEFAULT",BankCodeEnum.CCB, "光大信用卡PDF"),
-    CCB_LK("CCB_LK",BankCodeEnum.CCB,"建行龙卡"),
-    CITIC_STANDARD("CITIC_STANDARD",BankCodeEnum.CITIC,"中信银行标准卡IC信用卡"),
-    CMB_UNIONPAY("CMB_UNIONPAY",BankCodeEnum.CMB,"招商银行银联单币卡"),
-    ICBC_MDC("ICBC_MDC",BankCodeEnum.ICBC,"工商银行牡丹卡"),
-    SPDB("SPDB", BankCodeEnum.SPDB, "浦发银行信用卡"),
+    ABC_DEFAULT("ABC_DEFAULT", BankCodeEnum.ABC, "农业银行信用卡"), BCM_DEFAULT(
+            "BCM_DEFAULT", BankCodeEnum.BCM,
+            "交通银行信用卡"), CIB_DEFAULT("CIB_DEFAULT", BankCodeEnum.CIB,
+                    "兴业银行信用卡"), CEB_GOLD("CEB_GOLD", BankCodeEnum.CCB,
+                            "光大信用卡金卡"), CEB_DEFAULT("CEB_DEFAULT",
+                                    BankCodeEnum.CCB, "光大信用卡PDF"), CCB_LK(
+                                            "CCB_LK", BankCodeEnum.CCB,
+                                            "建行龙卡"), CITIC_STANDARD(
+                                                    "CITIC_STANDARD",
+                                                    BankCodeEnum.CITIC,
+                                                    "中信银行标准卡IC信用卡"), CMB_UNIONPAY(
+                                                            "CMB_UNIONPAY",
+                                                            BankCodeEnum.CMB,
+                                                            "招商银行银联单币卡"), ICBC_MDC(
+                                                                    "ICBC_MDC",
+                                                                    BankCodeEnum.ICBC,
+                                                                    "工商银行牡丹卡"), SPDB(
+                                                                            "SPDB",
+                                                                            BankCodeEnum.SPDB,
+                                                                            "浦发银行信用卡"),
 
-    CMB_YOUNG("CMB_YOUNG",BankCodeEnum.CMB,"招商银行YOUNG卡");
+    CMB_YOUNG("CMB_YOUNG", BankCodeEnum.CMB, "招商银行YOUNG卡");
 
     private BankCodeEnum bankCode;
     private String cardCode;
