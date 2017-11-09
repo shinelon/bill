@@ -43,9 +43,9 @@ public abstract class BaseBankTemplate implements BankMailAnalyzerTemplate,
      */
     private volatile int count;
     @Resource
-    private CreditBillDetailService creditBillDetailService;
+    protected CreditBillDetailService creditBillDetailService;
     @Resource
-    private CreditBillService creditBillService;
+    protected CreditBillService creditBillService;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -300,17 +300,6 @@ public abstract class BaseBankTemplate implements BankMailAnalyzerTemplate,
         if (billDetails != null && !billDetails.isEmpty()) {
             for (CreditBillDetail creditBillDetail : billDetails) {
                 try {
-                    if (billId == null) {
-                        bill = new CreditBill();
-                        bill.setSentDate(creditBillDetail.getTransactionDate());
-                        bill.setEmailId(apm.getEmailId());
-                        bill.setBankCode(apm.getBankCode());
-                        CreditBill saveBill = creditBillService
-                                .findCreditBillByTransDate(bill);
-                        if (saveBill != null) {
-                            billId = saveBill.getId();
-                        }
-                    }
                     creditBillDetail.setBillId(billId);
                     creditBillDetailService
                             .saveCreditBillDetail(creditBillDetail);

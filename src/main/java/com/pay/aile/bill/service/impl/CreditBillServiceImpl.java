@@ -65,17 +65,10 @@ public class CreditBillServiceImpl implements CreditBillService {
     @Transactional
     @Override
     public Long saveOrUpdateCreditBill(CreditBill bill) {
-        // CreditBill billParam = new CreditBill();
-        // billParam.setId(bill.getId());
-        // billParam.setDueDate(bill.getDueDate());
-        // billParam.setEmailId(bill.getEmailId());
-        // billParam = creditBillMapper.selectOne(billParam);
         if (bill.getId() == null) {
             creditBillMapper.insertCreditBill(bill);
         } else {
-
             creditBillMapper.updateById(bill);
-
         }
         return bill.getId();
     }
