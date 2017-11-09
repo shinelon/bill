@@ -17,19 +17,18 @@ import com.pay.aile.bill.utils.MongoDownloadUtil;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = BillApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class CEBAnalyzerTest {
+public class PSBCAnalyzerTest {
 
-	@Resource
-	private BankMailAnalyzer CEBAnalyzer;
+	@Resource(name = "PSBCAnalyzer")
+	private BankMailAnalyzer PSBCAnalyzer;
 	@Autowired
 	private MongoDownloadUtil downloadUtil;
 
 	@Test
 	public void test() {
-
 		String content = "";
 		try {
-			content = downloadUtil.getFile("7a35c36-c5b1-4f86-8212-5bed4e5eb9f0");
+			content = downloadUtil.getFile("c2843547-68ed-460b-a74d-c77b89a4f5a0");
 		} catch (MailBillException e) {
 			e.printStackTrace();
 		}
@@ -42,8 +41,7 @@ public class CEBAnalyzerTest {
 		// amp.setCardtypeId(2l);
 		amp.setEmail("czb18518679659@126.com");
 		// amp.setEmailId(6L);
-
-		CEBAnalyzer.analyze(amp);
+		PSBCAnalyzer.analyze(amp);
 	}
 
 }

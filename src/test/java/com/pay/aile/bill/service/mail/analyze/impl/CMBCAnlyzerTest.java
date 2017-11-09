@@ -9,41 +9,41 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.pay.aile.bill.BillApplication;
-import com.pay.aile.bill.exception.MailBillException;
 import com.pay.aile.bill.service.mail.analyze.BankMailAnalyzer;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
 import com.pay.aile.bill.service.mail.analyze.util.TextExtractUtil;
 import com.pay.aile.bill.utils.MongoDownloadUtil;
 
+/**
+ *
+ * @author zhibin.cui
+ * @description 民生银行解析模版测试
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = BillApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class CEBAnalyzerTest {
+public class CMBCAnlyzerTest {
 
-	@Resource
-	private BankMailAnalyzer CEBAnalyzer;
+	@Resource(name = "CMBCAnalyzer")
+	private BankMailAnalyzer CMBCAnalyzer;
 	@Autowired
 	private MongoDownloadUtil downloadUtil;
 
 	@Test
 	public void test() {
-
 		String content = "";
 		try {
-			content = downloadUtil.getFile("7a35c36-c5b1-4f86-8212-5bed4e5eb9f0");
-		} catch (MailBillException e) {
+			content = downloadUtil.getFile("INBOX|1tbiThWLWFhgzTOQiAAAsW");
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		content = TextExtractUtil.parseHtml(content, "font");
 		System.out.println(content);
 		AnalyzeParamsModel amp = new AnalyzeParamsModel();
 		amp.setContent(content);
-		amp.setBankCode("PSBC");
-		// amp.setCardtypeId(2l);
+		amp.setBankCode("CMBC");
 		amp.setEmail("czb18518679659@126.com");
-		// amp.setEmailId(6L);
+		CMBCAnalyzer.analyze(amp);
 
-		CEBAnalyzer.analyze(amp);
 	}
 
 }

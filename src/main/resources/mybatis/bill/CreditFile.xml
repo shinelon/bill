@@ -10,7 +10,7 @@
 		<result column="sent_date" property="sentDate" />
         <result column="subject" property="subject" />
         <result column="mail_type" property="mailType" />
-		<result column="email_id" property="emailId" />
+		<result column="email" property="email" />
         <result column="status" property="status" />
 		<result column="process_result" property="processResult" />
 	</resultMap>
@@ -21,7 +21,7 @@
 		<result column="sent_date" property="sentDate" />
         <result column="subject" property="subject" />
         <result column="mail_type" property="mailType" />
-		<result column="email_id" property="emailId" />
+		<result column="email" property="email" />
         <result column="status" property="status" />
 		<result column="process_result" property="processResult" />
         <result column="email" property="email" />
@@ -29,39 +29,35 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, filen_name AS filenName, create_date AS createDate, receive_date AS receiveDate, email_id AS emailId, process_result AS processResult
+        id, filen_name AS filenName, create_date AS createDate, receive_date AS receiveDate, email AS email, process_result AS processResult
     </sql>
     <select id="selectUnAnalyzedList" resultMap="UnAnalyzedResultMap">
         select 
-        b.email,
         a.id,
         a.file_name,
         a.create_date,
         a.sent_date,
         a.subject,
         a.mail_type,
-        a.email_id,
+        a.email,
         a.status,
         a.process_result
         from credit_file a 
-        join credit_email b on a.email_id = b.id
         where a.process_result != 1
     </select>
-    <select id="findUnAnalyzedListByEmail" parameterType="string" resultMap="UnAnalyzedResultMap">
+    <select id="selectUnAnalyzedListByEmail" parameterType="string" resultMap="UnAnalyzedResultMap">
         select 
-        b.email,
         a.id,
         a.file_name,
         a.create_date,
         a.sent_date,
         a.subject,
         a.mail_type,
-        a.email_id,
+        a.email,
         a.status,
         a.process_result
         from credit_file a 
-        join credit_email b on a.email_id = b.id
-        where a.process_result != 1 and email = #{value}
+        where a.process_result != 1 and a.email = #{value}
     </select>
     <update id="updateProcessResult">
        update credit_file 

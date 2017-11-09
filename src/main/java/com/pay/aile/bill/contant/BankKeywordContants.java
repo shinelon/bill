@@ -11,8 +11,8 @@ package com.pay.aile.bill.contant;
  */
 public class BankKeywordContants {
 
-    public static String ALL_BANK_KEYWORDS = "";
-    // 汉字使用汉字逗号分割
-    public static final String BANK_KEYWORD_SEPARATOR = "，";
+	public static String ALL_BANK_KEYWORDS = "";
+	// 汉字使用汉字逗号分割
+	public static final String BANK_KEYWORD_SEPARATOR = "，";
 
 }
