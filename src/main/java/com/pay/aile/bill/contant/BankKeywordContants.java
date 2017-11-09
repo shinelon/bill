@@ -32,6 +32,7 @@ public class BankKeywordContants {
 	// 汉字使用汉字逗号分割
 	public static final String BANK_KEYWORD_SEPARATOR = "，";
 	public static final String BANK_KEYWORD_SPDB = "上海浦东发展银行";
+	public static final String BANK_KEYWORD_PSBC = "邮储银行";
 
 	static {
 		ALL_BANK_KEYWORDS = formatKeywords();
