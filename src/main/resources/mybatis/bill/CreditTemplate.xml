@@ -22,13 +22,13 @@
 		<result column="cardtype_id" property="cardtypeId" />
 		<result column="cycle" property="cycle" />
 		<result column="bill_day" property="billDay" />
-		<result column="transaction_currency" property="transactionCurrency"/>
+		<result column="transaction_currency" property="transactionCurrency" />
 		
 	</resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, due_date AS dueDate, current_amount AS currentAmount, credits, cash, last_amount AS lastAmount, repayment, consumption, transaction_date AS transactionDate, billing_date AS billingDate, transaction_description AS transactionDescription, transaction_amount AS transactionAmount, accountable_amount AS accountableAmount, prepaid_cash_amount AS prepaidCashAmount, details, cardtype_id AS cardtypeId,cycle,bill_day as billDay,transaction_currency as transactionCurrency
+        id, due_date AS dueDate, current_amount AS currentAmount, credits, cash, last_amount AS lastAmount, repayment, consumption, transaction_date AS transactionDate, billing_date AS billingDate, transaction_description AS transactionDescription, transaction_amount AS transactionAmount, accountable_amount AS accountableAmount, prepaid_cash_amount AS prepaidCashAmount, details, cardtype_id AS cardtypeId,cycle,bill_day as billDay,transaction_currency AS transactionCurrency
     </sql>
 
 </mapper>

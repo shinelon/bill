@@ -5,41 +5,60 @@ import java.util.List;
 
 import com.pay.aile.bill.entity.CreditBill;
 import com.pay.aile.bill.entity.CreditBillDetail;
+import com.pay.aile.bill.entity.CreditCard;
 
 /**
- * 
+ *
  * @author Charlie
  * @description 存储解析结果
  */
 public class AnalyzeResult {
+	/**
+	 * 账单
+	 */
+	private CreditBill bill;
+	/**
+	 * 行用卡
+	 */
+	private CreditCard card;
+	/**
+	 * 账单明细
+	 */
+	private List<CreditBillDetail> detail;
 
-    private CreditBill bill;
-    private List<CreditBillDetail> detail;
+	public AnalyzeResult() {
+		bill = new CreditBill();
+		detail = new ArrayList<CreditBillDetail>();
+		card = new CreditCard();
+	}
 
-    public AnalyzeResult() {
-        bill = new CreditBill();
-        detail = new ArrayList<CreditBillDetail>();
-    }
+	public CreditBill getBill() {
+		return bill;
+	}
 
-    public CreditBill getBill() {
-        return bill;
-    }
+	public CreditCard getCard() {
+		return card;
+	}
 
-    public void setBill(CreditBill bill) {
-        this.bill = bill;
-    }
+	public List<CreditBillDetail> getDetail() {
+		return detail;
+	}
 
-    public List<CreditBillDetail> getDetail() {
-        return detail;
-    }
+	public void setBill(CreditBill bill) {
+		this.bill = bill;
+	}
 
-    public void setDetail(List<CreditBillDetail> detail) {
-        this.detail = detail;
-    }
+	public void setCard(CreditCard card) {
+		this.card = card;
+	}
 
-    @Override
-    public String toString() {
-        return "AnalyzeResult [bill=" + bill + ", detail=" + detail + "]";
-    }
+	public void setDetail(List<CreditBillDetail> detail) {
+		this.detail = detail;
+	}
+
+	@Override
+	public String toString() {
+		return "AnalyzeResult [bill=" + bill + ", detail=" + detail + "]";
+	}
 
 }
