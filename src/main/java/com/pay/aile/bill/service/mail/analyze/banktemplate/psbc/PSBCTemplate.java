@@ -4,9 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.pay.aile.bill.entity.CreditBillDetail;
 import com.pay.aile.bill.entity.CreditTemplate;
 import com.pay.aile.bill.service.mail.analyze.enums.CardTypeEnum;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
+import com.pay.aile.bill.service.mail.analyze.util.DateUtil;
 
 /**
  *
@@ -39,5 +41,20 @@ public class PSBCTemplate extends AbstractPSBCTemplate {
 	@Override
 	protected void setCardType() {
 		cardType = CardTypeEnum.PSBC_DEFAULT;
+	}
+
+	@Override
+	protected CreditBillDetail setCreditBillDetail(String detail) {
+		CreditBillDetail cbd = new CreditBillDetail();
+		String[] sa = detail.split(" ");
+		cbd.setTransactionDate(DateUtil.parseDate(sa[0]));
+		cbd.setBillingDate(DateUtil.parseDate(sa[1]));
+		cbd.setTransactionAmount(sa[sa.length - 2].replaceAll("\\n", ""));
+		String desc = "";
+		for (int i = 2; i < sa.length - 2; i++) {
+			desc = desc + sa[i];
+		}
+		cbd.setTransactionDescription(desc);
+		return cbd;
 	}
 }
