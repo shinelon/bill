@@ -18,10 +18,10 @@ import com.pay.aile.bill.utils.MongoDownloadUtil;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = BillApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ABCAnalyzerTest {
+public class CZBAnalyzerTest {
 
-    @Resource(name = "ABCAnalyzer")
-    private BankMailAnalyzer ABCAnalyzer;
+    @Resource(name = "CZBAnalyzer")
+    private BankMailAnalyzer CZBAnalyzer;
     @Autowired
     private MongoDownloadUtil downloadUtil;
 
@@ -32,7 +32,7 @@ public class ABCAnalyzerTest {
     public void test() {
         String content = "";
         try {
-            content = downloadUtil.getFile("中国农业银行金穗信用卡电子对账单");
+            content = downloadUtil.getFile("浙商银行信用卡电子账单");
         } catch (MailBillException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -42,10 +42,10 @@ public class ABCAnalyzerTest {
         System.out.println(content);
         AnalyzeParamsModel amp = new AnalyzeParamsModel();
         amp.setContent(content);
-        amp.setBankCode("ABC");
+        amp.setBankCode("CZB");
         amp.setEmail("123@qq.com");
         amp.setEmailId(1L);
-        ABCAnalyzer.analyze(amp);
+        CZBAnalyzer.analyze(amp);
     }
 
 }
