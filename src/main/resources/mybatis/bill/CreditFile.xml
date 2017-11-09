@@ -21,7 +21,7 @@
 		<result column="sent_date" property="sentDate" />
         <result column="subject" property="subject" />
         <result column="mail_type" property="mailType" />
-		<result column="email" property="email" />
+		<result column="email_id" property="emailId" />
         <result column="status" property="status" />
 		<result column="process_result" property="processResult" />
         <result column="email" property="email" />
@@ -41,8 +41,10 @@
         a.mail_type,
         a.email,
         a.status,
-        a.process_result
+        a.process_result,
+        b.email_id
         from credit_file a 
+        join credit_email b on a.email = b.email
         where a.process_result != 1
     </select>
     <select id="selectUnAnalyzedListByEmail" parameterType="string" resultMap="UnAnalyzedResultMap">
@@ -55,8 +57,10 @@
         a.mail_type,
         a.email,
         a.status,
-        a.process_result
+        a.process_result,
+        b.email_id
         from credit_file a 
+        join credit_email b on a.email = b.email
         where a.process_result != 1 and a.email = #{value}
     </select>
     <update id="updateProcessResult">
