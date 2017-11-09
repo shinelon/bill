@@ -54,14 +54,13 @@ public class EmlToMongoUtilTest {
 
         Properties props = new Properties();
         Session session = Session.getDefaultInstance(props, null);
-        InputStream inMsg = new FileInputStream(
-                "D:\\【广发卡10月账单】广发分享日，周五买一送一或半价！.eml");
+        InputStream inMsg = new FileInputStream("D:\\北京银行-信用卡电子账单.eml");
         Message msg = new MimeMessage(session, inMsg);
         CreditEmail creditEmail = new CreditEmail();
         creditEmail.setEmail("123@qq.com");
         creditEmail.setId(1L);
         EmailFile emailFile = ApacheMailUtil.getEmailFile(msg, creditEmail);
-        emailFile.setFileName("【广发卡10月账单】广发分享日，周五买一送一或半价！");
+        emailFile.setFileName("北京银行-信用卡电子账单");
         CreditFile creditFile = ApacheMailUtil.getCreditFile(emailFile,
                 creditEmail);
 

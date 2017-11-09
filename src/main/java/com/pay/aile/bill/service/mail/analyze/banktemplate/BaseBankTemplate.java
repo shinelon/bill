@@ -263,7 +263,7 @@ public abstract class BaseBankTemplate implements BankMailAnalyzerTemplate,
             List<String> list = PatternMatcherUtil.getMatcher(ruleValue,
                     content);
             if (list.isEmpty()) {
-                handleNotMatch(key, rules.getDueDate(), apm);
+                handleNotMatch(key, ruleValue, apm);
             }
             String result = list.get(0);
             String[] sa = result.split(splitSign);
