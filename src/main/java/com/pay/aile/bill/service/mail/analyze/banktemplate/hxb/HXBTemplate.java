@@ -28,6 +28,26 @@ public class HXBTemplate extends AbstractHXBTemplate {
 
 	}
 
+	// /**
+	// *
+	// * @Title: analyzeDueDate
+	// * @Description: 解析参数
+	// * @param card
+	// * @param content
+	// * @param apm
+	// * @return void 返回类型 @throws
+	// */
+	// @Override
+	// protected void analyzeBillDate(CreditCard card, String content,
+	// AnalyzeParamsModel apm) {
+	// if (StringUtils.hasText(rules.getBillDay())) {
+	//
+	// String billDay = getValueByPattern("billDay", content,
+	// rules.getBillDay(), apm, " ");
+	// card.setBillDay(billDay);
+	// }
+	// }
+
 	@Override
 	protected void analyzeInternal(AnalyzeParamsModel apm) {
 		super.analyzeInternal(apm);
@@ -37,4 +57,5 @@ public class HXBTemplate extends AbstractHXBTemplate {
 	protected void setCardType() {
 		cardType = CardTypeEnum.BCM_DEFAULT;
 	}
+
 }

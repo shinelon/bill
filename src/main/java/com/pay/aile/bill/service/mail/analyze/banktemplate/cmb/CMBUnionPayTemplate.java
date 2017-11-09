@@ -10,6 +10,7 @@ import org.springframework.util.StringUtils;
 
 import com.pay.aile.bill.entity.CreditBill;
 import com.pay.aile.bill.entity.CreditBillDetail;
+import com.pay.aile.bill.entity.CreditCard;
 import com.pay.aile.bill.entity.CreditTemplate;
 import com.pay.aile.bill.service.mail.analyze.enums.CardTypeEnum;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
@@ -109,7 +110,7 @@ public class CMBUnionPayTemplate extends AbstractCMBTemplate {
 
     @Override
     protected void analyzeDetails(List<CreditBillDetail> detail, String content,
-            AnalyzeParamsModel apm) {
+            AnalyzeParamsModel apm,CreditCard card) {
         List<String> list = null;
         if (StringUtils.hasText(rules.getDetails())) {
             // 交易明细

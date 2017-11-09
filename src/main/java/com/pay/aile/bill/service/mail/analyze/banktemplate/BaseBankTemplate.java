@@ -18,9 +18,11 @@ import org.springframework.util.StringUtils;
 
 import com.pay.aile.bill.entity.CreditBill;
 import com.pay.aile.bill.entity.CreditBillDetail;
+import com.pay.aile.bill.entity.CreditCard;
 import com.pay.aile.bill.entity.CreditTemplate;
 import com.pay.aile.bill.service.CreditBillDetailService;
 import com.pay.aile.bill.service.CreditBillService;
+import com.pay.aile.bill.service.CreditCardService;
 import com.pay.aile.bill.service.mail.analyze.BankMailAnalyzerTemplate;
 import com.pay.aile.bill.service.mail.analyze.constant.Constant;
 import com.pay.aile.bill.service.mail.analyze.enums.CardTypeEnum;
@@ -35,79 +37,107 @@ import com.pay.aile.bill.service.mail.analyze.util.PatternMatcherUtil;
  * @author Charlie
  * @description 卡种解析基础模板
  */
-public abstract class BaseBankTemplate implements BankMailAnalyzerTemplate,
-        Comparable<BaseBankTemplate>, InitializingBean {
+public abstract class BaseBankTemplate
+		implements BankMailAnalyzerTemplate, Comparable<BaseBankTemplate>, InitializingBean {
 
-    /**
-     * 统计每一种模板的调用次数 用于不同卡种之间的排序,调用次数高的排位靠前
-     */
-    private volatile int count;
-    @Resource
+	/**
+	 * 统计每一种模板的调用次数 用于不同卡种之间的排序,调用次数高的排位靠前
+	 */
+	private volatile int count;
+	@Resource
     protected CreditBillDetailService creditBillDetailService;
-    @Resource
+	@Resource
     protected CreditBillService creditBillService;
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+	@Resource
+	private CreditCardService creditCardService;
 
-    /**
-     * 信用卡类型 由子类去初始化自己是什么信用卡类型
-     */
-    protected CardTypeEnum cardType;
+	private Logger logger = LoggerFactory.getLogger(getClass());
 
-    /**
-     * 存放明细规则的map
-     */
-    protected Map<Integer, String> detailMap = new HashMap<Integer, String>();
-    /**
-     * 模板解析邮件时需要的关键字及对应的规则 key:到期还款日/应还款金额.eg value:规则 根据银行和信用卡类型,从缓存中初始化
-     */
-    protected CreditTemplate rules;
+	/**
+	 * 信用卡类型 由子类去初始化自己是什么信用卡类型
+	 */
+	protected CardTypeEnum cardType;
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        setCardType();
-    }
+	/**
+	 * 存放明细规则的map
+	 */
+	protected Map<Integer, String> detailMap = new HashMap<Integer, String>();
+	/**
+	 * 模板解析邮件时需要的关键字及对应的规则 key:到期还款日/应还款金额.eg value:规则 根据银行和信用卡类型,从缓存中初始化
+	 */
+	protected CreditTemplate rules;
 
-    @Override
-    public void analyze(AnalyzeParamsModel apm) {
-        count++;
-        initRules();
-        initDetail();
-        if (rules != null) {
-            apm.setCardtypeId(rules.getCardtypeId());
-        }
-        beforeAnalyze(apm);
-        analyzeInternal(apm);
-        afterAnalyze(apm);
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		setCardType();
+	}
 
-    /**
-     * 用于不同卡种之间的排序,调用次数高的排位靠前
-     */
-    @Override
-    public int compareTo(BaseBankTemplate o) {
-        if (o == null) {
-            return 1;
-        }
-        return count > o.count ? 1 : -1;
-    }
+	@Override
+	public void analyze(AnalyzeParamsModel apm) {
+		count++;
+		initRules();
+		initDetail();
+		if (rules != null) {
+			apm.setCardtypeId(rules.getCardtypeId());
+		}
+		beforeAnalyze(apm);
+		analyzeInternal(apm);
+		afterAnalyze(apm);
+	}
 
-    @Override
-    public void handleResult(AnalyzeParamsModel apm) {
-        handleResultInternal(apm);
-    }
+	/**
+	 * 用于不同卡种之间的排序,调用次数高的排位靠前
+	 */
+	@Override
+	public int compareTo(BaseBankTemplate o) {
+		if (o == null) {
+			return 1;
+		}
+		return count > o.count ? 1 : -1;
+	}
 
-    /**
-     *
-     * @Title: analyzeCash
-     * @Description:预借现金
-     * @param bill
-     * @param content
-     * @param apm
-     * @return void 返回类型 @throws
-     */
-    protected void analyzeCash(CreditBill bill, String content,
-            AnalyzeParamsModel apm) {
+	@Override
+	public void handleResult(AnalyzeParamsModel apm) {
+		handleResultInternal(apm);
+	}
+
+	/**
+	 *
+	 * @param apm
+	 */
+	protected void afterAnalyze(AnalyzeParamsModel apm) {
+
+	}
+
+	/**
+	 *
+	 * @Title: analyzeDueDate
+	 * @Description: 解析参数
+	 * @param card
+	 * @param content
+	 * @param apm
+	 * @return void 返回类型 @throws
+	 */
+	protected void analyzeBillDate(CreditCard card, String content, AnalyzeParamsModel apm) {
+		if (StringUtils.hasText(rules.getBillDay())) {
+
+			String billDay = getValueByPattern("billDay", content, rules.getBillDay(), apm, " ");
+			card.setBillDay(billDay);
+		}
+	}
+
+	/**
+	 *
+	 * @Title: analyzeCash
+	 * @Description:预借现金
+	 * @param bill
+	 * @param content
+	 * @param apm
+	 * @return void 返回类型 @throws
+	 */
+	protected void analyzeCash(CreditBill bill, String content, AnalyzeParamsModel apm) {
+
         if (StringUtils.hasText(rules.getCash())) {
 
             String cash = getValueByPattern("cash", content, rules.getCash(),
@@ -118,19 +148,20 @@ public abstract class BaseBankTemplate implements BankMailAnalyzerTemplate,
                 bill.setCash(new BigDecimal(cash));
             }
         }
-    }
 
-    /**
-     *
-     * @Title: analyzeCredits
-     * @Description: 信用额度
-     * @param bill
-     * @param content
-     * @param apm
-     * @return void 返回类型 @throws
-     */
-    protected void analyzeCredits(CreditBill bill, String content,
-            AnalyzeParamsModel apm) {
+	}
+
+	/**
+	 *
+	 * @Title: analyzeCredits
+	 * @Description: 信用额度
+	 * @param bill
+	 * @param content
+	 * @param apm
+	 * @return void 返回类型 @throws
+	 */
+	protected void analyzeCredits(CreditBill bill, String content, AnalyzeParamsModel apm) {
+
         if (StringUtils.hasText(rules.getCredits())) {
 
             String credits = getValueByPattern("credits", content,
@@ -141,19 +172,20 @@ public abstract class BaseBankTemplate implements BankMailAnalyzerTemplate,
                 bill.setCredits(new BigDecimal(credits));
             }
         }
-    }
 
-    /**
-     *
-     * @Title: analyzeCurrentAmount
-     * @Description: 应还款额
-     * @param bill
-     * @param content
-     * @param apm
-     * @return void 返回类型 @throws
-     */
-    protected void analyzeCurrentAmount(CreditBill bill, String content,
-            AnalyzeParamsModel apm) {
+	}
+
+	/**
+	 *
+	 * @Title: analyzeCurrentAmount
+	 * @Description: 应还款额
+	 * @param bill
+	 * @param content
+	 * @param apm
+	 * @return void 返回类型 @throws
+	 */
+	protected void analyzeCurrentAmount(CreditBill bill, String content, AnalyzeParamsModel apm) {
+
         if (StringUtils.hasText(rules.getCurrentAmount())) {
 
             String currentAmount = getValueByPattern("currentAmount", content,
@@ -167,186 +199,168 @@ public abstract class BaseBankTemplate implements BankMailAnalyzerTemplate,
                 bill.setCurrentAmount(new BigDecimal(currentAmount));
             }
         }
-    }
 
-    protected void analyzeDetail(List<CreditBillDetail> detailList,
-            String content, AnalyzeParamsModel apm) {
-        List<String> list = PatternMatcherUtil.getMatcher(rules.getDetails(),
-                content);
-        if (list.isEmpty()) {
-            handleNotMatch("details", rules.getDetails(), apm);
-        }
-        String[] sa = null;
-        for (int i = 0; i < list.size(); i++) {
+	}
 
-            detailList.add(setCreditBillDetail(list.get(i)));
-        }
+	protected void analyzeDetail(List<CreditBillDetail> detailList, String content, AnalyzeParamsModel apm) {
+		List<String> list = PatternMatcherUtil.getMatcher(rules.getDetails(), content);
+		if (list.isEmpty()) {
+			handleNotMatch("details", rules.getDetails(), apm);
+		}
+		String[] sa = null;
+		for (int i = 0; i < list.size(); i++) {
 
-    }
+			detailList.add(setCreditBillDetail(list.get(i)));
+		}
 
-    /**
-     *
-     * @Title: analyzeDueDate
-     * @Description: 解析参数
-     * @param bill
-     * @param content
-     * @param apm
-     * @return void 返回类型 @throws
-     */
-    protected void analyzeDueDate(CreditBill bill, String content,
-            AnalyzeParamsModel apm) {
-        if (StringUtils.hasText(rules.getDueDate())) {
+	}
 
-            String date = getValueByPattern("dueDate", content,
-                    rules.getDueDate(), apm, " ");
-            bill.setDueDate(DateUtil.parseDate(date));
-        }
-    }
+	protected void analyzeDetails(List<CreditBillDetail> detail, String content, AnalyzeParamsModel apm,CreditCard card) {
+		List<String> list = null;
+		if (StringUtils.hasText(rules.getDetails())) {
+			// 交易明细
+			list = PatternMatcherUtil.getMatcher(rules.getDetails(), content);
+			if (list.isEmpty()) {
+				handleNotMatch("details", rules.getDetails(), apm);
+			}
+			for (int i = 0; i < list.size(); i++) {
+				String s = list.get(i);
+				detail.add(setCreditBillDetail(s));
+				setCardNumbers(card, s);
+			}
+		}
+	}
 
-    protected void analyzeInternal(AnalyzeParamsModel apm) {
-        logger.info("模板:{},模板解析参数：{}", this.getClass().getSimpleName(), apm);
-        logger.debug("账单内容:{}", apm.getContent());
-        String content = apm.getContent();
-        AnalyzeResult ar = new AnalyzeResult();
-        CreditBill bill = ar.getBill();
-        List<CreditBillDetail> detail = ar.getDetail();
-        if (rules == null) {
-            throw new RuntimeException("账单模板规则未初始化");
-        }
+	protected void analyzeDueDate(CreditBill bill, String content, AnalyzeParamsModel apm) {
+		if (StringUtils.hasText(rules.getDueDate())) {
 
-        analyzeDueDate(bill, content, apm);
-        analyzeCurrentAmount(bill, content, apm);
-        analyzeCredits(bill, content, apm);
-        analyzeCash(bill, content, apm);
+			String date = getValueByPattern("dueDate", content, rules.getDueDate(), apm, " ");
+			bill.setDueDate(DateUtil.parseDate(date));
+		}
+	}
 
-        analyzeDetails(detail, content, apm);
-        apm.setResult(ar);
-    }
+	protected void analyzeInternal(AnalyzeParamsModel apm) {
+		logger.info("账单内容：{}", apm);
+		String content = apm.getContent();
+		AnalyzeResult ar = new AnalyzeResult();
+		// ka
+		CreditCard card = ar.getCard();
+		// 账单
+		CreditBill bill = ar.getBill();
 
-    protected void analyzeDetails(List<CreditBillDetail> detail, String content,
-            AnalyzeParamsModel apm) {
-        List<String> list = null;
-        if (StringUtils.hasText(rules.getDetails())) {
-            // 交易明细
-            list = PatternMatcherUtil.getMatcher(rules.getDetails(), content);
-            if (list.isEmpty()) {
-                handleNotMatch("details", rules.getDetails(), apm);
-            }
-            for (int i = 0; i < list.size(); i++) {
-                String s = list.get(i);
-                detail.add(setCreditBillDetail(s));
-            }
-        }
-    }
+		List<CreditBillDetail> detail = ar.getDetail();
+		if (rules == null) {
+			throw new RuntimeException("账单模板规则未初始化");
+		}
+		List<String> list = null;
+		// 还款日
+		analyzeBillDate(card, content, apm);
+		// 还款日
+		analyzeDueDate(bill, content, apm);
+		// 本期账单金额
+		analyzeCurrentAmount(bill, content, apm);
+		// 信用二度
+		analyzeCredits(bill, content, apm);
+		// 取取现金额
+		analyzeCash(bill, content, apm);
 
-    /**
-     *
-     * @param apm
-     */
-    protected void beforeAnalyze(AnalyzeParamsModel apm) {
+        analyzeDetails(detail, content, apm,card);
+		
+		// 设置卡片
+		setCard(card, bill, apm);
+		apm.setResult(ar);
+	}
 
-    }
+	/**
+	 *
+	 * @param apm
+	 */
+	protected void beforeAnalyze(AnalyzeParamsModel apm) {
 
-    /**
-    *
-    * @param apm
-    */
-    protected void afterAnalyze(AnalyzeParamsModel apm) {
+	}
 
-    }
+	protected String getValueByPattern(String key, String content, String ruleValue, AnalyzeParamsModel apm,
+			String splitSign) {
 
-    protected String getValueByPattern(String key, String content,
-            String ruleValue, AnalyzeParamsModel apm, String splitSign) {
+		if (StringUtils.hasText(ruleValue)) {
 
-        if (StringUtils.hasText(ruleValue)) {
+			List<String> list = PatternMatcherUtil.getMatcher(ruleValue, content);
+			if (list.isEmpty()) {
+				handleNotMatch(key, ruleValue, apm);
+			}
+			String result = list.get(0);
+			String[] sa = result.split(splitSign);
+			String value = sa[sa.length - 1];
+			return value;
+		}
+		return "";
+	}
 
-            List<String> list = PatternMatcherUtil.getMatcher(ruleValue,
-                    content);
-            if (list.isEmpty()) {
-                handleNotMatch(key, ruleValue, apm);
-            }
-            String result = list.get(0);
-            String[] sa = result.split(splitSign);
-            String value = sa[sa.length - 1];
-            return value;
-        }
-        return "";
-    }
+	protected void handleNotMatch(String key, String reg, AnalyzeParamsModel apm) {
+		apm.setResult(null);
+		throw new RuntimeException(String.format("未找到匹配值,bank=%s,cardType=%s,key=%s,reg=%s",
+				cardType.getBankCode().getBankCode(), cardType.getCardCode(), key, reg));
+	}
 
-    protected void handleNotMatch(String key, String reg,
-            AnalyzeParamsModel apm) {
-        apm.setResult(null);
-        throw new RuntimeException(
-                String.format("未找到匹配值,bank=%s,cardType=%s,key=%s,reg=%s",
-                        cardType.getBankCode().getBankCode(),
-                        cardType.getCardCode(), key, reg));
-    }
+	@Transactional
+	protected void handleResultInternal(AnalyzeParamsModel apm) {
+		Long emailId = apm.getEmailId();
+		// 解析成功，保存账单到数据库
+		CreditBill bill = apm.getResult().getBill();
+		List<CreditBillDetail> billDetails = apm.getResult().getDetail();
+		Long billId = null;
+		if (bill != null) {
+			bill.setEmailId(emailId);
+			bill.setCardtypeId(apm.getCardtypeId());
+			bill.setSentDate(apm.getSentDate());
+			bill.setBankCode(apm.getBankCode());
+			creditBillService.saveOrUpdateCreditBill(bill);
+			billId = bill.getId();
+		}
 
-    @Transactional
-    protected void handleResultInternal(AnalyzeParamsModel apm) {
-        // 解析成功，保存账单到数据库
-        CreditBill bill = apm.getResult().getBill();
-        List<CreditBillDetail> billDetails = apm.getResult().getDetail();
-        Long billId = null;
-        if (bill != null) {
-            bill.setEmailId(apm.getEmailId());
-            bill.setCardtypeId(apm.getCardtypeId());
-            bill.setSentDate(apm.getSentDate());
-            bill.setBankCode(apm.getBankCode());
-            billId = creditBillService.saveOrUpdateCreditBill(bill);
-            billId = bill.getId();
-        }
+		if (billDetails != null && !billDetails.isEmpty()) {
+			for (CreditBillDetail creditBillDetail : billDetails) {
+				try {
+					creditBillDetail.setBillId(billId);
+					creditBillDetailService.saveCreditBillDetail(creditBillDetail);
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
+				}
+			}
+		}
 
-        if (billDetails != null && !billDetails.isEmpty()) {
-            for (CreditBillDetail creditBillDetail : billDetails) {
-                try {
-                    creditBillDetail.setBillId(billId);
-                    creditBillDetailService
-                            .saveCreditBillDetail(creditBillDetail);
-                } catch (Exception e) {
-                    logger.error(e.getMessage(), e);
-                }
-            }
-        }
+	}
 
-    }
-
-    protected void initDetail() {
-        if (rules != null && StringUtils.hasText(rules.getDetails())) {
-            if (StringUtils.hasText(rules.getTransactionDate())) {
-                try {
-                    detailMap.put(Integer.parseInt(rules.getTransactionDate()),
-                            "transactionDate");
-                } catch (Exception e) {
-                    logger.error(e.getMessage());
-                }
-            }
-            if (StringUtils.hasText(rules.getBillingDate())) {
-                try {
-                    detailMap.put(Integer.parseInt(rules.getBillingDate()),
-                            "billingDate");
-                } catch (Exception e) {
-                    logger.error(e.getMessage());
-                }
-            }
-            if (StringUtils.hasText(rules.getTransactionDescription())) {
-                try {
-                    detailMap.put(
-                            Integer.parseInt(rules.getTransactionDescription()),
-                            "transactionDescription");
-                } catch (Exception e) {
-                    logger.error(e.getMessage());
-                }
-            }
-            if (StringUtils.hasText(rules.getTransactionCurrency())) {
-                try {
-                    detailMap.put(
-                            Integer.parseInt(rules.getTransactionCurrency()),
-                            "transactionCurrency");
-                } catch (Exception e) {
-                    logger.error(e.getMessage());
-                }
-            }
+	protected void initDetail() {
+		if (rules != null && StringUtils.hasText(rules.getDetails())) {
+			if (StringUtils.hasText(rules.getTransactionDate())) {
+				try {
+					detailMap.put(Integer.parseInt(rules.getTransactionDate()), "transactionDate");
+				} catch (Exception e) {
+					logger.error(e.getMessage());
+				}
+			}
+			if (StringUtils.hasText(rules.getBillingDate())) {
+				try {
+					detailMap.put(Integer.parseInt(rules.getBillingDate()), "billingDate");
+				} catch (Exception e) {
+					logger.error(e.getMessage());
+				}
+			}
+			if (StringUtils.hasText(rules.getTransactionDescription())) {
+				try {
+					detailMap.put(Integer.parseInt(rules.getTransactionDescription()), "transactionDescription");
+				} catch (Exception e) {
+					logger.error(e.getMessage());
+				}
+			}
+			if (StringUtils.hasText(rules.getTransactionCurrency())) {
+				try {
+					detailMap.put(Integer.parseInt(rules.getTransactionCurrency()), "transactionCurrency");
+				} catch (Exception e) {
+					logger.error(e.getMessage());
+				}
+			}
             if (StringUtils.hasText(rules.getTransactionAmount())) {
                 try {
                     detailMap.put(
@@ -356,66 +370,89 @@ public abstract class BaseBankTemplate implements BankMailAnalyzerTemplate,
                     logger.error(e.getMessage());
                 }
             }
-            if (StringUtils.hasText(rules.getAccountableAmount())) {
-                try {
-                    detailMap.put(
-                            Integer.parseInt(rules.getAccountableAmount()),
-                            "accountableAmount");
-                } catch (Exception e) {
-                    logger.error(e.getMessage());
-                }
-            }
+			if (StringUtils.hasText(rules.getAccountableAmount())) {
+				try {
+					detailMap.put(Integer.parseInt(rules.getAccountableAmount()), "accountableAmount");
+				} catch (Exception e) {
+					logger.error(e.getMessage());
+				}
+			}
 
-        }
-    }
+		}
+	}
 
-    /**
-     * 获取模板对应的关键字
-     */
-    protected void initRules() {
-        // 根据cardCode从缓存中获取对应的规则
-        String cardCode = cardType.getCardCode();
-        rules = JedisClusterUtils.getBean(
-                Constant.redisTemplateRuleCache + cardCode,
-                CreditTemplate.class);
-    }
+	/**
+	 * 获取模板对应的关键字
+	 */
+	protected void initRules() {
+		// 根据cardCode从缓存中获取对应的规则
+		String cardCode = cardType.getCardCode();
+		rules = JedisClusterUtils.getBean(Constant.redisTemplateRuleCache + cardCode, CreditTemplate.class);
+	}
 
-    /**
-     * 设置信用卡类型
-     */
-    protected void setCardType() {
+	/**
+	 *
+	 * @Title: setCard
+	 * @Description: 设置行用卡
+	 * @param card
+	 * @param bill
+	 * @param apm
+	 * @return void 返回类型 @throws
+	 */
+	protected void setCard(CreditCard card, CreditBill bill, AnalyzeParamsModel apm) {
 
-    }
+		card.setBankId(new Long(apm.getBankId()));
+		// 查询
+		// CreditCard tempCard = creditCardService.findCreditCard(card);
 
-    protected CreditBillDetail setCreditBillDetail(String detail) {
-        CreditBillDetail cbd = new CreditBillDetail();
-        String[] detailArray = detail.split(" ");
-        for (Integer i = 0; i < detailArray.length; i++) {
-            if (detailMap.containsKey(i)) {
-                Field field;
-                try {
-                    field = CreditBillDetail.class
-                            .getDeclaredField(detailMap.get(i));
-                    if (field.getType() == Date.class) {
-                        ReflectionUtils.setField(field, cbd,
-                                DateUtil.parseDate(detailArray[i]));
-                    } else {
-                        ReflectionUtils.setField(field, cbd, detailArray[i]);
-                    }
-                } catch (Exception e) {
-                    logger.error(e.getMessage());
-                }
+		card.setCash(String.valueOf(bill.getCash()));
+		card.setCredits(String.valueOf(bill.getCredits()));
 
-            } else {
-                setField(cbd, i, detailArray[i]);
-            }
+		creditCardService.saveOrUpateCreditCard(card);
+	}
 
-        }
-        return cbd;
+	protected void setCardNumbers(CreditCard card, String number) {
+		// if (StringUtils.hasText(number)) {
+		//
+		// card.setNumbers(number);
+		// }
+	}
 
-    }
+	/**
+	 * 设置信用卡类型
+	 */
+	protected void setCardType() {
 
-    protected void setField(CreditBillDetail cbd, int index, String value) {
+	}
 
-    }
+	protected CreditBillDetail setCreditBillDetail(String detail) {
+		CreditBillDetail cbd = new CreditBillDetail();
+		String[] detailArray = detail.split(" ");
+		for (Integer i = 0; i < detailArray.length; i++) {
+			if (detailMap.containsKey(i)) {
+				Field field;
+				try {
+					field = CreditBillDetail.class.getDeclaredField(detailMap.get(i));
+					if (field.getType() == Date.class) {
+						ReflectionUtils.setField(field, cbd, DateUtil.parseDate(detailArray[i]));
+					} else {
+						ReflectionUtils.setField(field, cbd, detailArray[i]);
+					}
+				} catch (Exception e) {
+					logger.error(e.getMessage());
+				}
+
+			} else {
+				///
+				setField(cbd, i, detailArray[i]);
+			}
+
+		}
+		return cbd;
+
+	}
+
+	protected void setField(CreditBillDetail cbd, int index, String value) {
+
+	}
 }

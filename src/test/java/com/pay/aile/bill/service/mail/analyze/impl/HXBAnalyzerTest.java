@@ -57,6 +57,7 @@ public class HXBAnalyzerTest {
 		amp.setEmail("jinjing_0316@outlook.com");
 		amp.setEmailId(6L);
 		amp.setSentDate(new Date());
+		amp.setBankId("26");
 		HBXAnalyzer.analyze(amp);
 	}
 
