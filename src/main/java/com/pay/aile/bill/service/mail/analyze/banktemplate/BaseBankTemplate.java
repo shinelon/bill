@@ -18,9 +18,11 @@ import org.springframework.util.StringUtils;
 
 import com.pay.aile.bill.entity.CreditBill;
 import com.pay.aile.bill.entity.CreditBillDetail;
+import com.pay.aile.bill.entity.CreditCard;
 import com.pay.aile.bill.entity.CreditTemplate;
 import com.pay.aile.bill.service.CreditBillDetailService;
 import com.pay.aile.bill.service.CreditBillService;
+import com.pay.aile.bill.service.CreditCardService;
 import com.pay.aile.bill.service.mail.analyze.BankMailAnalyzerTemplate;
 import com.pay.aile.bill.service.mail.analyze.constant.Constant;
 import com.pay.aile.bill.service.mail.analyze.enums.CardTypeEnum;
@@ -46,6 +48,9 @@ public abstract class BaseBankTemplate
 	private CreditBillDetailService creditBillDetailService;
 	@Resource
 	private CreditBillService creditBillService;
+
+	@Resource
+	private CreditCardService creditCardService;
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -94,6 +99,23 @@ public abstract class BaseBankTemplate
 	@Override
 	public void handleResult(AnalyzeParamsModel apm) {
 		handleResultInternal(apm);
+	}
+
+	/**
+	 *
+	 * @Title: analyzeDueDate
+	 * @Description: 解析参数
+	 * @param card
+	 * @param content
+	 * @param apm
+	 * @return void 返回类型 @throws
+	 */
+	protected void analyzeBillDate(CreditCard card, String content, AnalyzeParamsModel apm) {
+		if (StringUtils.hasText(rules.getBillDay())) {
+
+			String billDay = getValueByPattern("billDay", content, rules.getBillDay(), apm, " ");
+			card.setBillDay(billDay);
+		}
 	}
 
 	/**
@@ -163,15 +185,6 @@ public abstract class BaseBankTemplate
 
 	}
 
-	/**
-	 *
-	 * @Title: analyzeDueDate
-	 * @Description: 解析参数
-	 * @param bill
-	 * @param content
-	 * @param apm
-	 * @return void 返回类型 @throws
-	 */
 	protected void analyzeDueDate(CreditBill bill, String content, AnalyzeParamsModel apm) {
 		if (StringUtils.hasText(rules.getDueDate())) {
 
@@ -184,16 +197,25 @@ public abstract class BaseBankTemplate
 		logger.info("账单内容：{}", apm);
 		String content = apm.getContent();
 		AnalyzeResult ar = new AnalyzeResult();
+		// ka
+		CreditCard card = ar.getCard();
+		// 账单
 		CreditBill bill = ar.getBill();
+
 		List<CreditBillDetail> detail = ar.getDetail();
 		if (rules == null) {
 			throw new RuntimeException("账单模板规则未初始化");
 		}
 		List<String> list = null;
-
+		// 还款日
+		analyzeBillDate(card, content, apm);
+		// 还款日
 		analyzeDueDate(bill, content, apm);
+		// 本期账单金额
 		analyzeCurrentAmount(bill, content, apm);
+		// 信用二度
 		analyzeCredits(bill, content, apm);
+		// 取取现金额
 		analyzeCash(bill, content, apm);
 
 		if (StringUtils.hasText(rules.getDetails())) {
@@ -205,8 +227,12 @@ public abstract class BaseBankTemplate
 			for (int i = 0; i < list.size(); i++) {
 				String s = list.get(i);
 				detail.add(setCreditBillDetail(s));
+
+				setCardNumbers(card, s);
 			}
 		}
+		// 设置卡片
+		setCard(card, bill, apm);
 		apm.setResult(ar);
 	}
 
@@ -328,6 +354,34 @@ public abstract class BaseBankTemplate
 	}
 
 	/**
+	 *
+	 * @Title: setCard
+	 * @Description: 设置行用卡
+	 * @param card
+	 * @param bill
+	 * @param apm
+	 * @return void 返回类型 @throws
+	 */
+	protected void setCard(CreditCard card, CreditBill bill, AnalyzeParamsModel apm) {
+
+		card.setBankId(new Long(apm.getBankId()));
+		// 查询
+		// CreditCard tempCard = creditCardService.findCreditCard(card);
+
+		card.setCash(String.valueOf(bill.getCash()));
+		card.setCredits(String.valueOf(bill.getCredits()));
+
+		creditCardService.saveOrUpateCreditCard(card);
+	}
+
+	protected void setCardNumbers(CreditCard card, String number) {
+		// if (StringUtils.hasText(number)) {
+		//
+		// card.setNumbers(number);
+		// }
+	}
+
+	/**
 	 * 设置信用卡类型
 	 */
 	protected void setCardType() {
@@ -352,6 +406,7 @@ public abstract class BaseBankTemplate
 				}
 
 			} else {
+				///
 				setField(cbd, i, detailArray[i]);
 			}
 
