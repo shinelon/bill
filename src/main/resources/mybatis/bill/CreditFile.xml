@@ -10,7 +10,7 @@
 		<result column="sent_date" property="sentDate" />
         <result column="subject" property="subject" />
         <result column="mail_type" property="mailType" />
-		<result column="email_id" property="emailId" />
+		<result column="email" property="email" />
         <result column="status" property="status" />
 		<result column="process_result" property="processResult" />
 	</resultMap>
@@ -21,7 +21,7 @@
 		<result column="sent_date" property="sentDate" />
         <result column="subject" property="subject" />
         <result column="mail_type" property="mailType" />
-		<result column="email_id" property="emailId" />
+		<result column="email" property="email" />
         <result column="status" property="status" />
 		<result column="process_result" property="processResult" />
         <result column="email" property="email" />
