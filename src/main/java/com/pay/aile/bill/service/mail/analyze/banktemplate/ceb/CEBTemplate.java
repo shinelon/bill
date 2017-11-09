@@ -10,7 +10,7 @@ import com.pay.aile.bill.service.mail.analyze.util.DateUtil;
 /**
  *
  * @author Charlie
- * @description 广大银行信用卡账单内容解析模板
+ * @description 光大银行信用卡账单内容解析模板
  */
 @Service
 public class CEBTemplate extends AbstractCEBTemplate {

@@ -48,21 +48,22 @@ public class EmlToMongoUtilTest {
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    // @Test
+    @Test
     public void emlToMongo() throws Exception {
         logger.info("emlToMongo");
 
         Properties props = new Properties();
         Session session = Session.getDefaultInstance(props, null);
         InputStream inMsg = new FileInputStream(
-                "D:\\银行账单eml文件\\邮件eml\\交通银行信用卡电子账单-.eml");
+                "D:\\中国工商银行客户对账 单(ICBC Peony Card Bank Statement).eml");
         Message msg = new MimeMessage(session, inMsg);
         CreditEmail creditEmail = new CreditEmail();
         creditEmail.setEmail("123@qq.com");
         creditEmail.setId(1L);
         EmailFile emailFile = ApacheMailUtil.getEmailFile(msg, creditEmail);
-        emailFile.setFileName("fef4a602-3378-4fdd-8e1e-296e0a958896");
-        CreditFile creditFile = ApacheMailUtil.getCreditFile(emailFile, creditEmail);
+        emailFile.setFileName("中国工商银行客户对账单");
+        CreditFile creditFile = ApacheMailUtil.getCreditFile(emailFile,
+                creditEmail);
 
         List<EmailFile> emailFileList = new ArrayList<>();
         emailFileList.add(emailFile);
