@@ -9,7 +9,7 @@ import com.pay.aile.bill.service.mail.analyze.enums.CardTypeEnum;
 /**
  *
  * @author Charlie
- * @description 兴业银行解析模板
+ * @description 农业银行解析模板
  */
 @Service
 public class ABCTemplate extends AbstractABCTemplate {
