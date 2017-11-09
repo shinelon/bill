@@ -59,6 +59,12 @@ public class CreditEmail extends Model<CreditEmail> {
      */
     @TableField(exist = false)
     private boolean encrypt = false;
+    @TableField(exist = false)
+    private long lastJobTimestamp;
+    @TableField(exist = false)
+    private long lastJobExecutionTime;
+    @TableField(exist = false)
+    private String Remarks;
 
     public CreditEmail() {
 
@@ -85,8 +91,20 @@ public class CreditEmail extends Model<CreditEmail> {
         return id;
     }
 
+    public long getLastJobExecutionTime() {
+        return lastJobExecutionTime;
+    }
+
+    public long getLastJobTimestamp() {
+        return lastJobTimestamp;
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    public String getRemarks() {
+        return Remarks;
     }
 
     public Integer getStatus() {
@@ -121,8 +139,20 @@ public class CreditEmail extends Model<CreditEmail> {
         this.id = id;
     }
 
+    public void setLastJobExecutionTime(long lastJobExecutionTime) {
+        this.lastJobExecutionTime = lastJobExecutionTime;
+    }
+
+    public void setLastJobTimestamp(long lastJobTimestamp) {
+        this.lastJobTimestamp = lastJobTimestamp;
+    }
+
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setRemarks(String remarks) {
+        Remarks = remarks;
     }
 
     public void setStatus(Integer status) {
