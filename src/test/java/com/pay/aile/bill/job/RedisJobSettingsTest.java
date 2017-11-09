@@ -1,6 +1,5 @@
 package com.pay.aile.bill.job;
 
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +22,15 @@ import com.pay.aile.bill.BillApplication;
 public class RedisJobSettingsTest {
     private static final Logger logger = LoggerFactory.getLogger(RedisJobSettingsTest.class);
     @Autowired
-    private RedisJobSettings redisJobSettings;
+    private RedisJobHandle redisJobSettings;
 
-    @Test
+    // @Test
     public void testInitJobList() {
         redisJobSettings.initJobList();
+    }
+
+    // @Test
+    public void unLockTest() {
+        redisJobSettings.unLock(redisJobSettings.MAIL_DOWANLOD_LIST_NAME);
     }
 }

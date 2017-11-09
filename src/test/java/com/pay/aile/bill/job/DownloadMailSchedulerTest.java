@@ -25,8 +25,15 @@ public class DownloadMailSchedulerTest {
     @Autowired
     private DownloadMailScheduler downloadMailScheduler;
 
-    @Test
+    // @Test
     public void testJob() {
         downloadMailScheduler.downLoadMail();
+    }
+
+    @Test
+    public void testJobLoop() throws InterruptedException {
+        downloadMailScheduler.downLoadMailLoop();
+        Thread.sleep(100000);
+        // downloadMailScheduler.offJobLoop();
     }
 }
