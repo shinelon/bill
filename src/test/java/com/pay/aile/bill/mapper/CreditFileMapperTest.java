@@ -18,15 +18,23 @@ public class CreditFileMapperTest {
     @Autowired
     private CreditFileMapper creditFileMapper;
 
-    @Test
-    public void testUpdateProcessResult() {
-        creditFileMapper.updateProcessResult(1, 1L);
-    }
-
-    @Test
+    // @Test
     public void testSelectUnAnalyzedList() {
         List<CreditFileModel> list = creditFileMapper.selectUnAnalyzedList();
         Assert.assertNotNull(list);
         Assert.assertFalse(list.isEmpty());
     }
+
+    @Test
+    public void testSelectUnAnalyzedListByEmail() {
+        List<CreditFileModel> list = creditFileMapper.selectUnAnalyzedListByEmail("jinjing_0316@outlook.com");
+        Assert.assertNotNull(list);
+        Assert.assertFalse(list.isEmpty());
+    }
+
+    // @Test
+    public void testUpdateProcessResult() {
+        creditFileMapper.updateProcessResult(1, 1L);
+    }
+
 }
