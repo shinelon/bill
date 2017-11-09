@@ -24,12 +24,22 @@ import com.pay.aile.bill.service.mail.download.DownloadMail;
 @Service
 public class DownloadMailScheduler {
     private static final Logger logger = LoggerFactory.getLogger(DownloadMailScheduler.class);
+    // 当邮箱扫描时间间隔大约loopIntervalSeconds 重新下载邮箱
+    private static final long loopIntervalSeconds = 100L;
+    // 当循环线程发现没有邮件需要下载的时候，等待waitSeconds
+    private static final long waitSeconds = 100L;
+
+    private static boolean flagJobLoop = true;
     @Autowired
     private CreditEmailService creditEmailService;
     @Autowired
     private ThreadPoolTaskExecutor taskExecutor;
+
     @Autowired
     private DownloadMail downloadMail;
+
+    @Autowired
+    private RedisJobHandle redisJobHandle;
 
     public void downLoadMail() {
         long startTime = System.currentTimeMillis();
@@ -55,5 +65,39 @@ public class DownloadMailScheduler {
             e.printStackTrace();
         }
 
+    }
+
+    public void downLoadMailLoop() {
+        while (flagJobLoop) {
+            CreditEmail creditEmail = redisJobHandle.getJob();
+            if (creditEmail.getId() == null) {
+                // 如果获取不到creditEmail 则任务已经删除
+                continue;
+            }
+
+            if (System.currentTimeMillis() - creditEmail.getLastJobTimestamp() < loopIntervalSeconds * 1000) {
+                redisJobHandle.doneJob(creditEmail);
+                try {
+                    Thread.sleep(waitSeconds * 1000);
+                    logger.debug("==job id :{} is done waitSeconds:{} ", creditEmail.getId(), waitSeconds);
+                } catch (InterruptedException e) {
+                }
+                continue;
+            }
+            taskExecutor.execute(() -> {
+                try {
+                    logger.debug("id:{}download email:{}", creditEmail.getId(), creditEmail.getEmail());
+                    downloadMail.execute(creditEmail, redisJobHandle);
+                } catch (Exception e) {
+                    logger.warn("download exception:{}", creditEmail);
+                }
+            });
+
+        }
+
+    }
+
+    public void offJobLoop() {
+        flagJobLoop = false;
     }
 }

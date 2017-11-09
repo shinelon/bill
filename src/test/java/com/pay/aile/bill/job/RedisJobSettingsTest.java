@@ -1,6 +1,5 @@
 package com.pay.aile.bill.job;
 
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,29 +10,27 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.pay.aile.bill.BillApplication;
 
 /***
- * DownloadMailSchedulerTest.java
+ * RedisJobSettingsTest.java
  *
  * @author shinelon
  *
- * @date 2017年11月8日
+ * @date 2017年11月9日
  *
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = BillApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class DownloadMailSchedulerTest {
-    private static final Logger logger = LoggerFactory.getLogger(DownloadMailSchedulerTest.class);
+public class RedisJobSettingsTest {
+    private static final Logger logger = LoggerFactory.getLogger(RedisJobSettingsTest.class);
     @Autowired
-    private DownloadMailScheduler downloadMailScheduler;
+    private RedisJobHandle redisJobSettings;
 
     // @Test
-    public void testJob() {
-        downloadMailScheduler.downLoadMail();
+    public void testInitJobList() {
+        redisJobSettings.initJobList();
     }
 
-    @Test
-    public void testJobLoop() throws InterruptedException {
-        downloadMailScheduler.downLoadMailLoop();
-        Thread.sleep(100000);
-        // downloadMailScheduler.offJobLoop();
+    // @Test
+    public void unLockTest() {
+        redisJobSettings.unLock(redisJobSettings.MAIL_DOWANLOD_LIST_NAME);
     }
 }
