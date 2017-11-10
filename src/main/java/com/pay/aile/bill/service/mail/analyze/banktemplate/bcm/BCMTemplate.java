@@ -23,10 +23,8 @@ public class BCMTemplate extends AbstractBCMTemplate {
     public void initRules() {
         super.initRules();
         if (rules == null) {
-            rules = creditTemplateMapper.selectById(4);
-        }
-        if (rules == null) {
             rules = new CreditTemplate();
+            rules.setCardtypeId(10L);
             rules.setDueDate("到期还款日 \\d{4}/\\d{2}/\\d{2}");
             rules.setCurrentAmount("本期应还款额 \\d+\\.?\\d*");
             rules.setCredits("信用额度 \\d+.?\\d*");

@@ -18,52 +18,48 @@ import com.pay.aile.bill.service.mail.analyze.util.DateUtil;
 @Service
 public class CMBCTemplate extends AbstractCMBCTemplate {
 
-	private String date = "";
+    private String date = "";
 
-	@Override
-	protected void analyzeDueDate(CreditBill bill, String content, AnalyzeParamsModel apm) {
-		if (StringUtils.hasText(rules.getDueDate())) {
+    @Override
+    public void initRules() {
+        if (rules == null) {
+            rules = new CreditTemplate();
+            rules.setCardtypeId(17L);
+            rules.setBillingDate("StatementDate \\d{4}/\\d{2}/\\d{2}"); // 账单日
+            rules.setDueDate("PaymentDueDate \\d{4}/\\d{2}/\\d{2}");
+            rules.setCurrentAmount("NewBalance \\d+.?\\d*");
+            rules.setDetails("\\d{2}/\\d{2} \\d{2}/\\d{2} \\S+ \\d+.?\\d* \\d{4}");
+        }
+    }
 
-			date = getValueByPattern("dueDate", content, rules.getDueDate(), apm, " ");
-			bill.setDueDate(DateUtil.parseDate(date));
-		}
-	}
+    @Override
+    protected void analyzeDueDate(CreditBill bill, String content, AnalyzeParamsModel apm) {
+        if (StringUtils.hasText(rules.getDueDate())) {
 
-	@Override
-	protected void analyzeInternal(AnalyzeParamsModel apm) {
-		super.analyzeInternal(apm);
-	}
+            date = getValueByPattern("dueDate", content, rules.getDueDate(), apm, " ");
+            bill.setDueDate(DateUtil.parseDate(date));
+        }
+    }
 
-	@Override
-	public void initRules() {
-		if (rules == null) {
-			rules = new CreditTemplate();
-			rules.setBillingDate("StatementDate \\d{4}/\\d{2}/\\d{2}"); // 账单日
-			rules.setDueDate("PaymentDueDate \\d{4}/\\d{2}/\\d{2}");
-			rules.setCurrentAmount("NewBalance \\d+.?\\d*");
-			rules.setDetails("\\d{2}/\\d{2} \\d{2}/\\d{2} \\S+ \\d+.?\\d* \\d{4}");
-		}
-	}
+    @Override
+    protected void setCardType() {
+        cardType = CardTypeEnum.CMBC_DEFAULT;
+    };
 
-	@Override
-	protected void setCardType() {
-		cardType = CardTypeEnum.CMBC_DEFAULT;
-	};
-
-	@Override
-	protected CreditBillDetail setCreditBillDetail(String detail) {
-		CreditBillDetail cbd = new CreditBillDetail();
-		String[] sa = detail.split(" ");
-		String year = date.substring(0, 5);
-		cbd.setTransactionDate(DateUtil.parseDate(year + sa[0]));
-		cbd.setBillingDate(DateUtil.parseDate(year + sa[1]));
-		cbd.setTransactionAmount(sa[sa.length - 2].replaceAll("\\n", ""));
-		String desc = "";
-		for (int i = 2; i < sa.length - 2; i++) {
-			desc = desc + sa[i];
-		}
-		cbd.setTransactionDescription(desc);
-		return cbd;
-	}
+    @Override
+    protected CreditBillDetail setCreditBillDetail(String detail) {
+        CreditBillDetail cbd = new CreditBillDetail();
+        String[] sa = detail.split(" ");
+        String year = date.substring(0, 5);
+        cbd.setTransactionDate(DateUtil.parseDate(year + sa[0]));
+        cbd.setBillingDate(DateUtil.parseDate(year + sa[1]));
+        cbd.setTransactionAmount(sa[sa.length - 2].replaceAll("\\n", ""));
+        String desc = "";
+        for (int i = 2; i < sa.length - 2; i++) {
+            desc = desc + sa[i];
+        }
+        cbd.setTransactionDescription(desc);
+        return cbd;
+    }
 
 }

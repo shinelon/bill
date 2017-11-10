@@ -18,6 +18,18 @@ import com.pay.aile.bill.service.mail.analyze.util.PatternMatcherUtil;
  */
 @Service
 public class SPDBCreditTemplate extends AbstractSPDBTemplate {
+    @Override
+    public void initRules() {
+        super.initRules();
+        if (rules == null) {
+            rules = new CreditTemplate();
+            rules.setCardtypeId(15L);
+            // 目前邮箱中浦发信用卡账单只有这两项/应还款额-还款日期
+            rules.setDueDate("到期\\s?还\\s?款日[:|：]\\s?\\d{4}/\\d{1,2}/\\d{1,2}");
+            rules.setCurrentAmount("本期\\s?应还\\s?款\\s?总额\\s?[:|：]\\s?(-?\\d+,?){0,9}.?\\d{0,2}");
+        }
+    }
+
     /**
      * 应还款额
      */
@@ -38,17 +50,6 @@ public class SPDBCreditTemplate extends AbstractSPDBTemplate {
         if (StringUtils.hasText(rules.getDueDate())) {
             String date = getValueByPattern("dueDate", content, rules.getDueDate(), apm, "：");
             bill.setDueDate(DateUtil.parseDate(date));
-        }
-    }
-
-    @Override
-    public void initRules() {
-        super.initRules();
-        if (rules == null) {
-            rules = new CreditTemplate();
-            // 目前邮箱中浦发信用卡账单只有这两项/应还款额-还款日期
-            rules.setDueDate("到期\\s?还\\s?款日[:|：]\\s?\\d{4}/\\d{1,2}/\\d{1,2}");
-            rules.setCurrentAmount("本期\\s?应还\\s?款\\s?总额\\s?[:|：]\\s?(-?\\d+,?){0,9}.?\\d{0,2}");
         }
     }
 

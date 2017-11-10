@@ -19,7 +19,7 @@ import com.pay.aile.bill.service.mail.analyze.util.DateUtil;
 import com.pay.aile.bill.service.mail.analyze.util.PatternMatcherUtil;
 
 /**
- * 
+ *
  * @author Charlie
  * @description 招商银行银联单币卡解析模板
  */
@@ -29,13 +29,13 @@ public class CMBUnionPayTemplate extends AbstractCMBTemplate {
 
     @Override
     public void initRules() {
-        //        super.initRules();
+        super.initRules();
         if (rules == null) {
             rules = new CreditTemplate();
+            rules.setCardtypeId(3L);
             rules.setDueDate("\\d{2} 月 \\d{2} 日");
             rules.setCurrentAmount("本期应还金额NewBalance \\d+\\.?\\d*");
-            rules.setDetails(
-                    "\\d{4} \\d{8} \\d{2}:\\d{2}:\\d{2} \\S+ \\S+ \\d+\\.?\\d*");
+            rules.setDetails("\\d{4} \\d{8} \\d{2}:\\d{2}:\\d{2} \\S+ \\S+ \\d+\\.?\\d*");
             rules.setTransactionDate("1");
             rules.setTransactionCurrency("3");
             rules.setTransactionAmount("5");
@@ -43,23 +43,44 @@ public class CMBUnionPayTemplate extends AbstractCMBTemplate {
     }
 
     @Override
-    protected void setCardType() {
-        this.cardType = CardTypeEnum.CMB_UNIONPAY;
+    protected void afterAnalyze(AnalyzeParamsModel apm) {
+        AnalyzeResult result = apm.getResult();
+        if (result.getBill().getDueDate() == null) {
+            result.setBill(null);
+        }
+        if (result.getBill() == null && (result.getDetail() == null || result.getDetail().isEmpty())) {
+            logger.error("CMBUnionPayTemplate 解析失败,apm={}", apm);
+            apm.setResult(null);
+        }
     }
 
     @Override
-    protected void analyzeDueDate(CreditBill bill, String content,
-            AnalyzeParamsModel apm) {
+    protected void analyzeDetails(List<CreditBillDetail> detail, String content, AnalyzeParamsModel apm,
+            CreditCard card) {
+        List<String> list = null;
+        if (StringUtils.hasText(rules.getDetails())) {
+            // 交易明细
+            list = PatternMatcherUtil.getMatcher(rules.getDetails(), content);
+            if (!list.isEmpty()) {
+                for (int i = 0; i < list.size(); i++) {
+                    String s = list.get(i);
+                    detail.add(setCreditBillDetail(s));
+                    setCardNumbers(card, s);
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void analyzeDueDate(CreditBill bill, String content, AnalyzeParamsModel apm) {
         if (StringUtils.hasText(rules.getDueDate())) {
             try {
                 String ruleValue = rules.getDueDate();
-                List<String> list = PatternMatcherUtil.getMatcher(ruleValue,
-                        content);
+                List<String> list = PatternMatcherUtil.getMatcher(ruleValue, content);
                 if (!list.isEmpty()) {
 
                     String date = list.get(0);
-                    date = date.replaceAll("\\s+", "").replaceAll("月", "-")
-                            .replaceAll("日", "");
+                    date = date.replaceAll("\\s+", "").replaceAll("月", "-").replaceAll("日", "");
                     String monthStr = date.split("-")[0];
                     int billMonth = Integer.valueOf(monthStr);
                     Calendar c = Calendar.getInstance();
@@ -78,13 +99,12 @@ public class CMBUnionPayTemplate extends AbstractCMBTemplate {
     }
 
     @Override
-    protected String getValueByPattern(String key, String content,
-            String ruleValue, AnalyzeParamsModel apm, String splitSign) {
+    protected String getValueByPattern(String key, String content, String ruleValue, AnalyzeParamsModel apm,
+            String splitSign) {
 
         if (StringUtils.hasText(ruleValue)) {
 
-            List<String> list = PatternMatcherUtil.getMatcher(ruleValue,
-                    content);
+            List<String> list = PatternMatcherUtil.getMatcher(ruleValue, content);
             if (!list.isEmpty()) {
                 String result = list.get(0);
                 String[] sa = result.split(splitSign);
@@ -96,33 +116,8 @@ public class CMBUnionPayTemplate extends AbstractCMBTemplate {
     }
 
     @Override
-    protected void afterAnalyze(AnalyzeParamsModel apm) {
-        AnalyzeResult result = apm.getResult();
-        if (result.getBill().getDueDate() == null) {
-            result.setBill(null);
-        }
-        if (result.getBill() == null && (result.getDetail() == null
-                || result.getDetail().isEmpty())) {
-            logger.error("CMBUnionPayTemplate 解析失败,apm={}", apm);
-            apm.setResult(null);
-        }
-    }
-
-    @Override
-    protected void analyzeDetails(List<CreditBillDetail> detail, String content,
-            AnalyzeParamsModel apm,CreditCard card) {
-        List<String> list = null;
-        if (StringUtils.hasText(rules.getDetails())) {
-            // 交易明细
-            list = PatternMatcherUtil.getMatcher(rules.getDetails(), content);
-            if (!list.isEmpty()) {
-                for (int i = 0; i < list.size(); i++) {
-                    String s = list.get(i);
-                    detail.add(setCreditBillDetail(s));
-                    setCardNumbers(card, s);
-                }
-            }
-        }
+    protected void setCardType() {
+        cardType = CardTypeEnum.CMB_UNIONPAY;
     }
 
 }

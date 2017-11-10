@@ -18,11 +18,10 @@ public class GDBTemplate extends AbstractGDBTemplate {
         super.initRules();
         if (rules == null) {
             rules = new CreditTemplate();
-            rules.setDueDate(
-                    "\\d{4}\\*+\\d{4} \\d+\\.?\\d* \\d+\\.?\\d* \\d{4}/\\d{2}/\\d{2}");
+            rules.setCardtypeId(8L);
+            rules.setDueDate("\\d{4}\\*+\\d{4} \\d+\\.?\\d* \\d+\\.?\\d* \\d{4}/\\d{2}/\\d{2}");
             rules.setCurrentAmount("\\d{4}\\*+\\d{4} \\d+\\.?\\d*");
-            rules.setCredits(
-                    "\\d{4}\\*+\\d{4} \\d+\\.?\\d* \\d+\\.?\\d* \\d{4}/\\d{2}/\\d{2} \\S+ \\d+\\.?\\d*");
+            rules.setCredits("\\d{4}\\*+\\d{4} \\d+\\.?\\d* \\d+\\.?\\d* \\d{4}/\\d{2}/\\d{2} \\S+ \\d+\\.?\\d*");
         }
     }
 

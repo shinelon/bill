@@ -19,7 +19,7 @@ import com.pay.aile.bill.service.mail.analyze.util.DateUtil;
 import com.pay.aile.bill.service.mail.analyze.util.PatternMatcherUtil;
 
 /**
- * 
+ *
  * @author Charlie
  * @description 招商银行YOUNG卡解析模板
  */
@@ -32,10 +32,10 @@ public class CMBYoungTemplate extends AbstractCMBTemplate {
         super.initRules();
         if (rules == null) {
             rules = new CreditTemplate();
+            rules.setCardtypeId(2L);
             rules.setDueDate("\\d{2}/\\d{2}");
             rules.setCurrentAmount("\\d{2}/\\d{2} \\d+\\.?\\d*");
-            rules.setDetails(
-                    "\\d{4} \\d{8} \\d{2}:\\d{2}:\\d{2} \\S+ \\S+ \\d+\\.?\\d*");
+            rules.setDetails("\\d{4} \\d{8} \\d{2}:\\d{2}:\\d{2} \\S+ \\S+ \\d+\\.?\\d*");
             rules.setTransactionDate("1");
             rules.setTransactionCurrency("3");
             rules.setTransactionAmount("5");
@@ -43,18 +43,40 @@ public class CMBYoungTemplate extends AbstractCMBTemplate {
     }
 
     @Override
-    protected void setCardType() {
-        this.cardType = CardTypeEnum.CMB_YOUNG;
+    protected void afterAnalyze(AnalyzeParamsModel apm) {
+        AnalyzeResult result = apm.getResult();
+        if (result.getBill().getDueDate() == null) {
+            result.setBill(null);
+        }
+        if (result.getBill() == null && (result.getDetail() == null || result.getDetail().isEmpty())) {
+            logger.error("CMBYoungTemplate 解析失败,apm={}", apm);
+            apm.setResult(null);
+        }
     }
 
     @Override
-    protected void analyzeDueDate(CreditBill bill, String content,
-            AnalyzeParamsModel apm) {
+    protected void analyzeDetails(List<CreditBillDetail> detail, String content, AnalyzeParamsModel apm,
+            CreditCard card) {
+        List<String> list = null;
+        if (StringUtils.hasText(rules.getDetails())) {
+            // 交易明细
+            list = PatternMatcherUtil.getMatcher(rules.getDetails(), content);
+            if (!list.isEmpty()) {
+                for (int i = 0; i < list.size(); i++) {
+                    String s = list.get(i);
+                    detail.add(setCreditBillDetail(s));
+                    setCardNumbers(card, s);
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void analyzeDueDate(CreditBill bill, String content, AnalyzeParamsModel apm) {
         if (StringUtils.hasText(rules.getDueDate())) {
             try {
                 String ruleValue = rules.getDueDate();
-                List<String> list = PatternMatcherUtil.getMatcher(ruleValue,
-                        content);
+                List<String> list = PatternMatcherUtil.getMatcher(ruleValue, content);
                 if (!list.isEmpty()) {
 
                     String date = list.get(0);
@@ -76,13 +98,12 @@ public class CMBYoungTemplate extends AbstractCMBTemplate {
     }
 
     @Override
-    protected String getValueByPattern(String key, String content,
-            String ruleValue, AnalyzeParamsModel apm, String splitSign) {
+    protected String getValueByPattern(String key, String content, String ruleValue, AnalyzeParamsModel apm,
+            String splitSign) {
 
         if (StringUtils.hasText(ruleValue)) {
 
-            List<String> list = PatternMatcherUtil.getMatcher(ruleValue,
-                    content);
+            List<String> list = PatternMatcherUtil.getMatcher(ruleValue, content);
             if (!list.isEmpty()) {
                 String result = list.get(0);
                 String[] sa = result.split(splitSign);
@@ -94,32 +115,7 @@ public class CMBYoungTemplate extends AbstractCMBTemplate {
     }
 
     @Override
-    protected void afterAnalyze(AnalyzeParamsModel apm) {
-        AnalyzeResult result = apm.getResult();
-        if (result.getBill().getDueDate() == null) {
-            result.setBill(null);
-        }
-        if (result.getBill() == null && (result.getDetail() == null
-                || result.getDetail().isEmpty())) {
-            logger.error("CMBYoungTemplate 解析失败,apm={}", apm);
-            apm.setResult(null);
-        }
-    }
-
-    @Override
-    protected void analyzeDetails(List<CreditBillDetail> detail, String content,
-            AnalyzeParamsModel apm,CreditCard card) {
-        List<String> list = null;
-        if (StringUtils.hasText(rules.getDetails())) {
-            // 交易明细
-            list = PatternMatcherUtil.getMatcher(rules.getDetails(), content);
-            if (!list.isEmpty()) {
-                for (int i = 0; i < list.size(); i++) {
-                    String s = list.get(i);
-                    detail.add(setCreditBillDetail(s));
-                    setCardNumbers(card, s);
-                }
-            }
-        }
+    protected void setCardType() {
+        cardType = CardTypeEnum.CMB_YOUNG;
     }
 }

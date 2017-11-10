@@ -18,8 +18,8 @@ public class CZBTemplate extends AbstractCZBTemplate {
         super.initRules();
         if (rules == null) {
             rules = new CreditTemplate();
-            rules.setDueDate(
-                    "PaymentDueDate \\d+\\.?\\d* \\d+\\.?\\d* \\d{8} \\d{8}");
+            rules.setCardtypeId(6L);
+            rules.setDueDate("PaymentDueDate \\d+\\.?\\d* \\d+\\.?\\d* \\d{8} \\d{8}");
             rules.setCurrentAmount("循环利息Interest \\d+\\.?\\d*");
             rules.setCredits("PaymentDueDate \\d+\\.?\\d*");
             rules.setDetails("\\d{8} \\d{8} \\S+ -?\\d+\\.?\\d* \\d{4}");

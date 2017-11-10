@@ -19,13 +19,12 @@ public class ABCTemplate extends AbstractABCTemplate {
         super.initRules();
         if (rules == null) {
             rules = new CreditTemplate();
+            rules.setCardtypeId(5L);
             rules.setDueDate("到期还款日 \\d{8}");
-            rules.setCurrentAmount(
-                    "CreditLimit [\\u4e00-\\u9fa5]+\\([a-zA-Z]+\\) -?\\d+\\.?\\d*");
+            rules.setCurrentAmount("CreditLimit [\\u4e00-\\u9fa5]+\\([a-zA-Z]+\\) -?\\d+\\.?\\d*");
             rules.setCredits(
                     "CreditLimit [\\u4e00-\\u9fa5]+\\([a-zA-Z]+\\) -?\\d+\\.?\\d* -?\\d+\\.?\\d* \\d+\\.?\\d*");
-            rules.setDetails(
-                    "\\d{8} \\d{8} \\d{4} \\S+ \\S+ \\d+\\.?\\d*/[a-zA-Z]+ -?\\d+\\.?\\d*/[a-zA-Z]+");
+            rules.setDetails("\\d{8} \\d{8} \\d{4} \\S+ \\S+ \\d+\\.?\\d*/[a-zA-Z]+ -?\\d+\\.?\\d*/[a-zA-Z]+");
             rules.setTransactionDate("0");
             rules.setBillingDate("1");
         }
@@ -41,8 +40,7 @@ public class ABCTemplate extends AbstractABCTemplate {
         if (index == 3) {
             cbd.setTransactionDescription(value);
         } else if (index == 4) {
-            cbd.setTransactionDescription(
-                    cbd.getTransactionDescription() + value);
+            cbd.setTransactionDescription(cbd.getTransactionDescription() + value);
         } else if (index == 5) {
             String[] trans = value.split("/");
             cbd.setTransactionAmount(trans[0]);

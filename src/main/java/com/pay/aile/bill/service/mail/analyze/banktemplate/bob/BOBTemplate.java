@@ -24,24 +24,17 @@ public class BOBTemplate extends AbstractBOBTemplate {
         super.initRules();
         if (rules == null) {
             rules = new CreditTemplate();
+            rules.setCardtypeId(7L);
             rules.setCurrentAmount("本期应还款额：\\d+\\.?\\d*");
         }
     }
 
     @Override
-    protected void setCardType() {
-        cardType = CardTypeEnum.BOB_DEFAULT;
-    }
-
-    @Override
-    protected void analyzeCurrentAmount(CreditBill bill, String content,
-            AnalyzeParamsModel apm) {
+    protected void analyzeCurrentAmount(CreditBill bill, String content, AnalyzeParamsModel apm) {
         if (StringUtils.hasText(rules.getCurrentAmount())) {
 
-            String currentAmount = getValueByPattern("currentAmount", content,
-                    rules.getCurrentAmount(), apm, "：");
-            currentAmount = PatternMatcherUtil
-                    .getMatcherString("-?\\d+\\.?\\d*", currentAmount);
+            String currentAmount = getValueByPattern("currentAmount", content, rules.getCurrentAmount(), apm, "：");
+            currentAmount = PatternMatcherUtil.getMatcherString("-?\\d+\\.?\\d*", currentAmount);
             if (StringUtils.hasText(currentAmount)) {
                 if (currentAmount.startsWith("-")) {
                     currentAmount = currentAmount.replaceAll("-", "");
@@ -49,6 +42,11 @@ public class BOBTemplate extends AbstractBOBTemplate {
                 bill.setCurrentAmount(new BigDecimal(currentAmount));
             }
         }
+    }
+
+    @Override
+    protected void setCardType() {
+        cardType = CardTypeEnum.BOB_DEFAULT;
     }
 
 }

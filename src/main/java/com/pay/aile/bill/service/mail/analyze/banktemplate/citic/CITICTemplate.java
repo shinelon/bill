@@ -19,20 +19,17 @@ public class CITICTemplate extends AbstractCITICTemplate {
 
     @Override
     public void initRules() {
-        //        super.initRules();
+        super.initRules();
         if (rules == null) {
             rules = new CreditTemplate();
+            rules.setCardtypeId(1L);
             rules.setDueDate("到期还款日：\\d{4}年\\d{2}月\\d{2}日");
-            rules.setCurrentAmount(
-                    "到期还款日：\\d{4}年\\d{2}月\\d{2}日 [a-zA-Z]{3} \\d+\\.?\\d*");
+            rules.setCurrentAmount("到期还款日：\\d{4}年\\d{2}月\\d{2}日 [a-zA-Z]{3} \\d+\\.?\\d*");
             rules.setCredits(
                     "到期还款日：\\d{4}年\\d{2}月\\d{2}日 [a-zA-Z]{3} \\d+\\.?\\d+ [a-zA-Z]{3} \\d+\\.?\\d+ [a-zA-Z]{3} \\d+\\.?\\d+ [a-zA-Z]{3} \\d+.?\\d+ \\d*\\D* [a-zA-Z]{3} \\d+\\.?\\d*");
-            rules.setPrepaidCashAmount(
-                    "预借现金额度 [a-zA-Z]{3} \\d+\\.?\\d+ [a-zA-Z]{3} \\d+\\.?\\d+");
-            rules.setCash(
-                    "取现额度 [a-zA-Z]{3} \\d+\\.?\\d+ [a-zA-Z]{3} \\d+\\.?\\d+");
-            rules.setDetails(
-                    "\\d{8} \\d{8} \\d{0,4} \\S+ [A-Za-z]{3} -?\\d+\\.?\\d* [a-zA-Z]{3} -?\\d+\\.?\\d*");
+            rules.setPrepaidCashAmount("预借现金额度 [a-zA-Z]{3} \\d+\\.?\\d+ [a-zA-Z]{3} \\d+\\.?\\d+");
+            rules.setCash("取现额度 [a-zA-Z]{3} \\d+\\.?\\d+ [a-zA-Z]{3} \\d+\\.?\\d+");
+            rules.setDetails("\\d{8} \\d{8} \\d{0,4} \\S+ [A-Za-z]{3} -?\\d+\\.?\\d* [a-zA-Z]{3} -?\\d+\\.?\\d*");
             rules.setTransactionDate("0");
             rules.setBillingDate("1");
             rules.setTransactionDescription("3");
@@ -43,18 +40,16 @@ public class CITICTemplate extends AbstractCITICTemplate {
     }
 
     @Override
-    protected void setCardType() {
-        cardType = CardTypeEnum.CITIC_STANDARD;
+    protected void analyzeDueDate(CreditBill bill, String content, AnalyzeParamsModel apm) {
+        if (StringUtils.hasText(rules.getDueDate())) {
+
+            String date = getValueByPattern("dueDate", content, rules.getDueDate(), apm, "：");
+            bill.setDueDate(DateUtil.parseDate(date));
+        }
     }
 
     @Override
-    protected void analyzeDueDate(CreditBill bill, String content,
-            AnalyzeParamsModel apm) {
-        if (StringUtils.hasText(rules.getDueDate())) {
-
-            String date = getValueByPattern("dueDate", content,
-                    rules.getDueDate(), apm, "：");
-            bill.setDueDate(DateUtil.parseDate(date));
-        }
+    protected void setCardType() {
+        cardType = CardTypeEnum.CITIC_STANDARD;
     }
 }

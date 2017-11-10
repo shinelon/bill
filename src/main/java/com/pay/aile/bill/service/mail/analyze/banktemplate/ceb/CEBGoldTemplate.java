@@ -23,27 +23,25 @@ public class CEBGoldTemplate extends AbstractCEBTemplate {
         super.initRules();
         if (rules == null) {
             rules = new CreditTemplate();
+            rules.setCardtypeId(12L);
             // 账单日
-            rules.setBillingDate(
-                    "积分余额 Rewards Points Balance \\d{4}/\\d{2}/\\d{2}");
-            //到期还款日
-            rules.setDueDate(
-                    "积分余额 Rewards Points Balance \\d{4}/\\d{2}/\\d{2} \\d{4}/\\d{2}/\\d{2}");
-            //额度
-            rules.setCredits(
-                    "积分余额 Rewards Points Balance \\d{4}/\\d{2}/\\d{2} \\d{4}/\\d{2}/\\d{2} \\d+");
-            //应还款额
+            rules.setBillingDate("积分余额 Rewards Points Balance \\d{4}/\\d{2}/\\d{2}");
+            // 到期还款日
+            rules.setDueDate("积分余额 Rewards Points Balance \\d{4}/\\d{2}/\\d{2} \\d{4}/\\d{2}/\\d{2}");
+            // 额度
+            rules.setCredits("积分余额 Rewards Points Balance \\d{4}/\\d{2}/\\d{2} \\d{4}/\\d{2}/\\d{2} \\d+");
+            // 应还款额
             rules.setCurrentAmount(
                     "积分余额 Rewards Points Balance \\d{4}/\\d{2}/\\d{2} \\d{4}/\\d{2}/\\d{2} \\d+ \\d+.?\\d*");
-            rules.setDetails(
-                    "\\d{4}/\\d{2}/\\d{2} \\d{4}/\\d{2}/\\d{2} \\d{4} .*\\n");
+            rules.setDetails("\\d{4}/\\d{2}/\\d{2} \\d{4}/\\d{2}/\\d{2} \\d{4} .*\\n");
         }
     }
 
     @Override
     protected void setCardType() {
         cardType = CardTypeEnum.CEB_GOLD;
-    }    
+    }
+
     @Override
     protected CreditBillDetail setCreditBillDetail(String detail) {
         CreditBillDetail cbd = new CreditBillDetail();

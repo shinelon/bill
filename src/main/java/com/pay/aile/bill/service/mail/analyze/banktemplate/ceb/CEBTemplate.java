@@ -20,12 +20,12 @@ public class CEBTemplate extends AbstractCEBTemplate {
         super.initRules();
         if (rules == null) {
             rules = new CreditTemplate();
+            rules.setCardtypeId(4L);
             rules.setBillingDate("账单日 \\d{4}/\\d{2}/\\d{2}");// 账单日
             rules.setDueDate("到期还款日 \\d{4}/\\d{2}/\\d{2}");
             rules.setCurrentAmount("人民币本期应还款额 \\d+.?\\d*");
             rules.setCredits("信用额度 \\d+.?\\d*");
-            rules.setDetails(
-                    "\\d{4}/\\d{2}/\\d{2} \\d{4}/\\d{2}/\\d{2} \\d{4} .*\\n");
+            rules.setDetails("\\d{4}/\\d{2}/\\d{2} \\d{4}/\\d{2}/\\d{2} \\d{4} .*\\n");
         }
     }
 
