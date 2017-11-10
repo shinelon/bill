@@ -136,6 +136,8 @@ public class CreditTemplate extends Model<CreditTemplate> {
 	@TableField(value = "update_date", fill = FieldFill.UPDATE)
 	private Date updateDate;
 
+	@TableField("card_numbers")
+	private String cardNumbers;
 	/**
 	 * 账单年月
 	 */
@@ -155,6 +157,10 @@ public class CreditTemplate extends Model<CreditTemplate> {
 
 	public String getCardholder() {
 		return cardholder;
+	}
+
+	public String getCardNumbers() {
+		return cardNumbers;
 	}
 
 	public Long getCardtypeId() {
@@ -255,6 +261,10 @@ public class CreditTemplate extends Model<CreditTemplate> {
 
 	public void setCardholder(String cardholder) {
 		this.cardholder = cardholder;
+	}
+
+	public void setCardNumbers(String cardNumbers) {
+		this.cardNumbers = cardNumbers;
 	}
 
 	public void setCardtypeId(Long cardtypeId) {

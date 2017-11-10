@@ -33,7 +33,10 @@ public class CreditCardServiceImpl implements CreditCardService {
 	 */
 	@Override
 	public Long saveOrUpateCreditCard(CreditCard card) {
-		CreditCard oldCard = creditCardMapper.selectOne(card);
+		// 根据卡号查询
+		CreditCard oldCard = new CreditCard();
+		oldCard.setNumbers(card.getNumbers());
+		oldCard = creditCardMapper.selectOne(card);
 		if (oldCard != null) {
 			card.setId(oldCard.getId());
 		}

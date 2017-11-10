@@ -13,7 +13,7 @@
 		<result column="repayment" property="repayment" />
 		<result column="consumption" property="consumption" />
         <result column="email_id" property="emailId" />
-        <result column="cardtype_id" property="cardtypeId" />
+        <result column="card_id" property="cardId" />
         <result column="sent_date" property="sentDate" />
         <result column="status" property="status" />
         <result column="create_date" property="createDate" />
@@ -60,8 +60,8 @@
       <if test="emailId != null" >
         email_id,
       </if>
-      <if test="cardtypeId != null" >
-        cardtype_id,
+      <if test="cardId != null" >
+        card_id,
       </if>
       <if test="sentDate != null" >
         sent_date,
@@ -125,8 +125,8 @@
       <if test="emailId != null" >
         #{emailId,jdbcType=BIGINT},
       </if>
-      <if test="cardtypeId != null" >
-        #{cardtypeId,jdbcType=BIGINT},
+      <if test="cardId != null" >
+        #{cardId,jdbcType=BIGINT},
       </if>
       <if test="sentDate != null" >
         #{sentDate,jdbcType=DATE},
