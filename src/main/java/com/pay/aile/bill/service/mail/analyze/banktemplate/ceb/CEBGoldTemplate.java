@@ -4,8 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.pay.aile.bill.entity.CreditBillDetail;
 import com.pay.aile.bill.entity.CreditTemplate;
 import com.pay.aile.bill.service.mail.analyze.enums.CardTypeEnum;
+import com.pay.aile.bill.service.mail.analyze.util.DateUtil;
 
 /**
  *
@@ -34,12 +36,26 @@ public class CEBGoldTemplate extends AbstractCEBTemplate {
             rules.setCurrentAmount(
                     "积分余额 Rewards Points Balance \\d{4}/\\d{2}/\\d{2} \\d{4}/\\d{2}/\\d{2} \\d+ \\d+.?\\d*");
             rules.setDetails(
-                    "\\d{4}/\\d{2}/\\d{2} \\d{4}/\\d{2}/\\d{2} \\d{4} \\S+ \\d+.?\\d*");
+                    "\\d{4}/\\d{2}/\\d{2} \\d{4}/\\d{2}/\\d{2} \\d{4} .*\\n");
         }
     }
 
     @Override
     protected void setCardType() {
         cardType = CardTypeEnum.CEB_GOLD;
+    }    
+    @Override
+    protected CreditBillDetail setCreditBillDetail(String detail) {
+        CreditBillDetail cbd = new CreditBillDetail();
+        String[] sa = detail.split(" ");
+        cbd.setTransactionDate(DateUtil.parseDate(sa[0]));
+        cbd.setBillingDate(DateUtil.parseDate(sa[1]));
+        cbd.setTransactionAmount(sa[sa.length - 1].replaceAll("\\n", ""));
+        String desc = "";
+        for (int i = 3; i < sa.length - 1; i++) {
+            desc = desc + sa[i];
+        }
+        cbd.setTransactionDescription(desc);
+        return cbd;
     }
 }

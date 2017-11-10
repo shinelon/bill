@@ -45,6 +45,8 @@ public abstract class AbstractCMBTemplate extends BaseBankTemplate {
                                 .findCreditBillByTransDate(bill);
                         if (saveBill != null) {
                             billId = saveBill.getId();
+                        }else{
+                            
                         }
                     }
                     creditBillDetail.setBillId(billId);

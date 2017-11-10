@@ -21,7 +21,7 @@ public class BOBTemplate extends AbstractBOBTemplate {
 
     @Override
     public void initRules() {
-        //        super.initRules();
+        super.initRules();
         if (rules == null) {
             rules = new CreditTemplate();
             rules.setCurrentAmount("本期应还款额：\\d+\\.?\\d*");
