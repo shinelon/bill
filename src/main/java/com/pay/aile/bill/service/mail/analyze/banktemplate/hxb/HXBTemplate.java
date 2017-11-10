@@ -32,6 +32,26 @@ public class HXBTemplate extends AbstractHXBTemplate {
 
     }
 
+	/**
+	 *
+     * @Title: analyzeDueDate
+     * @Description: 解析参数
+     * @param card
+     * @param content
+     * @param apm
+     * @return void 返回类型 @throws
+     */
+    @Override
+    protected void analyzeCardholder(CreditCard card, String content, AnalyzeParamsModel apm) {
+        if (StringUtils.hasText(rules.getCardholder())) {
+
+            String cardholder = getValueByPattern("cardholder", content, rules.getCardholder(), apm,
+                    "");
+            cardholder = cardholder.substring(cardholder.indexOf("的") + 1, cardholder.length() - 3);
+            card.setCardholder(cardholder);
+        }
+    }
+
     // /**
     // *
     // * @Title: analyzeDueDate
@@ -51,25 +71,6 @@ public class HXBTemplate extends AbstractHXBTemplate {
     // card.setBillDay(billDay);
     // }
     // }
-
-    /**
-     *
-     * @Title: analyzeDueDate
-     * @Description: 解析参数
-     * @param card
-     * @param content
-     * @param apm
-     * @return void 返回类型 @throws
-     */
-    @Override
-    protected void analyzeCardholder(CreditCard card, String content, AnalyzeParamsModel apm) {
-        if (StringUtils.hasText(rules.getCardholder())) {
-
-            String cardholder = getValueByPattern("cardholder", content, rules.getCardholder(), apm, "");
-            cardholder = cardholder.substring(cardholder.indexOf("的") + 1, cardholder.length() - 3);
-            card.setCardholder(cardholder);
-        }
-    }
 
     @Override
     protected void analyzeCycle(CreditBill bill, String content, AnalyzeParamsModel apm) {
@@ -91,13 +92,20 @@ public class HXBTemplate extends AbstractHXBTemplate {
     protected void analyzeYearMonth(CreditBill bill, String content, AnalyzeParamsModel apm) {
         if (StringUtils.hasText(rules.getYearMonth())) {
 
-            String yearMonth = getValueByPattern("yearMonth", content, rules.getYearMonth(), apm, "");
+            String yearMonth = getValueByPattern("yearMonth", content, rules.getYearMonth(), apm,
+                    "");
             bill.setYear(yearMonth.substring(0, 4));
             bill.setMonth(yearMonth.substring(5, 7));
             // bill.setMonth(month);
             // bill.setBeginDate(beginDate);
             // bill.setEndDate(endDate);
         }
+    }
+
+    @Override
+    protected void setCardNumbers(CreditCard card, String number) {
+        String[] detailArray = number.split(" ");
+        card.setNumbers(detailArray[4]);
     }
 
     @Override
