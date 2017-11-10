@@ -16,6 +16,7 @@ public class CreditCard extends Model<CreditCard> {
 	 */
 
 	private static final long serialVersionUID = -8413068283560221578L;
+
 	/**
 	 * 所属银行
 	 */
@@ -27,16 +28,21 @@ public class CreditCard extends Model<CreditCard> {
 	@TableField("bill_day")
 	private String billDay;
 	/**
+	 * 持卡人
+	 */
+
+	@TableField("cardholder")
+	private String cardholder;
+
+	/**
 	 * 取现额度
 	 */
 	private String cash;
-
 	/**
 	 * 创建时间
 	 */
 	@TableField(value = "create_date", fill = FieldFill.INSERT)
 	private Date createDate;
-
 	/**
 	 * 信用额度
 	 */
@@ -59,11 +65,13 @@ public class CreditCard extends Model<CreditCard> {
 	 */
 	@TableField("prepaid_cash_amount")
 	private String prepaidCashAmount;
+
 	/**
 	 * 有效标志1有效0无效
 	 */
 	@TableField(fill = FieldFill.INSERT)
 	private Integer status;
+
 	/**
 	 * 修改时间
 	 */
@@ -76,6 +84,10 @@ public class CreditCard extends Model<CreditCard> {
 
 	public String getBillDay() {
 		return billDay;
+	}
+
+	public String getCardholder() {
+		return cardholder;
 	}
 
 	public String getCash() {
@@ -120,6 +132,10 @@ public class CreditCard extends Model<CreditCard> {
 
 	public void setBillDay(String billDay) {
 		this.billDay = billDay;
+	}
+
+	public void setCardholder(String cardholder) {
+		this.cardholder = cardholder;
 	}
 
 	public void setCash(String cash) {

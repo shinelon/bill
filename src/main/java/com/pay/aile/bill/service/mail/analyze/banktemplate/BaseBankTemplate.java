@@ -45,9 +45,9 @@ public abstract class BaseBankTemplate
 	 */
 	private volatile int count;
 	@Resource
-    protected CreditBillDetailService creditBillDetailService;
+	private CreditBillDetailService creditBillDetailService;
 	@Resource
-    protected CreditBillService creditBillService;
+	private CreditBillService creditBillService;
 
 	@Resource
 	private CreditCardService creditCardService;
@@ -110,6 +110,14 @@ public abstract class BaseBankTemplate
 
 	}
 
+	protected void analyzeBillDate(CreditCard card, String content, AnalyzeParamsModel apm) {
+		if (StringUtils.hasText(rules.getBillDay())) {
+
+			String billDay = getValueByPattern("billDay", content, rules.getBillDay(), apm, " ");
+			card.setBillDay(billDay);
+		}
+	}
+
 	/**
 	 *
 	 * @Title: analyzeDueDate
@@ -119,11 +127,11 @@ public abstract class BaseBankTemplate
 	 * @param apm
 	 * @return void 返回类型 @throws
 	 */
-	protected void analyzeBillDate(CreditCard card, String content, AnalyzeParamsModel apm) {
-		if (StringUtils.hasText(rules.getBillDay())) {
+	protected void analyzeCardholder(CreditCard card, String content, AnalyzeParamsModel apm) {
+		if (StringUtils.hasText(rules.getCardholder())) {
 
-			String billDay = getValueByPattern("billDay", content, rules.getBillDay(), apm, " ");
-			card.setBillDay(billDay);
+			String cardholder = getValueByPattern("cardholder", content, rules.getCardholder(), apm, " ");
+			card.setCardholder(cardholder);
 		}
 	}
 
@@ -137,18 +145,12 @@ public abstract class BaseBankTemplate
 	 * @return void 返回类型 @throws
 	 */
 	protected void analyzeCash(CreditBill bill, String content, AnalyzeParamsModel apm) {
+		if (StringUtils.hasText(rules.getCash())) {
 
-        if (StringUtils.hasText(rules.getCash())) {
-
-            String cash = getValueByPattern("cash", content, rules.getCash(),
-                    apm, " ");
-            cash = PatternMatcherUtil.getMatcherString("\\d+\\.?\\d*", cash);
-            if (StringUtils.hasText(cash)) {
-
-                bill.setCash(new BigDecimal(cash));
-            }
-        }
-
+			String cash = getValueByPattern("cash", content, rules.getCash(), apm, " ");
+			cash = PatternMatcherUtil.getMatcherString("\\d+.?\\d*", cash);
+			bill.setCash(new BigDecimal(cash));
+		}
 	}
 
 	/**
@@ -161,18 +163,12 @@ public abstract class BaseBankTemplate
 	 * @return void 返回类型 @throws
 	 */
 	protected void analyzeCredits(CreditBill bill, String content, AnalyzeParamsModel apm) {
+		if (StringUtils.hasText(rules.getCredits())) {
 
-        if (StringUtils.hasText(rules.getCredits())) {
-
-            String credits = getValueByPattern("credits", content,
-                    rules.getCredits(), apm, " ");
-            credits = PatternMatcherUtil.getMatcherString("\\d+\\.?\\d",
-                    credits);
-            if (StringUtils.hasText(credits)) {
-                bill.setCredits(new BigDecimal(credits));
-            }
-        }
-
+			String credits = getValueByPattern("credits", content, rules.getCredits(), apm, " ");
+			credits = PatternMatcherUtil.getMatcherString("\\d+.?\\d*", credits);
+			bill.setCredits(new BigDecimal(credits));
+		}
 	}
 
 	/**
@@ -185,21 +181,22 @@ public abstract class BaseBankTemplate
 	 * @return void 返回类型 @throws
 	 */
 	protected void analyzeCurrentAmount(CreditBill bill, String content, AnalyzeParamsModel apm) {
+		if (StringUtils.hasText(rules.getCurrentAmount())) {
 
-        if (StringUtils.hasText(rules.getCurrentAmount())) {
+			String currentAmount = getValueByPattern("currentAmount", content, rules.getCurrentAmount(), apm, " ");
+			currentAmount = PatternMatcherUtil.getMatcherString("\\d+.?\\d*", currentAmount);
+			bill.setCurrentAmount(new BigDecimal(currentAmount));
+		}
+	}
 
-            String currentAmount = getValueByPattern("currentAmount", content,
-                    rules.getCurrentAmount(), apm, " ");
-            currentAmount = PatternMatcherUtil
-                    .getMatcherString("-?\\d+\\.?\\d*", currentAmount);
-            if (StringUtils.hasText(currentAmount)) {
-                if (currentAmount.startsWith("-")) {
-                    currentAmount = currentAmount.replaceAll("-", "");
-                }
-                bill.setCurrentAmount(new BigDecimal(currentAmount));
-            }
-        }
+	protected void analyzeCycle(CreditBill bill, String content, AnalyzeParamsModel apm) {
+		if (StringUtils.hasText(rules.getCycle())) {
 
+			String cycle = getValueByPattern("cycle", content, rules.getCycle(), apm, " ");
+			cycle = PatternMatcherUtil.getMatcherString("\\d+.?\\d*", cycle);
+			// bill.setBeginDate(beginDate);
+			// bill.setEndDate(endDate);
+		}
 	}
 
 	protected void analyzeDetail(List<CreditBillDetail> detailList, String content, AnalyzeParamsModel apm) {
@@ -215,7 +212,16 @@ public abstract class BaseBankTemplate
 
 	}
 
-	protected void analyzeDetails(List<CreditBillDetail> detail, String content, AnalyzeParamsModel apm,CreditCard card) {
+	/**
+	 *
+	 * @Title: analyzeDetails
+	 * @Description: 分析账单明细
+	 * @param detail
+	 * @param content
+	 * @param apm
+	 * @return void 返回类型 @throws
+	 */
+	protected void analyzeDetails(List<CreditBillDetail> detail, String content, AnalyzeParamsModel apm) {
 		List<String> list = null;
 		if (StringUtils.hasText(rules.getDetails())) {
 			// 交易明细
@@ -226,11 +232,19 @@ public abstract class BaseBankTemplate
 			for (int i = 0; i < list.size(); i++) {
 				String s = list.get(i);
 				detail.add(setCreditBillDetail(s));
-				setCardNumbers(card, s);
 			}
 		}
 	}
 
+	/**
+	 *
+	 * @Title: analyzeDueDate
+	 * @Description: 还款日
+	 * @param bill
+	 * @param content
+	 * @param apm
+	 * @return void 返回类型 @throws
+	 */
 	protected void analyzeDueDate(CreditBill bill, String content, AnalyzeParamsModel apm) {
 		if (StringUtils.hasText(rules.getDueDate())) {
 
@@ -253,22 +267,62 @@ public abstract class BaseBankTemplate
 			throw new RuntimeException("账单模板规则未初始化");
 		}
 		List<String> list = null;
+		// 年月
+		analyzeYearMonth(bill, content, apm);
+		// 周期
+		analyzeCycle(bill, content, apm);
+		// 持卡人
+		analyzeCardholder(card, content, apm);
 		// 还款日
 		analyzeBillDate(card, content, apm);
 		// 还款日
 		analyzeDueDate(bill, content, apm);
 		// 本期账单金额
 		analyzeCurrentAmount(bill, content, apm);
+		// 最低还款额
+		analyzeMinimum(bill, content, apm);
 		// 信用二度
 		analyzeCredits(bill, content, apm);
 		// 取取现金额
 		analyzeCash(bill, content, apm);
 
-        analyzeDetails(detail, content, apm,card);
-		
+		if (StringUtils.hasText(rules.getDetails())) {
+			// 交易明细
+			list = PatternMatcherUtil.getMatcher(rules.getDetails(), content);
+			if (list.isEmpty()) {
+				handleNotMatch("details", rules.getDetails(), apm);
+			}
+			for (int i = 0; i < list.size(); i++) {
+				String s = list.get(i);
+				detail.add(setCreditBillDetail(s));
+
+				setCardNumbers(card, s);
+			}
+		}
 		// 设置卡片
 		setCard(card, bill, apm);
 		apm.setResult(ar);
+	}
+
+	protected void analyzeMinimum(CreditBill bill, String content, AnalyzeParamsModel apm) {
+		if (StringUtils.hasText(rules.getMinimum())) {
+
+			String minimum = getValueByPattern("minimum", content, rules.getMinimum(), apm, " ");
+			minimum = PatternMatcherUtil.getMatcherString("\\d+.?\\d*", minimum);
+			bill.setMinimum(new BigDecimal(minimum));
+		}
+	}
+
+	protected void analyzeYearMonth(CreditBill bill, String content, AnalyzeParamsModel apm) {
+		if (StringUtils.hasText(rules.getYearMonth())) {
+
+			String yearMonth = getValueByPattern("yearMonth", content, rules.getYearMonth(), apm, " ");
+			yearMonth = PatternMatcherUtil.getMatcherString("\\d+.?\\d*", yearMonth);
+			// bill.setYear(year);
+			// bill.setMonth(month);
+			// bill.setBeginDate(beginDate);
+			// bill.setEndDate(endDate);
+		}
 	}
 
 	/**
@@ -286,12 +340,17 @@ public abstract class BaseBankTemplate
 
 			List<String> list = PatternMatcherUtil.getMatcher(ruleValue, content);
 			if (list.isEmpty()) {
-				handleNotMatch(key, ruleValue, apm);
+				handleNotMatch(key, rules.getDueDate(), apm);
 			}
 			String result = list.get(0);
-			String[] sa = result.split(splitSign);
-			String value = sa[sa.length - 1];
-			return value;
+			if ("".equals(splitSign)) {
+				return result;
+			} else {
+				String[] sa = result.split(splitSign);
+				String value = sa[sa.length - 1];
+				return value;
+			}
+
 		}
 		return "";
 	}
@@ -313,14 +372,21 @@ public abstract class BaseBankTemplate
 			bill.setEmailId(emailId);
 			bill.setCardtypeId(apm.getCardtypeId());
 			bill.setSentDate(apm.getSentDate());
-			bill.setBankCode(apm.getBankCode());
-			creditBillService.saveOrUpdateCreditBill(bill);
-			billId = bill.getId();
+			billId = creditBillService.saveOrUpdateCreditBill(bill);
+			// billId = bill.getId();
 		}
 
 		if (billDetails != null && !billDetails.isEmpty()) {
 			for (CreditBillDetail creditBillDetail : billDetails) {
 				try {
+					if (billId == null) {
+						bill.setSentDate(creditBillDetail.getTransactionDate());
+						bill = creditBillService.findCreditBillByTransDate(bill);
+						if (bill == null) {
+							logger.warn("未查询到明细对应的账单,result={}", apm);
+							throw new RuntimeException("未查询到明细对应的账单");
+						}
+					}
 					creditBillDetail.setBillId(billId);
 					creditBillDetailService.saveCreditBillDetail(creditBillDetail);
 				} catch (Exception e) {
@@ -361,15 +427,6 @@ public abstract class BaseBankTemplate
 					logger.error(e.getMessage());
 				}
 			}
-            if (StringUtils.hasText(rules.getTransactionAmount())) {
-                try {
-                    detailMap.put(
-                            Integer.parseInt(rules.getTransactionAmount()),
-                            "transactionAmount");
-                } catch (Exception e) {
-                    logger.error(e.getMessage());
-                }
-            }
 			if (StringUtils.hasText(rules.getAccountableAmount())) {
 				try {
 					detailMap.put(Integer.parseInt(rules.getAccountableAmount()), "accountableAmount");
@@ -411,6 +468,13 @@ public abstract class BaseBankTemplate
 		creditCardService.saveOrUpateCreditCard(card);
 	}
 
+	/**
+	 *
+	 * @Title: setCardNumbers @Description: 卡号
+	 * @param card
+	 * @param number
+	 * @return void 返回类型 @throws
+	 */
 	protected void setCardNumbers(CreditCard card, String number) {
 		// if (StringUtils.hasText(number)) {
 		//

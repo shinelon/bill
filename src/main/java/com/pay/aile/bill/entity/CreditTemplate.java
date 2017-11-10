@@ -38,11 +38,15 @@ public class CreditTemplate extends Model<CreditTemplate> {
 	private String billingDate;
 
 	/**
+	 * 持卡人
+	 */
+	private String cardholder;
+
+	/**
 	 * 卡类型
 	 */
 	@TableField("cardtype_id")
 	private Long cardtypeId;
-
 	/**
 	 * 取现额度
 	 */
@@ -60,11 +64,15 @@ public class CreditTemplate extends Model<CreditTemplate> {
 	 * 信用额度
 	 */
 	private String credits;
+
 	/**
 	 * 本期应还款额
 	 */
 	@TableField("current_amount")
 	private String currentAmount;
+	/**
+	 * 账单周期
+	 */
 	private String cycle;
 	/**
 	 * 账单明细
@@ -79,20 +87,25 @@ public class CreditTemplate extends Model<CreditTemplate> {
 	@TableField("last_amount")
 	private String lastAmount;
 	/**
+	 * 最低还款额
+	 */
+	private String minimum;
+	/**
 	 * 预借现金额度
 	 */
 	@TableField("prepaid_cash_amount")
 	private String prepaidCashAmount;
+
 	/**
 	 * 还款/退货/费用返还
 	 */
 	private String repayment;
+
 	/**
 	 * 有效标志1有效0无效
 	 */
 	@TableField(fill = FieldFill.INSERT)
 	private Integer status;
-
 	/**
 	 * 交易金额
 	 */
@@ -110,16 +123,23 @@ public class CreditTemplate extends Model<CreditTemplate> {
 	 */
 	@TableField("transaction_date")
 	private String transactionDate;
+
 	/**
 	 * 交易说明
 	 */
 	@TableField("transaction_description")
 	private String transactionDescription;
+
 	/**
 	 * 修改时间
 	 */
 	@TableField(value = "update_date", fill = FieldFill.UPDATE)
 	private Date updateDate;
+
+	/**
+	 * 账单年月
+	 */
+	private String yearMonth;
 
 	public String getAccountableAmount() {
 		return accountableAmount;
@@ -131,6 +151,10 @@ public class CreditTemplate extends Model<CreditTemplate> {
 
 	public String getBillingDate() {
 		return billingDate;
+	}
+
+	public String getCardholder() {
+		return cardholder;
 	}
 
 	public Long getCardtypeId() {
@@ -177,6 +201,10 @@ public class CreditTemplate extends Model<CreditTemplate> {
 		return lastAmount;
 	}
 
+	public String getMinimum() {
+		return minimum;
+	}
+
 	public String getPrepaidCashAmount() {
 		return prepaidCashAmount;
 	}
@@ -209,6 +237,10 @@ public class CreditTemplate extends Model<CreditTemplate> {
 		return updateDate;
 	}
 
+	public String getYearMonth() {
+		return yearMonth;
+	}
+
 	public void setAccountableAmount(String accountableAmount) {
 		this.accountableAmount = accountableAmount;
 	}
@@ -219,6 +251,10 @@ public class CreditTemplate extends Model<CreditTemplate> {
 
 	public void setBillingDate(String billingDate) {
 		this.billingDate = billingDate;
+	}
+
+	public void setCardholder(String cardholder) {
+		this.cardholder = cardholder;
 	}
 
 	public void setCardtypeId(Long cardtypeId) {
@@ -265,6 +301,10 @@ public class CreditTemplate extends Model<CreditTemplate> {
 		this.lastAmount = lastAmount;
 	}
 
+	public void setMinimum(String minimum) {
+		this.minimum = minimum;
+	}
+
 	public void setPrepaidCashAmount(String prepaidCashAmount) {
 		this.prepaidCashAmount = prepaidCashAmount;
 	}
@@ -295,6 +335,10 @@ public class CreditTemplate extends Model<CreditTemplate> {
 
 	public void setUpdateDate(Date updateDate) {
 		this.updateDate = updateDate;
+	}
+
+	public void setYearMonth(String yearMonth) {
+		this.yearMonth = yearMonth;
 	}
 
 	@Override
