@@ -22,24 +22,23 @@ import com.pay.aile.bill.service.mail.analyze.task.FileAnalyzeScheduler;
  */
 @Component
 public class FileAnalyzeStartup implements ApplicationListener<ContextRefreshedEvent> {
-	private static final Logger logger = LoggerFactory.getLogger(FileAnalyzeStartup.class);
+    private static final Logger logger = LoggerFactory.getLogger(FileAnalyzeStartup.class);
 
-	@Override
-	public void onApplicationEvent(ContextRefreshedEvent event) {
-		if (event.getApplicationContext().getParent() == null) {
-			logger.info("do starup init");
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        if (event.getApplicationContext().getParent() == null) {
+            logger.info("do FileAnalyzeStartup init");
 
-			FileAnalyzeScheduler fileAnalyzeScheduler = event.getApplicationContext()
-					.getBean(FileAnalyzeScheduler.class);
-			logger.info("do starup downLoadMailLoop");
-			ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1,
-					new BasicThreadFactory.Builder().namingPattern("loop-file-pool-%d").daemon(true).build());
+            FileAnalyzeScheduler fileAnalyzeScheduler = event.getApplicationContext()
+                    .getBean(FileAnalyzeScheduler.class);
+            ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1,
+                    new BasicThreadFactory.Builder().namingPattern("loop-file-pool-%d").daemon(true).build());
 
-			executorService.execute(() -> {
-				fileAnalyzeScheduler.analyzeLoop();
-			});
+            // executorService.execute(() -> {
+            // fileAnalyzeScheduler.analyzeLoop();
+            // });
 
-		}
-	}
+        }
+    }
 
 }

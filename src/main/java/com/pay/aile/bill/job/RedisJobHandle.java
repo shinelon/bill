@@ -117,6 +117,8 @@ public class RedisJobHandle {
         if (list.size() == redisJobListSize) {
             return;
         }
+        // 初始list
+        redisTemplate.delete(MAIL_DOWANLOD_LIST_NAME);
         redisTemplate.opsForList().leftPushAll(MAIL_DOWANLOD_LIST_NAME, listJsonString);
         redisTemplate.executePipelined(new RedisCallback<Object>() {
             @Override
