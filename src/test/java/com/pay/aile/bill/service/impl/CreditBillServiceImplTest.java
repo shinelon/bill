@@ -1,7 +1,5 @@
 package com.pay.aile.bill.service.impl;
 
-import java.util.Date;
-
 import javax.annotation.Resource;
 
 import org.junit.Test;
@@ -18,26 +16,16 @@ import com.pay.aile.bill.service.mail.analyze.util.DateUtil;
 @SpringBootTest(classes = BillApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CreditBillServiceImplTest {
 
-	@Resource
-	private CreditBillService creditBillService;
+    @Resource
+    private CreditBillService creditBillService;
 
-	@Test
-	public void testFindCreditBillByTransDate() {
-		CreditBill bill = new CreditBill();
-		bill.setDueDate(DateUtil.parseDateFromString("2017-09-06", null));
-		bill.setEmailId(1L);
-		// bill.setCardtypeId(1L);
-		bill.setSentDate(new Date());
-		creditBillService.findCreditBillByTransDate(bill);
-	}
-
-	@Test
-	public void testSaveOrUpdateCreditBill() {
-		CreditBill bill = new CreditBill();
-		bill.setDueDate(DateUtil.parseDateFromString("2017-09-06", null));
-		bill.setEmailId(1L);
-		bill.setStatus(1);
-		creditBillService.saveOrUpdateCreditBill(bill);
-	}
+    @Test
+    public void testSaveOrUpdateCreditBill() {
+        CreditBill bill = new CreditBill();
+        bill.setDueDate(DateUtil.parseDateFromString("2017-09-06", null));
+        bill.setEmailId(1L);
+        bill.setStatus(1);
+        creditBillService.saveOrUpdateCreditBill(bill);
+    }
 
 }

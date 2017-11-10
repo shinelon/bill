@@ -11,11 +11,9 @@ import com.pay.aile.bill.entity.CreditBill;
  */
 public interface CreditBillService {
 
-	public CreditBill findCreditBillByTransDate(CreditBill bill);
+    public List<CreditBill> getBillList(CreditBill bill);
 
-	public List<CreditBill> getBillList(CreditBill bill);
+    public Long saveCreditBill(CreditBill bill);
 
-	public Long saveCreditBill(CreditBill bill);
-
-	public Long saveOrUpdateCreditBill(CreditBill bill);
+    public Long saveOrUpdateCreditBill(CreditBill bill);
 }
