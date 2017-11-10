@@ -16,15 +16,15 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
  */
 @Configuration
 public class ThreadPoolConfig {
-	@Bean(name = "mailTaskExecutor")
-	public ThreadPoolTaskExecutor cofigPool() {
-		ThreadPoolTaskExecutor pool = new ThreadPoolTaskExecutor();
-		pool.setCorePoolSize(64);
-		pool.setMaxPoolSize(256);
-		pool.setThreadNamePrefix("task-");
-		pool.setKeepAliveSeconds(30);
-		pool.setQueueCapacity(2048);
-		pool.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
-		return pool;
-	}
+    @Bean(name = "mailTaskExecutor")
+    public ThreadPoolTaskExecutor cofigPool() {
+        ThreadPoolTaskExecutor pool = new ThreadPoolTaskExecutor();
+        pool.setCorePoolSize(64);
+        pool.setMaxPoolSize(256);
+        pool.setThreadNamePrefix("mailTask-");
+        pool.setKeepAliveSeconds(30);
+        pool.setQueueCapacity(2048);
+        pool.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        return pool;
+    }
 }
