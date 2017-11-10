@@ -28,6 +28,7 @@ import com.pay.aile.bill.service.mail.relation.CreditFileRelation;
 public class MongoDownloadUtil {
     private static final Logger logger = LoggerFactory.getLogger(MongoDownloadUtil.class);
     private static final String DOC_KEY_FILE_NAME = "fileName";
+    private static final String DOC_KEY_FILE_EMAIL = "email";
 
     @Autowired
     private CreditFileRelation creditFileRelation;
@@ -52,19 +53,40 @@ public class MongoDownloadUtil {
 
     }
 
+    @SuppressWarnings("static-access")
+    public String getFile(String email, String fileName) throws MailBillException {
+
+        try {
+
+            Criteria criteria = new Criteria();
+            criteria.where(DOC_KEY_FILE_NAME).is(fileName).and(DOC_KEY_FILE_EMAIL).is(email);
+
+            Query query = new Query(criteria);
+            EmailFile ef = mongoTemplate.findOne(query, EmailFile.class);
+            return ef.getContent();
+        } catch (Exception e) {
+
+            logger.error(e.getMessage());
+            throw new MailBillException(e.getMessage());
+        }
+
+    }
+
     public void saveCreditFile(List<CreditFile> creditFileList) {
         creditFileRelation.saveNotExitsCreditFile(creditFileList);
     }
 
     public void saveEmailFiles(List<EmailFile> emailFileList) {
-        List<String> fileNames = emailFileList.stream().map(e -> e.getFileName()).collect(Collectors.toList());
+        List<String> fileNames = emailFileList.stream().map(e -> e.getFileName())
+                .collect(Collectors.toList());
         Criteria criteria = new Criteria(DOC_KEY_FILE_NAME);
         criteria.in(fileNames);
         Query query = new Query(criteria);
         List<EmailFile> exitsEmailFileList = mongoTemplate.find(query, EmailFile.class);
         List<String> exitsfileNames = exitsEmailFileList.stream().map(e -> e.getFileName())
                 .collect(Collectors.toList());
-        List<EmailFile> insertList = emailFileList.stream().filter(e -> !exitsfileNames.contains(e.getFileName()))
+        List<EmailFile> insertList = emailFileList.stream()
+                .filter(e -> !exitsfileNames.contains(e.getFileName()))
                 .collect(Collectors.toList());
         if (insertList.size() > 0) {
             mongoTemplate.insert(insertList, EmailFile.class);

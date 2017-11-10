@@ -27,14 +27,20 @@ public class CreditBank extends Model<CreditBank> {
      */
     private String name;
     /**
+     * 银行编码
+     */
+    private String code;
+    /**
      * 扩展主题关键字
      */
     @TableField("ext_keyword")
     private String extKeyword;
+
     /**
      * 是否支持网银
      */
     private Integer online;
+
     /**
      * 是否支持邮件
      */
@@ -54,6 +60,10 @@ public class CreditBank extends Model<CreditBank> {
      */
     @TableField(value = "create_date", fill = FieldFill.INSERT)
     private Date createDate;
+
+    public String getCode() {
+        return code;
+    }
 
     public Date getCreateDate() {
         return createDate;
@@ -85,6 +95,10 @@ public class CreditBank extends Model<CreditBank> {
 
     public Date getUpdateDate() {
         return updateDate;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public void setCreateDate(Date createDate) {
@@ -121,9 +135,9 @@ public class CreditBank extends Model<CreditBank> {
 
     @Override
     public String toString() {
-        return "CreditBank{" + "id=" + id + ", name=" + name + ", extKeyword=" + extKeyword + ", online=" + online
-                + ", email=" + email + ", status=" + status + ", updateDate=" + updateDate + ", createDate="
-                + createDate + "}";
+        return "CreditBank{" + "id=" + id + ", name=" + name + ", extKeyword=" + extKeyword
+                + ", online=" + online + ", email=" + email + ", status=" + status + ", updateDate="
+                + updateDate + ", createDate=" + createDate + "}";
     }
 
     @Override

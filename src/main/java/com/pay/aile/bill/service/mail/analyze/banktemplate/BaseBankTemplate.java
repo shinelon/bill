@@ -24,13 +24,12 @@ import com.pay.aile.bill.service.CreditBillDetailService;
 import com.pay.aile.bill.service.CreditBillService;
 import com.pay.aile.bill.service.CreditCardService;
 import com.pay.aile.bill.service.mail.analyze.BankMailAnalyzerTemplate;
-import com.pay.aile.bill.service.mail.analyze.constant.Constant;
+import com.pay.aile.bill.service.mail.analyze.config.TemplateCache;
 import com.pay.aile.bill.service.mail.analyze.enums.CardTypeEnum;
 import com.pay.aile.bill.service.mail.analyze.exception.AnalyzeBillException;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeResult;
 import com.pay.aile.bill.service.mail.analyze.util.DateUtil;
-import com.pay.aile.bill.service.mail.analyze.util.JedisClusterUtils;
 import com.pay.aile.bill.service.mail.analyze.util.PatternMatcherUtil;
 
 /**
@@ -451,8 +450,12 @@ public abstract class BaseBankTemplate
     protected void initRules() {
         // 根据cardCode从缓存中获取对应的规则
         String cardCode = cardType.getCardCode();
-        rules = JedisClusterUtils.getBean(Constant.redisTemplateRuleCache + cardCode,
-                CreditTemplate.class);
+        // 从缓存中找模板
+        // rules = JedisClusterUtils.getBean(Constant.redisTemplateRuleCache +
+        // cardCode,
+        // CreditTemplate.class);
+        rules = TemplateCache.templateCache.get(cardCode);
+
     }
 
     /**
