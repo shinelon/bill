@@ -2,10 +2,14 @@ package com.pay.aile.bill.service.mail.analyze.banktemplate.hxb;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import com.pay.aile.bill.entity.CreditBill;
+import com.pay.aile.bill.entity.CreditCard;
 import com.pay.aile.bill.mapper.CreditTemplateMapper;
 import com.pay.aile.bill.service.mail.analyze.enums.CardTypeEnum;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
+import com.pay.aile.bill.service.mail.analyze.util.PatternMatcherUtil;
 
 /**
  *
@@ -48,14 +52,56 @@ public class HXBTemplate extends AbstractHXBTemplate {
 	// }
 	// }
 
+	/**
+	 *
+	 * @Title: analyzeDueDate
+	 * @Description: 解析参数
+	 * @param card
+	 * @param content
+	 * @param apm
+	 * @return void 返回类型 @throws
+	 */
+	@Override
+	protected void analyzeCardholder(CreditCard card, String content, AnalyzeParamsModel apm) {
+		if (StringUtils.hasText(rules.getCardholder())) {
+
+			String cardholder = getValueByPattern("cardholder", content, rules.getCardholder(), apm, "");
+			cardholder = cardholder.substring(cardholder.indexOf("的") + 1, cardholder.length() - 3);
+			card.setCardholder(cardholder);
+		}
+	}
+
+	@Override
+	protected void analyzeCycle(CreditBill bill, String content, AnalyzeParamsModel apm) {
+		if (StringUtils.hasText(rules.getCycle())) {
+
+			String cycle = getValueByPattern("cycle", content, rules.getCycle(), apm, " ");
+			cycle = PatternMatcherUtil.getMatcherString("\\d+.?\\d", cycle);
+			// bill.setBeginDate(beginDate);
+			// bill.setEndDate(endDate);
+		}
+	}
+
 	@Override
 	protected void analyzeInternal(AnalyzeParamsModel apm) {
 		super.analyzeInternal(apm);
 	}
 
 	@Override
+	protected void analyzeYearMonth(CreditBill bill, String content, AnalyzeParamsModel apm) {
+		if (StringUtils.hasText(rules.getYearMonth())) {
+
+			String yearMonth = getValueByPattern("yearMonth", content, rules.getYearMonth(), apm, "");
+			bill.setYear(yearMonth.substring(0, 4));
+			bill.setMonth(yearMonth.substring(5, 7));
+			// bill.setMonth(month);
+			// bill.setBeginDate(beginDate);
+			// bill.setEndDate(endDate);
+		}
+	}
+
+	@Override
 	protected void setCardType() {
 		cardType = CardTypeEnum.BCM_DEFAULT;
 	}
-
 }

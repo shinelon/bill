@@ -110,6 +110,14 @@ public abstract class BaseBankTemplate
 
 	}
 
+	protected void analyzeBillDate(CreditCard card, String content, AnalyzeParamsModel apm) {
+		if (StringUtils.hasText(rules.getBillDay())) {
+
+			String billDay = getValueByPattern("billDay", content, rules.getBillDay(), apm, " ");
+			card.setBillDay(billDay);
+		}
+	}
+
 	/**
 	 *
 	 * @Title: analyzeDueDate
@@ -119,11 +127,11 @@ public abstract class BaseBankTemplate
 	 * @param apm
 	 * @return void 返回类型 @throws
 	 */
-	protected void analyzeBillDate(CreditCard card, String content, AnalyzeParamsModel apm) {
-		if (StringUtils.hasText(rules.getBillDay())) {
+	protected void analyzeCardholder(CreditCard card, String content, AnalyzeParamsModel apm) {
+		if (StringUtils.hasText(rules.getCardholder())) {
 
-			String billDay = getValueByPattern("billDay", content, rules.getBillDay(), apm, " ");
-			card.setBillDay(billDay);
+			String cardholder = getValueByPattern("cardholder", content, rules.getCardholder(), apm, " ");
+			card.setCardholder(cardholder);
 		}
 	}
 
@@ -158,7 +166,7 @@ public abstract class BaseBankTemplate
 		if (StringUtils.hasText(rules.getCredits())) {
 
 			String credits = getValueByPattern("credits", content, rules.getCredits(), apm, " ");
-			credits = PatternMatcherUtil.getMatcherString("\\d+.?\\d", credits);
+			credits = PatternMatcherUtil.getMatcherString("\\d+.?\\d*", credits);
 			bill.setCredits(new BigDecimal(credits));
 		}
 	}
@@ -181,6 +189,16 @@ public abstract class BaseBankTemplate
 		}
 	}
 
+	protected void analyzeCycle(CreditBill bill, String content, AnalyzeParamsModel apm) {
+		if (StringUtils.hasText(rules.getCycle())) {
+
+			String cycle = getValueByPattern("cycle", content, rules.getCycle(), apm, " ");
+			cycle = PatternMatcherUtil.getMatcherString("\\d+.?\\d*", cycle);
+			// bill.setBeginDate(beginDate);
+			// bill.setEndDate(endDate);
+		}
+	}
+
 	protected void analyzeDetail(List<CreditBillDetail> detailList, String content, AnalyzeParamsModel apm) {
 		List<String> list = PatternMatcherUtil.getMatcher(rules.getDetails(), content);
 		if (list.isEmpty()) {
@@ -194,6 +212,15 @@ public abstract class BaseBankTemplate
 
 	}
 
+	/**
+	 *
+	 * @Title: analyzeDetails
+	 * @Description: 分析账单明细
+	 * @param detail
+	 * @param content
+	 * @param apm
+	 * @return void 返回类型 @throws
+	 */
 	protected void analyzeDetails(List<CreditBillDetail> detail, String content, AnalyzeParamsModel apm) {
 		List<String> list = null;
 		if (StringUtils.hasText(rules.getDetails())) {
@@ -209,6 +236,15 @@ public abstract class BaseBankTemplate
 		}
 	}
 
+	/**
+	 *
+	 * @Title: analyzeDueDate
+	 * @Description: 还款日
+	 * @param bill
+	 * @param content
+	 * @param apm
+	 * @return void 返回类型 @throws
+	 */
 	protected void analyzeDueDate(CreditBill bill, String content, AnalyzeParamsModel apm) {
 		if (StringUtils.hasText(rules.getDueDate())) {
 
@@ -231,12 +267,20 @@ public abstract class BaseBankTemplate
 			throw new RuntimeException("账单模板规则未初始化");
 		}
 		List<String> list = null;
+		// 年月
+		analyzeYearMonth(bill, content, apm);
+		// 周期
+		analyzeCycle(bill, content, apm);
+		// 持卡人
+		analyzeCardholder(card, content, apm);
 		// 还款日
 		analyzeBillDate(card, content, apm);
 		// 还款日
 		analyzeDueDate(bill, content, apm);
 		// 本期账单金额
 		analyzeCurrentAmount(bill, content, apm);
+		// 最低还款额
+		analyzeMinimum(bill, content, apm);
 		// 信用二度
 		analyzeCredits(bill, content, apm);
 		// 取取现金额
@@ -260,6 +304,27 @@ public abstract class BaseBankTemplate
 		apm.setResult(ar);
 	}
 
+	protected void analyzeMinimum(CreditBill bill, String content, AnalyzeParamsModel apm) {
+		if (StringUtils.hasText(rules.getMinimum())) {
+
+			String minimum = getValueByPattern("minimum", content, rules.getMinimum(), apm, " ");
+			minimum = PatternMatcherUtil.getMatcherString("\\d+.?\\d*", minimum);
+			bill.setMinimum(new BigDecimal(minimum));
+		}
+	}
+
+	protected void analyzeYearMonth(CreditBill bill, String content, AnalyzeParamsModel apm) {
+		if (StringUtils.hasText(rules.getYearMonth())) {
+
+			String yearMonth = getValueByPattern("yearMonth", content, rules.getYearMonth(), apm, " ");
+			yearMonth = PatternMatcherUtil.getMatcherString("\\d+.?\\d*", yearMonth);
+			// bill.setYear(year);
+			// bill.setMonth(month);
+			// bill.setBeginDate(beginDate);
+			// bill.setEndDate(endDate);
+		}
+	}
+
 	/**
 	 *
 	 * @param apm
@@ -278,9 +343,14 @@ public abstract class BaseBankTemplate
 				handleNotMatch(key, rules.getDueDate(), apm);
 			}
 			String result = list.get(0);
-			String[] sa = result.split(splitSign);
-			String value = sa[sa.length - 1];
-			return value;
+			if ("".equals(splitSign)) {
+				return result;
+			} else {
+				String[] sa = result.split(splitSign);
+				String value = sa[sa.length - 1];
+				return value;
+			}
+
 		}
 		return "";
 	}
@@ -398,6 +468,13 @@ public abstract class BaseBankTemplate
 		creditCardService.saveOrUpateCreditCard(card);
 	}
 
+	/**
+	 *
+	 * @Title: setCardNumbers @Description: 卡号
+	 * @param card
+	 * @param number
+	 * @return void 返回类型 @throws
+	 */
 	protected void setCardNumbers(CreditCard card, String number) {
 		// if (StringUtils.hasText(number)) {
 		//

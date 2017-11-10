@@ -20,11 +20,17 @@
         <result column="update_date" property="updateDate" />
         <result column="bank_code" property="bankCode" />
         <result column="account_type" property="accountType" />
+        <result column="begin_date" property="beginDate" />
+        <result column="end_date" property="endDate" />
+        <result column="year" property="year" />
+        <result column="month" property="month" />
+        <result column="minimum" property="minimum" />
+        
 	</resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, due_date AS dueDate, current_amount AS currentAmount, credits, cash, last_amount AS lastAmount, repayment, consumption
+        id, due_date AS dueDate, current_amount AS currentAmount, credits, cash, last_amount AS lastAmount, repayment, consumption,begin_date AS beginDate,end_date AS endDate,year,month,minimum
     </sql>
     
     <insert id="insertCreditBill" parameterType="com.pay.aile.bill.entity.CreditBill" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
@@ -75,6 +81,24 @@
       <if test="accountType != null" >
         account_type,
       </if>
+      <if test="beginDate != null" >
+        begin_date,
+      </if>
+       <if test="endDate != null" >
+        end_date,
+      </if>
+      
+      <if test="year != null" >
+        year,
+      </if>
+      
+      <if test="month != null" >
+        month,
+      </if>
+      <if test="minimum != null" >
+        minimum,
+      </if>
+      
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="dueDate != null" >
@@ -122,6 +146,22 @@
       <if test="accountType != null" >
         #{accountType,jdbcType=VARCHAR},
       </if>
+      <if test="beginDate != null" >
+        #{beginDate,jdbcType=DATE},
+      </if>
+      <if test="endDate != null" >
+        #{endDate,jdbcType=DATE},
+      </if>
+         <if test="year != null" >
+        #{year,jdbcType=VARCHAR},
+      </if>
+      <if test="month != null" >
+        #{month,jdbcType=VARCHAR},
+      </if>
+       <if test="minimum != null" >
+        #{minimum,jdbcType=DECIMAL},
+      </if>
+      
     </trim>
   </insert>
 

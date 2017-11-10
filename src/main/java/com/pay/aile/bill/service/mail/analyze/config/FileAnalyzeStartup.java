@@ -1,4 +1,4 @@
-package com.pay.aile.bill.config;
+package com.pay.aile.bill.service.mail.analyze.config;
 
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -10,35 +10,33 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
-import com.pay.aile.bill.job.DownloadMailScheduler;
-import com.pay.aile.bill.job.RedisJobHandle;
+import com.pay.aile.bill.service.mail.analyze.task.FileAnalyzeScheduler;
 
-/***
- * ApplicationStartup.java
+/**
  *
- * @author shinelon
- *
+ * @ClassName: FileAnalyzeStartup
+ * @Description: 文件解析任务启动类
+ * @author jinjing
  * @date 2017年11月9日
  *
  */
 @Component
-public class ApplicationStartup implements ApplicationListener<ContextRefreshedEvent> {
-	private static final Logger logger = LoggerFactory.getLogger(ApplicationStartup.class);
+public class FileAnalyzeStartup implements ApplicationListener<ContextRefreshedEvent> {
+	private static final Logger logger = LoggerFactory.getLogger(FileAnalyzeStartup.class);
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
 		if (event.getApplicationContext().getParent() == null) {
 			logger.info("do starup init");
-			RedisJobHandle redisJobHandle = event.getApplicationContext().getBean(RedisJobHandle.class);
-			redisJobHandle.initJobList();
-			DownloadMailScheduler downloadMailScheduler = event.getApplicationContext()
-					.getBean(DownloadMailScheduler.class);
+
+			FileAnalyzeScheduler fileAnalyzeScheduler = event.getApplicationContext()
+					.getBean(FileAnalyzeScheduler.class);
 			logger.info("do starup downLoadMailLoop");
 			ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1,
-					new BasicThreadFactory.Builder().namingPattern("loop-mail-pool-%d").daemon(true).build());
+					new BasicThreadFactory.Builder().namingPattern("loop-file-pool-%d").daemon(true).build());
 
 			executorService.execute(() -> {
-				downloadMailScheduler.downLoadMailLoop();
+				fileAnalyzeScheduler.analyzeLoop();
 			});
 
 		}

@@ -20,221 +20,288 @@ import com.baomidou.mybatisplus.enums.FieldFill;
 @TableName("credit_bill")
 public class CreditBill extends Model<CreditBill> {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private Long id;
-    /**
-     * 到期还款日
-     */
-    @TableField("due_date")
-    private Date dueDate;
-    /**
-     * 本期应还款额
-     */
-    @TableField("current_amount")
-    private BigDecimal currentAmount;
-    /**
-     * 信用额度
-     */
-    private BigDecimal credits;
-    /**
-     * 取现额度
-     */
-    private BigDecimal cash;
-    @TableField("last_amount")
-    private BigDecimal lastAmount;
-    /**
-     * 还款/退货/费用返还
-     */
-    private BigDecimal repayment;
-    /**
-     * 消费/取现/其他费用
-     */
-    private BigDecimal consumption;
-    /**
-     * 有效标志1有效0无效
-     */
-    @TableField(fill = FieldFill.INSERT)
-    private Integer status;
-    /**
-     * 修改时间
-     */
-    @TableField(value = "update_date", fill = FieldFill.UPDATE)
-    private Date updateDate;
-    /**
-     * 创建时间
-     */
-    @TableField(value = "create_date", fill = FieldFill.INSERT)
-    private Date createDate;
+	/**
+	 * 账户类型
+	 */
+	@TableField(value = "account_type")
+	private String accountType;
 
-    /**
-     * 用户邮箱id
-     */
-    @TableField(value = "email_id")
-    private Long emailId;
-    @TableField(value = "cardtype_id")
-    private Long cardtypeId;
-    /**
-     * 邮件的发送日期
-     */
-    @TableField(value = "sent_date")
-    private Date sentDate;
-    /**
-     * 银行编码
-     */
-    @TableField(value = "bank_code")
-    private String bankCode;
+	/**
+	 * 银行编码
+	 */
+	@TableField(value = "bank_code")
+	private String bankCode;
+	/**
+	 * 账单开始时间
+	 */
+	@TableField("begin_date")
+	private Date beginDate;
+	@TableField(value = "cardtype_id")
+	private Long cardtypeId;
+	/**
+	 * 取现额度
+	 */
+	private BigDecimal cash;
 
-    /**
-     * 账户类型
-     */
-    @TableField(value = "account_type")
-    private String accountType;
+	/**
+	 * 消费/取现/其他费用
+	 */
+	private BigDecimal consumption;
 
-    public BigDecimal getCash() {
-        return cash;
-    }
+	/**
+	 * 创建时间
+	 */
+	@TableField(value = "create_date", fill = FieldFill.INSERT)
+	private Date createDate;
 
-    public BigDecimal getConsumption() {
-        return consumption;
-    }
+	/**
+	 * 信用额度
+	 */
+	private BigDecimal credits;
 
-    public Date getCreateDate() {
-        return createDate;
-    }
+	/**
+	 * 本期应还款额
+	 */
+	@TableField("current_amount")
+	private BigDecimal currentAmount;
 
-    public BigDecimal getCredits() {
-        return credits;
-    }
+	/**
+	 * 到期还款日
+	 */
+	@TableField("due_date")
+	private Date dueDate;
 
-    public BigDecimal getCurrentAmount() {
-        return currentAmount;
-    }
+	/**
+	 * 用户邮箱id
+	 */
+	@TableField(value = "email_id")
+	private Long emailId;
+	/**
+	 * 账单结束时间
+	 */
+	@TableField("end_date")
+	private Date endDate;
+	private Long id;
 
-    public Date getDueDate() {
-        return dueDate;
-    }
+	@TableField("last_amount")
+	private BigDecimal lastAmount;
 
-    public BigDecimal getLastAmount() {
-        return lastAmount;
-    }
+	/**
+	 * 最低还款额
+	 */
+	private BigDecimal minimum;
 
-    public BigDecimal getRepayment() {
-        return repayment;
-    }
+	/**
+	 * 月
+	 */
+	private String month;
 
-    public Integer getStatus() {
-        return status;
-    }
+	/**
+	 * 还款/退货/费用返还
+	 */
+	private BigDecimal repayment;
+	/**
+	 * 邮件的发送日期
+	 */
+	@TableField(value = "sent_date")
+	private Date sentDate;
+	/**
+	 * 有效标志1有效0无效
+	 */
+	@TableField(fill = FieldFill.INSERT)
+	private Integer status;
+	/**
+	 * 修改时间
+	 */
+	@TableField(value = "update_date", fill = FieldFill.UPDATE)
+	private Date updateDate;
+	/**
+	 * 年
+	 */
+	private String year;
 
-    public Date getUpdateDate() {
-        return updateDate;
-    }
+	public String getAccountType() {
+		return accountType;
+	}
 
-    public void setCash(BigDecimal cash) {
-        this.cash = cash;
-    }
+	public String getBankCode() {
+		return bankCode;
+	}
 
-    public void setConsumption(BigDecimal consumption) {
-        this.consumption = consumption;
-    }
+	public Date getBeginDate() {
+		return beginDate;
+	}
 
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
+	public Long getCardtypeId() {
+		return cardtypeId;
+	}
 
-    public void setCredits(BigDecimal credits) {
-        this.credits = credits;
-    }
+	public BigDecimal getCash() {
+		return cash;
+	}
 
-    public void setCurrentAmount(BigDecimal currentAmount) {
-        this.currentAmount = currentAmount;
-    }
+	public BigDecimal getConsumption() {
+		return consumption;
+	}
 
-    public void setDueDate(Date dueDate) {
-        this.dueDate = dueDate;
-    }
+	public Date getCreateDate() {
+		return createDate;
+	}
 
-    public void setLastAmount(BigDecimal lastAmount) {
-        this.lastAmount = lastAmount;
-    }
+	public BigDecimal getCredits() {
+		return credits;
+	}
 
-    public void setRepayment(BigDecimal repayment) {
-        this.repayment = repayment;
-    }
+	public BigDecimal getCurrentAmount() {
+		return currentAmount;
+	}
 
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
+	public Date getDueDate() {
+		return dueDate;
+	}
 
-    public void setUpdateDate(Date updateDate) {
-        this.updateDate = updateDate;
-    }
+	public Long getEmailId() {
+		return emailId;
+	}
 
-    @Override
-    protected Serializable pkVal() {
-        return id;
-    }
+	public Date getEndDate() {
+		return endDate;
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public BigDecimal getLastAmount() {
+		return lastAmount;
+	}
 
-    public Long getEmailId() {
-        return emailId;
-    }
+	public BigDecimal getMinimum() {
+		return minimum;
+	}
 
-    public void setEmailId(Long emailId) {
-        this.emailId = emailId;
-    }
+	public String getMonth() {
+		return month;
+	}
 
-    public Long getCardtypeId() {
-        return cardtypeId;
-    }
+	public BigDecimal getRepayment() {
+		return repayment;
+	}
 
-    public void setCardtypeId(Long cardtypeId) {
-        this.cardtypeId = cardtypeId;
-    }
+	public Date getSentDate() {
+		return sentDate;
+	}
 
-    public String getBankCode() {
-        return bankCode;
-    }
+	public Integer getStatus() {
+		return status;
+	}
 
-    public void setBankCode(String bankCode) {
-        this.bankCode = bankCode;
-    }
+	public Date getUpdateDate() {
+		return updateDate;
+	}
 
-    public Date getSentDate() {
-        return sentDate;
-    }
+	public String getYear() {
+		return year;
+	}
 
-    public void setSentDate(Date sentDate) {
-        this.sentDate = sentDate;
-    }
+	public void setAccountType(String accountType) {
+		this.accountType = accountType;
+	}
 
-    @Override
-    public String toString() {
-        return "CreditBill [id=" + id + ", dueDate=" + dueDate
-                + ", currentAmount=" + currentAmount + ", credits=" + credits
-                + ", cash=" + cash + ", lastAmount=" + lastAmount
-                + ", repayment=" + repayment + ", consumption=" + consumption
-                + ", status=" + status + ", updateDate=" + updateDate
-                + ", createDate=" + createDate + ", emailId=" + emailId
-                + ", cardtypeId=" + cardtypeId + ", sentDate=" + sentDate
-                + ", bankCode=" + bankCode + ", accountType=" + accountType
-                + "]";
-    }
+	public void setBankCode(String bankCode) {
+		this.bankCode = bankCode;
+	}
 
-    public String getAccountType() {
-        return accountType;
-    }
+	public void setBeginDate(Date beginDate) {
+		this.beginDate = beginDate;
+	}
 
-    public void setAccountType(String accountType) {
-        this.accountType = accountType;
-    }
+	public void setCardtypeId(Long cardtypeId) {
+		this.cardtypeId = cardtypeId;
+	}
+
+	public void setCash(BigDecimal cash) {
+		this.cash = cash;
+	}
+
+	public void setConsumption(BigDecimal consumption) {
+		this.consumption = consumption;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+	public void setCredits(BigDecimal credits) {
+		this.credits = credits;
+	}
+
+	public void setCurrentAmount(BigDecimal currentAmount) {
+		this.currentAmount = currentAmount;
+	}
+
+	public void setDueDate(Date dueDate) {
+		this.dueDate = dueDate;
+	}
+
+	public void setEmailId(Long emailId) {
+		this.emailId = emailId;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setLastAmount(BigDecimal lastAmount) {
+		this.lastAmount = lastAmount;
+	}
+
+	public void setMinimum(BigDecimal minimum) {
+		this.minimum = minimum;
+	}
+
+	public void setMonth(String month) {
+		this.month = month;
+	}
+
+	public void setRepayment(BigDecimal repayment) {
+		this.repayment = repayment;
+	}
+
+	public void setSentDate(Date sentDate) {
+		this.sentDate = sentDate;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
+	}
+
+	public void setYear(String year) {
+		this.year = year;
+	}
+
+	@Override
+	public String toString() {
+		return "CreditBill [id=" + id + ", dueDate=" + dueDate + ", currentAmount=" + currentAmount + ", credits="
+				+ credits + ", cash=" + cash + ", lastAmount=" + lastAmount + ", repayment=" + repayment
+				+ ", consumption=" + consumption + ", status=" + status + ", updateDate=" + updateDate + ", createDate="
+				+ createDate + ", emailId=" + emailId + ", cardtypeId=" + cardtypeId + ", sentDate=" + sentDate
+				+ ", bankCode=" + bankCode + ", accountType=" + accountType + "]";
+	}
+
+	@Override
+	protected Serializable pkVal() {
+		return id;
+	}
 
 }
