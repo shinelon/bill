@@ -41,7 +41,7 @@ public class CMBCTemplate extends AbstractCMBCTemplate {
 			rules.setBillingDate("StatementDate \\d{4}/\\d{2}/\\d{2}"); // 账单日
 			rules.setDueDate("PaymentDueDate \\d{4}/\\d{2}/\\d{2}");
 			rules.setCurrentAmount("NewBalance \\d+.?\\d*");
-			rules.setDetails("\\d{2}/\\d{2} \\d{2}/\\d{2} \\S+ \\d+.?\\d* \\d{4}");
+			rules.setDetails("\\d{2}/\\d{2} \\d{2}/\\d{2} \\S+ -?\\d+.?\\d* \\d{4}");
 		}
 	}
 

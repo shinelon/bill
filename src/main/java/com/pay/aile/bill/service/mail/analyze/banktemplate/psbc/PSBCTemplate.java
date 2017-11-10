@@ -34,7 +34,7 @@ public class PSBCTemplate extends AbstractPSBCTemplate {
 			rules.setCurrentAmount("本期应还款总额 \\d+.?\\d*");
 			rules.setCredits("信用额度 \\d+.?\\d*");
 			rules.setPrepaidCashAmount("预借现金额度 \\d+.?\\d*");
-			rules.setDetails("\\d{4}/\\d{2}/\\d{2} \\d{4}/\\d{2}/\\d{2} \\S+ \\d+.?\\d* \\d{4}");
+			rules.setDetails("\\d{4}/\\d{2}/\\d{2} \\d{4}/\\d{2}/\\d{2} \\S+ -?\\d+.?\\d* \\d{4}");
 		}
 	}
 

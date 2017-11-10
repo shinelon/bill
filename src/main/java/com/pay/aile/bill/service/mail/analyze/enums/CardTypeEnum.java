@@ -14,7 +14,8 @@ public enum CardTypeEnum {
 											"工商银行牡丹卡"), SPDB("SPDB", BankCodeEnum.SPDB, "浦发银行信用卡"),
 
 	CMB_YOUNG("CMB_YOUNG", BankCodeEnum.CMB, "招商银行YOUNG卡"), PSBC_DEFAULT("PSBC_DEFAULT", BankCodeEnum.PSBC,
-			"邮政储蓄银行信用卡"), CMBC_DEFAULT("CMBC_DEFAULT", BankCodeEnum.CMBC, "民生银行信用卡");
+			"邮政储蓄银行信用卡"), CMBC_DEFAULT("CMBC_DEFAULT", BankCodeEnum.CMBC,
+					"民生银行信用卡"), BOC_DEFAULT("BOC_DEFAULT", BankCodeEnum.BOC, "中国银行信用卡");
 
 	private BankCodeEnum bankCode;
 	private String cardCode;

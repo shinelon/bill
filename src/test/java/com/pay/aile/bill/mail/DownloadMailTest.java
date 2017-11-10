@@ -20,65 +20,65 @@ import com.pay.aile.bill.service.mail.download.DownloadMail;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = BillApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class DownloadMailTest {
-    @Autowired
-    public DownloadMail downloadMail;
+	@Autowired
+	public DownloadMail downloadMail;
 
-    // 开启POP3授权码
-    // @Test
-    public void testHotMail() {
-        try {
-            downloadMail.execute("jinjing_0316@outlook.com", "bobo0316");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+	// 开启POP3授权码
+	// @Test
+	public void testHotMail() {
+		try {
+			downloadMail.execute("jinjing_0316@outlook.com", "bobo0316");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-    // 开启POP3授权码
-    @Test
-    public void testMail126() {
-        try {
-            downloadMail.execute("jinjing_0316@126.com", "jinjing03161");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+	// 开启POP3授权码
+	@Test
+	public void testMail126() {
+		try {
+			downloadMail.execute("czb18518679659@126.com", "12345qwerty");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-    // 不需要POP3授权码
-    // @Test
-    public void testmail139() {
-        try {
-            downloadMail.execute("15701680705@139.com", "yanming1710");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+	// 不需要POP3授权码
+	// @Test
+	public void testmail139() {
+		try {
+			downloadMail.execute("15701680705@139.com", "yanming1710");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-    // 开启POP3授权码
-    // @Test
-    public void testMail163() {
-        try {
-            downloadMail.execute("yanming15@163.com", "yanming151");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+	// 开启POP3授权码
+	// @Test
+	public void testMail163() {
+		try {
+			downloadMail.execute("yanming15@163.com", "yanming151");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-    // @Test
-    public void testMailAliyun() {
-        try {
-            downloadMail.execute("jinjing_0316@aliyun.com", "jinjing0316");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+	// @Test
+	public void testMailAliyun() {
+		try {
+			downloadMail.execute("jinjing_0316@aliyun.com", "jinjing0316");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-    // 开启POP3授权码
-    // @Test
-    public void testMailQQ() {
-        try {
-            downloadMail.execute("xxxx@qq.com", "vjbvejavwiqobcgf");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+	// 开启POP3授权码
+	// @Test
+	public void testMailQQ() {
+		try {
+			downloadMail.execute("xxxx@qq.com", "vjbvejavwiqobcgf");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
