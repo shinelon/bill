@@ -16,12 +16,15 @@ public class ABCTemplate extends AbstractABCTemplate {
 
     @Override
     public void initRules() {
-        super.initRules();
+        // super.initRules();
         if (rules == null) {
             rules = new CreditTemplate();
             rules.setCardtypeId(5L);
+            rules.setCycle("账单周期 \\d{8}-\\d{8}");
+            rules.setMinimum("CreditLimit [\\u4e00-\\u9fa5]+\\([a-zA-Z]+\\) -?\\d+\\.?\\d* -?\\d+\\.?\\d*");
             rules.setDueDate("到期还款日 \\d{8}");
             rules.setCurrentAmount("CreditLimit [\\u4e00-\\u9fa5]+\\([a-zA-Z]+\\) -?\\d+\\.?\\d*");
+            rules.setLastAmount("AccountBalance [\\u4e00-\\u9fa5]+\\([a-zA-Z]+\\) -?\\d+\\.?\\d*");
             rules.setCredits(
                     "CreditLimit [\\u4e00-\\u9fa5]+\\([a-zA-Z]+\\) -?\\d+\\.?\\d* -?\\d+\\.?\\d* \\d+\\.?\\d*");
             rules.setDetails("\\d{8} \\d{8} \\d{4} \\S+ \\S+ \\d+\\.?\\d*/[a-zA-Z]+ -?\\d+\\.?\\d*/[a-zA-Z]+");
@@ -47,7 +50,13 @@ public class ABCTemplate extends AbstractABCTemplate {
             cbd.setTransactionCurrency(trans[1]);
         } else if (index == 6) {
             String[] account = value.split("/");
-            cbd.setAccountableAmount(account[0].replaceAll("-", ""));
+            String amount = account[0];
+            if (amount.startsWith("-")) {
+                amount = amount.replaceAll("-", "");
+            } else {
+                amount = "-" + amount;
+            }
+            cbd.setAccountableAmount(amount);
             cbd.setAccountType(account[1]);
         }
     }
