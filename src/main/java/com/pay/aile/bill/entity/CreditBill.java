@@ -38,8 +38,11 @@ public class CreditBill extends Model<CreditBill> {
 	 */
 	@TableField("begin_date")
 	private Date beginDate;
-	@TableField(value = "cardtype_id")
-	private Long cardtypeId;
+	/**
+	 * 对象卡id
+	 */
+	@TableField(value = "card_id")
+	private Long cardId;
 	/**
 	 * 取现额度
 	 */
@@ -134,8 +137,8 @@ public class CreditBill extends Model<CreditBill> {
 		return beginDate;
 	}
 
-	public Long getCardtypeId() {
-		return cardtypeId;
+	public Long getCardId() {
+		return cardId;
 	}
 
 	public BigDecimal getCash() {
@@ -218,8 +221,8 @@ public class CreditBill extends Model<CreditBill> {
 		this.beginDate = beginDate;
 	}
 
-	public void setCardtypeId(Long cardtypeId) {
-		this.cardtypeId = cardtypeId;
+	public void setCardId(Long cardId) {
+		this.cardId = cardId;
 	}
 
 	public void setCash(BigDecimal cash) {
@@ -295,8 +298,8 @@ public class CreditBill extends Model<CreditBill> {
 		return "CreditBill [id=" + id + ", dueDate=" + dueDate + ", currentAmount=" + currentAmount + ", credits="
 				+ credits + ", cash=" + cash + ", lastAmount=" + lastAmount + ", repayment=" + repayment
 				+ ", consumption=" + consumption + ", status=" + status + ", updateDate=" + updateDate + ", createDate="
-				+ createDate + ", emailId=" + emailId + ", cardtypeId=" + cardtypeId + ", sentDate=" + sentDate
-				+ ", bankCode=" + bankCode + ", accountType=" + accountType + "]";
+				+ createDate + ", emailId=" + emailId + ", cardId=" + cardId + ", sentDate=" + sentDate + ", bankCode="
+				+ bankCode + ", accountType=" + accountType + "]";
 	}
 
 	@Override

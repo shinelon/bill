@@ -11,12 +11,13 @@ import com.pay.aile.bill.service.mail.analyze.banktemplate.BaseBankTemplate;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
 
 /**
- * 
+ *
  * @author Charlie
  * @description 招商银行解析模板
  */
 public abstract class AbstractCMBTemplate extends BaseBankTemplate {
     private Logger logger = LoggerFactory.getLogger(getClass());
+
     @Override
     protected void handleResultInternal(AnalyzeParamsModel apm) {
 
@@ -26,7 +27,7 @@ public abstract class AbstractCMBTemplate extends BaseBankTemplate {
         Long billId = null;
         if (bill != null) {
             bill.setEmailId(apm.getEmailId());
-            bill.setCardtypeId(apm.getCardtypeId());
+            // bill.setCardtypeId(apm.getCardtypeId());
             bill.setSentDate(apm.getSentDate());
             bill.setBankCode(apm.getBankCode());
             billId = creditBillService.saveOrUpdateCreditBill(bill);
@@ -41,22 +42,20 @@ public abstract class AbstractCMBTemplate extends BaseBankTemplate {
                         bill.setSentDate(creditBillDetail.getTransactionDate());
                         bill.setEmailId(apm.getEmailId());
                         bill.setBankCode(apm.getBankCode());
-                        CreditBill saveBill = creditBillService
-                                .findCreditBillByTransDate(bill);
+                        CreditBill saveBill = creditBillService.findCreditBillByTransDate(bill);
                         if (saveBill != null) {
                             billId = saveBill.getId();
-                        }else{
-                            
+                        } else {
+
                         }
                     }
                     creditBillDetail.setBillId(billId);
-                    creditBillDetailService
-                            .saveCreditBillDetail(creditBillDetail);
+                    creditBillDetailService.saveCreditBillDetail(creditBillDetail);
                 } catch (Exception e) {
                     logger.error(e.getMessage(), e);
                 }
             }
         }
     }
-    
+
 }
