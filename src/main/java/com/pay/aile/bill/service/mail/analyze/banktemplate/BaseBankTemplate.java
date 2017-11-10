@@ -204,42 +204,6 @@ public abstract class BaseBankTemplate
 		}
 	}
 
-	protected void analyzeDetail(List<CreditBillDetail> detailList, String content, AnalyzeParamsModel apm) {
-		List<String> list = PatternMatcherUtil.getMatcher(rules.getDetails(), content);
-		if (list.isEmpty()) {
-			handleNotMatch("details", rules.getDetails(), apm);
-		}
-		String[] sa = null;
-		for (int i = 0; i < list.size(); i++) {
-
-			detailList.add(setCreditBillDetail(list.get(i)));
-		}
-
-	}
-
-	/**
-	 *
-	 * @Title: analyzeDetails
-	 * @Description: 分析账单明细
-	 * @param detail
-	 * @param content
-	 * @param apm
-	 * @return void 返回类型 @throws
-	 */
-	protected void analyzeDetails(List<CreditBillDetail> detail, String content, AnalyzeParamsModel apm) {
-		List<String> list = null;
-		if (StringUtils.hasText(rules.getDetails())) {
-			// 交易明细
-			list = PatternMatcherUtil.getMatcher(rules.getDetails(), content);
-			if (list.isEmpty()) {
-				handleNotMatch("details", rules.getDetails(), apm);
-			}
-			for (int i = 0; i < list.size(); i++) {
-				String s = list.get(i);
-				detail.add(setCreditBillDetail(s));
-			}
-		}
-	}
 
 	protected void analyzeDetails(List<CreditBillDetail> detail, String content, AnalyzeParamsModel apm,
 			CreditCard card) {
@@ -308,19 +272,7 @@ public abstract class BaseBankTemplate
 		// 取取现金额
 		analyzeCash(bill, content, apm);
 
-		if (StringUtils.hasText(rules.getDetails())) {
-			// 交易明细
-			list = PatternMatcherUtil.getMatcher(rules.getDetails(), content);
-			if (list.isEmpty()) {
-				handleNotMatch("details", rules.getDetails(), apm);
-			}
-			for (int i = 0; i < list.size(); i++) {
-				String s = list.get(i);
-				detail.add(setCreditBillDetail(s));
-
-				setCardNumbers(card, s);
-			}
-		}
+		analyzeDetails(detail, content, apm, card);
 		// 设置卡片
 		setCard(card, bill, apm);
 		apm.setResult(ar);
@@ -449,6 +401,13 @@ public abstract class BaseBankTemplate
 					logger.error(e.getMessage());
 				}
 			}
+            if (StringUtils.hasText(rules.getTransactionAmount())) {
+                try {
+                    detailMap.put(Integer.parseInt(rules.getTransactionAmount()), "transactionAmount");
+                } catch (Exception e) {
+                    logger.error(e.getMessage());
+                }
+            }
 			if (StringUtils.hasText(rules.getAccountableAmount())) {
 				try {
 					detailMap.put(Integer.parseInt(rules.getAccountableAmount()), "accountableAmount");

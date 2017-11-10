@@ -117,6 +117,7 @@ public class CMBYoungTemplate extends AbstractCMBTemplate {
                 for (int i = 0; i < list.size(); i++) {
                     String s = list.get(i);
                     detail.add(setCreditBillDetail(s));
+                    setCardNumbers(card, s);
                 }
             }
         }
