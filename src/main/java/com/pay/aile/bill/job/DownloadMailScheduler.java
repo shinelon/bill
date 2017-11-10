@@ -30,8 +30,8 @@ public class DownloadMailScheduler {
     // 当邮箱扫描时间间隔大约loopIntervalSeconds 重新下载邮箱
     private static final long loopIntervalSeconds = 180L;
 
-    // 当循环线程发现没有邮件需要下载的时候，等待waitSeconds
-    private static final long waitSeconds = 10L;
+    // 当循环线程发现没有邮件需要下载的时候，等待sleepSeconds
+    private static final long sleepSeconds = 10L;
     @Autowired
     private CreditEmailService creditEmailService;
     @Autowired
@@ -80,11 +80,9 @@ public class DownloadMailScheduler {
 
             if (System.currentTimeMillis() - creditEmail.getLastJobTimestamp() < loopIntervalSeconds * 1000) {
                 redisJobHandle.doneJob(creditEmail);
-                try {
-                    Thread.sleep(waitSeconds * 1000);
-                    logger.debug("==job id :{} is done waitSeconds:{} ", creditEmail.getId(), waitSeconds);
-                } catch (InterruptedException e) {
-                }
+                logger.debug("job id :{} is done in {}s  sleepForAWhile:{}s ", creditEmail.getId(), loopIntervalSeconds,
+                        sleepSeconds);
+                sleepForAWhile(sleepSeconds);
                 continue;
             }
             taskExecutor.execute(() -> {
@@ -102,5 +100,13 @@ public class DownloadMailScheduler {
 
     public void offJobLoop() {
         flagJobLoop = false;
+    }
+
+    private void sleepForAWhile(long sleepSeconds) {
+        try {
+            Thread.sleep(sleepSeconds * 1000);
+        } catch (InterruptedException e) {
+
+        }
     }
 }
