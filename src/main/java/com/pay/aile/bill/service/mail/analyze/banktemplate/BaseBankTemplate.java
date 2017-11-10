@@ -44,20 +44,20 @@ public abstract class BaseBankTemplate
 	 * 统计每一种模板的调用次数 用于不同卡种之间的排序,调用次数高的排位靠前
 	 */
 	private volatile int count;
-	@Resource
-	private CreditBillDetailService creditBillDetailService;
-	@Resource
-	private CreditBillService creditBillService;
-
-	@Resource
-	private CreditCardService creditCardService;
-
 	private Logger logger = LoggerFactory.getLogger(getClass());
-
 	/**
 	 * 信用卡类型 由子类去初始化自己是什么信用卡类型
 	 */
 	protected CardTypeEnum cardType;
+
+	@Resource
+	protected CreditBillDetailService creditBillDetailService;
+
+	@Resource
+	protected CreditBillService creditBillService;
+
+	@Resource
+	protected CreditCardService creditCardService;
 
 	/**
 	 * 存放明细规则的map
@@ -232,6 +232,23 @@ public abstract class BaseBankTemplate
 			for (int i = 0; i < list.size(); i++) {
 				String s = list.get(i);
 				detail.add(setCreditBillDetail(s));
+			}
+		}
+	}
+
+	protected void analyzeDetails(List<CreditBillDetail> detail, String content, AnalyzeParamsModel apm,
+			CreditCard card) {
+		List<String> list = null;
+		if (StringUtils.hasText(rules.getDetails())) {
+			// 交易明细
+			list = PatternMatcherUtil.getMatcher(rules.getDetails(), content);
+			if (list.isEmpty()) {
+				handleNotMatch("details", rules.getDetails(), apm);
+			}
+			for (int i = 0; i < list.size(); i++) {
+				String s = list.get(i);
+				detail.add(setCreditBillDetail(s));
+				setCardNumbers(card, s);
 			}
 		}
 	}
