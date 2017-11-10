@@ -48,10 +48,10 @@ public class RedisSentinelConfig {
         jedisPoolConfig.setMaxTotal(500);
         jedisPoolConfig.setMinIdle(5);
         jedisPoolConfig.setMaxIdle(200);
-        jedisPoolConfig.setMaxWaitMillis(3000);
         jedisPoolConfig.setBlockWhenExhausted(true);
-        jedisPoolConfig.setTestOnBorrow(true);
-        jedisPoolConfig.setTestOnReturn(true);
+        jedisPoolConfig.setMaxWaitMillis(3000);
+        jedisPoolConfig.setTestOnBorrow(false);
+        jedisPoolConfig.setTestOnReturn(false);
         jedisPoolConfig.setTestWhileIdle(true);
         jedisPoolConfig.setMinEvictableIdleTimeMillis(60000);
         jedisPoolConfig.setTimeBetweenEvictionRunsMillis(30000);
