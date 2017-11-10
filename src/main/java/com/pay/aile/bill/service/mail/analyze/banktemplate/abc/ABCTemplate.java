@@ -20,6 +20,8 @@ public class ABCTemplate extends AbstractABCTemplate {
         if (rules == null) {
             rules = new CreditTemplate();
             rules.setCardtypeId(5L);
+            rules.setCardholder("尊敬的[\\u4e00-\\u9fa5]+先生");
+            rules.setYearMonth("以下是您2017年10月份的信用卡电子账单");
             rules.setCycle("账单周期 \\d{8}-\\d{8}");
             rules.setMinimum("CreditLimit [\\u4e00-\\u9fa5]+\\([a-zA-Z]+\\) -?\\d+\\.?\\d* -?\\d+\\.?\\d*");
             rules.setDueDate("到期还款日 \\d{8}");

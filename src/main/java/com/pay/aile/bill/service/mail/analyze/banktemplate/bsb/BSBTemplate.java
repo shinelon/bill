@@ -26,6 +26,7 @@ public class BSBTemplate extends AbstractBSBTemplate {
             rules = new CreditTemplate();
             rules.setCardtypeId(9L);
             rules.setCurrentAmount("本期应还款额：\\d+\\.?\\d*");
+            rules.setMinimum("最低还款额：\\d+\\.?\\d*");
         }
     }
 

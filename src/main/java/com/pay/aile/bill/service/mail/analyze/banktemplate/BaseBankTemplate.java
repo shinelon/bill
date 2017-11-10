@@ -114,7 +114,6 @@ public abstract class BaseBankTemplate
 
     protected void analyzeBillDate(CreditCard card, String content, AnalyzeParamsModel apm) {
         if (StringUtils.hasText(rules.getBillDay())) {
-
             String billDay = getValueByPattern("billDay", content, rules.getBillDay(), apm, " ");
             card.setBillDay(billDay);
         }
@@ -131,9 +130,17 @@ public abstract class BaseBankTemplate
      */
     protected void analyzeCardholder(CreditCard card, String content, AnalyzeParamsModel apm) {
         if (StringUtils.hasText(rules.getCardholder())) {
-
             String cardholder = getValueByPattern("cardholder", content, rules.getCardholder(), apm, " ");
+            cardholder = cardholder.replaceAll("尊敬的", "").replaceAll("先生", "").replaceAll("女士", "");
             card.setCardholder(cardholder);
+        }
+    }
+
+    protected void analyzeCardNo(CreditCard card, String content, AnalyzeParamsModel apm) {
+        if (StringUtils.hasText(rules.getCardNumbers())) {
+            String value = getValueByPattern("cardNumbers", content, rules.getCardNumbers(), apm, " ");
+            String cardNo = PatternMatcherUtil.getMatcherString("\\d{4}", value);
+            card.setNumbers(cardNo);
         }
     }
 
@@ -201,8 +208,9 @@ public abstract class BaseBankTemplate
 
             String cycle = getValueByPattern("cycle", content, rules.getCycle(), apm, " ");
             cycle = PatternMatcherUtil.getMatcherString("\\d+.?\\d*", cycle);
-            // bill.setBeginDate(beginDate);
-            // bill.setEndDate(endDate);
+            String[] sa = cycle.split("-");
+            bill.setBeginDate(DateUtil.parseDate(sa[0]));
+            bill.setEndDate(DateUtil.parseDate(sa[1]));
         }
     }
 
@@ -272,6 +280,8 @@ public abstract class BaseBankTemplate
         analyzeCredits(bill, content, apm);
         // 取取现金额
         analyzeCash(bill, content, apm);
+        // 卡号
+        analyzeCardNo(card, content, apm);
 
         analyzeDetails(detail, content, apm, card);
         // 设置卡片
@@ -292,11 +302,10 @@ public abstract class BaseBankTemplate
         if (StringUtils.hasText(rules.getYearMonth())) {
 
             String yearMonth = getValueByPattern("yearMonth", content, rules.getYearMonth(), apm, " ");
-            yearMonth = PatternMatcherUtil.getMatcherString("\\d+.?\\d*", yearMonth);
-            // bill.setYear(year);
-            // bill.setMonth(month);
-            // bill.setBeginDate(beginDate);
-            // bill.setEndDate(endDate);
+            String year = PatternMatcherUtil.getMatcherString("\\d{4}", yearMonth);
+            String month = PatternMatcherUtil.getMatcherString("\\d{2}", yearMonth);
+            bill.setYear(year);
+            bill.setMonth(month);
         }
     }
 
@@ -466,7 +475,7 @@ public abstract class BaseBankTemplate
      * @return void 返回类型 @throws
      */
     protected void setCardNumbers(CreditCard card, String number) {
-        if (StringUtils.hasText(rules.getCardNumbers())) {
+        if (StringUtils.hasText(rules.getCardNumbers()) && !StringUtils.hasText(card.getNumbers())) {
             try {
                 int n = Integer.parseInt(rules.getCardNumbers());
                 String[] detailArray = number.split(" ");

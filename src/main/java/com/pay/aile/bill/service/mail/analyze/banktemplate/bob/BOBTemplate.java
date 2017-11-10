@@ -26,6 +26,7 @@ public class BOBTemplate extends AbstractBOBTemplate {
             rules = new CreditTemplate();
             rules.setCardtypeId(7L);
             rules.setCurrentAmount("本期应还款额：\\d+\\.?\\d*");
+            rules.setMinimum("最低还款额：\\d+\\.?\\d*");
         }
     }
 
