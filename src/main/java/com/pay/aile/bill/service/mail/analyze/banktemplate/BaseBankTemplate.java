@@ -24,6 +24,7 @@ import com.pay.aile.bill.service.CreditBillDetailService;
 import com.pay.aile.bill.service.CreditBillService;
 import com.pay.aile.bill.service.CreditCardService;
 import com.pay.aile.bill.service.mail.analyze.BankMailAnalyzerTemplate;
+import com.pay.aile.bill.service.mail.analyze.MailContentExtractor;
 import com.pay.aile.bill.service.mail.analyze.config.TemplateCache;
 import com.pay.aile.bill.service.mail.analyze.enums.CardTypeEnum;
 import com.pay.aile.bill.service.mail.analyze.exception.AnalyzeBillException;
@@ -39,7 +40,8 @@ import com.pay.aile.bill.service.mail.analyze.util.PatternMatcherUtil;
  */
 public abstract class BaseBankTemplate
         implements BankMailAnalyzerTemplate, Comparable<BaseBankTemplate>, InitializingBean {
-
+    @Resource(name = "textExtractor")
+    private MailContentExtractor extractor;
     /**
      * 统计每一种模板的调用次数 用于不同卡种之间的排序,调用次数高的排位靠前
      */
@@ -81,6 +83,7 @@ public abstract class BaseBankTemplate
         if (rules != null) {
             apm.setCardtypeId(rules.getCardtypeId());
         }
+
         beforeAnalyze(apm);
         analyzeInternal(apm);
         afterAnalyze(apm);
@@ -307,7 +310,7 @@ public abstract class BaseBankTemplate
      * @param apm
      */
     protected void beforeAnalyze(AnalyzeParamsModel apm) {
-
+        initContext(apm);
     }
 
     /**
@@ -390,6 +393,15 @@ public abstract class BaseBankTemplate
             }
         }
 
+    }
+
+    /**
+     *
+     * @Title: initContext @Description: 初始化需要解析的内容 @param @param apm 参数 @return
+     *         void 返回类型 @throws
+     */
+    protected void initContext(AnalyzeParamsModel apm) {
+        extractor.extract(apm.getContent(), "td");
     }
 
     protected void initDetail() {

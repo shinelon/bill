@@ -1,6 +1,5 @@
 package com.pay.aile.bill.service.mail.analyze.impl;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -9,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import com.pay.aile.bill.entity.CreditEmail;
 import com.pay.aile.bill.exception.MailBillException;
@@ -78,52 +76,49 @@ public class ParseMailImpl implements IParseMail {
      * @return void 返回类型 @throws
      */
     public void executeParseFile(CreditFileModel creditFile) {
+        // 解析
+        Exception error = null;
+        Long id = creditFile.getId();
         try {
-            Long id = creditFile.getId();
-            // String fileName = creditFile.getFileName();
-            String email = creditFile.getEmail();
-            Long emailId = creditFile.getEmailId();
-            Date sentDate = creditFile.getSentDate();// 邮件日期
-            String subject = creditFile.getSubject();// 邮件主题
-            String bankCode = getBankCode(subject);
-            String type = creditFile.getMailType();
-            MailContentExtractor extractor = null;
-            for (MailContentExtractor mailContentExtractor : extractors) {
-                if (mailContentExtractor.support(type)) {
-                    extractor = mailContentExtractor;
-                    break;
-                }
-            }
-            if (extractor == null) {
-                throw new RuntimeException("no extractors found");
-            }
-            // 获取邮件内容，并做处理，默认是去除td里面的空格
-            String content = getFileContent(creditFile, extractor);
-            if (!StringUtils.hasText(content)) {
-                logger.error("extract error");
-            }
-            // 获取解析器
-            BankMailAnalyzer parser = null;
-            for (BankMailAnalyzer p : parsers) {
-                if (p.support(bankCode)) {
-                    parser = p;
-                    break;
-                }
-            }
-            if (parser == null) {
-                throw new RuntimeException("no parsers found");
-            }
-            // 解析
-            Exception error = null;
             try {
-                AnalyzeParamsModel apm = new AnalyzeParamsModel();
-                apm.setEmail(email);
-                apm.setContent(content);
-                apm.setBankCode(bankCode);
-                // 根据bankCode设置id
-                apm.setBankId(String.valueOf(TemplateCache.bankCache.get(bankCode)));
-                apm.setEmailId(emailId);
-                apm.setSentDate(sentDate);
+
+                // String fileName = creditFile.getFileName();
+                // String email = creditFile.getEmail();
+                // Long emailId = creditFile.getEmailId();
+                // Date sentDate = creditFile.getSentDate();// 邮件日期
+                // String subject = creditFile.getSubject();// 邮件主题
+                // String bankCode = getBankCode(subject);
+                // String type = creditFile.getMailType();
+                // MailContentExtractor extractor = null;
+                // for (MailContentExtractor mailContentExtractor : extractors)
+                // {
+                // if (mailContentExtractor.support(type)) {
+                // extractor = mailContentExtractor;
+                // break;
+                // }
+                // }
+                // if (extractor == null) {
+                // throw new RuntimeException("no extractors found");
+                // }
+                // // 获取邮件内容，并做处理，默认是去除td里面的空格
+                // String content = getFileContent(creditFile, extractor);
+                // if (!StringUtils.hasText(content)) {
+                // logger.error("extract error");
+                // }
+                // 获取解析器
+
+                AnalyzeParamsModel apm = setModel(creditFile);
+                BankMailAnalyzer parser = null;
+                for (BankMailAnalyzer p : parsers) {
+                    if (p.support(apm.getBankCode())) {
+                        parser = p;
+                        break;
+                    }
+                }
+                if (parser == null) {
+                    throw new RuntimeException("no parsers found");
+                }
+
                 parser.analyze(apm);
             } catch (Exception e) {
                 // TODO 解析错误,发送信息告知
@@ -134,7 +129,9 @@ public class ParseMailImpl implements IParseMail {
                 // 更新解析状态
                 creditFileService.updateProcessResult(1, id);
             }
-        } catch (Exception e) {
+        } catch (
+
+        Exception e) {
             logger.error(e.getMessage(), e);
         }
 
@@ -174,5 +171,20 @@ public class ParseMailImpl implements IParseMail {
             throw new RuntimeException("未查到银行,name=" + subject);
         }
         return bank.getBankCode();
+    }
+
+    private AnalyzeParamsModel setModel(CreditFileModel creditFile) {
+        AnalyzeParamsModel apm = new AnalyzeParamsModel();
+        String subject = creditFile.getSubject();// 邮件主题
+        String bankCode = getBankCode(subject);
+
+        apm.setEmail(creditFile.getEmail());
+        apm.setBankCode(bankCode);
+        // 根据bankCode设置id
+        apm.setBankId(String.valueOf(TemplateCache.bankCache.get(bankCode)));
+        apm.setEmailId(creditFile.getEmailId());
+        apm.setSentDate(creditFile.getSentDate());
+
+        return apm;
     }
 }
