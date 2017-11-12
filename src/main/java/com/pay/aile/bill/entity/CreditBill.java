@@ -121,6 +121,12 @@ public class CreditBill extends Model<CreditBill> {
      */
     private String year;
 
+    /**
+     * 邮件发送shijian
+     */
+    @TableField(value = "sent_date")
+    private Date sentDate;
+
     public String getAccountType() {
         return accountType;
     }
@@ -187,6 +193,10 @@ public class CreditBill extends Model<CreditBill> {
 
     public BigDecimal getRepayment() {
         return repayment;
+    }
+
+    public Date getSentDate() {
+        return sentDate;
     }
 
     public Integer getStatus() {
@@ -269,6 +279,10 @@ public class CreditBill extends Model<CreditBill> {
         this.repayment = repayment;
     }
 
+    public void setSentDate(Date sentDate) {
+        this.sentDate = sentDate;
+    }
+
     public void setStatus(Integer status) {
         this.status = status;
     }
@@ -283,12 +297,13 @@ public class CreditBill extends Model<CreditBill> {
 
     @Override
     public String toString() {
-        return "CreditBill [accountType=" + accountType + ", bankCode=" + bankCode + ", beginDate=" + beginDate
-                + ", cardId=" + cardId + ", cash=" + cash + ", consumption=" + consumption + ", createDate="
-                + createDate + ", credits=" + credits + ", currentAmount=" + currentAmount + ", dueDate=" + dueDate
-                + ", emailId=" + emailId + ", endDate=" + endDate + ", id=" + id + ", lastAmount=" + lastAmount
-                + ", minimum=" + minimum + ", month=" + month + ", repayment=" + repayment + ", status=" + status
-                + ", updateDate=" + updateDate + ", year=" + year + "]";
+        return "CreditBill [accountType=" + accountType + ", bankCode=" + bankCode + ", beginDate="
+                + beginDate + ", cardId=" + cardId + ", cash=" + cash + ", consumption="
+                + consumption + ", createDate=" + createDate + ", credits=" + credits
+                + ", currentAmount=" + currentAmount + ", dueDate=" + dueDate + ", emailId="
+                + emailId + ", endDate=" + endDate + ", id=" + id + ", lastAmount=" + lastAmount
+                + ", minimum=" + minimum + ", month=" + month + ", repayment=" + repayment
+                + ", status=" + status + ", updateDate=" + updateDate + ", year=" + year + "]";
     }
 
     @Override

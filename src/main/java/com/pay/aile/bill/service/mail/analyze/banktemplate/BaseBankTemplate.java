@@ -379,7 +379,9 @@ public abstract class BaseBankTemplate
                 try {
                     if (billId == null) {
                         bill.setSentDate(creditBillDetail.getTransactionDate());
-                        bill = creditBillService.findCreditBillByTransDate(bill);
+                        // TODO 代提交
+                        // bill =
+                        // creditBillService.findCreditBillByTransDate(bill);
                         if (bill == null) {
                             logger.warn("未查询到明细对应的账单,result={}", apm);
                             throw new RuntimeException("未查询到明细对应的账单");
