@@ -9,7 +9,7 @@ import com.pay.aile.bill.service.mail.analyze.MailContentExtractor;
 import com.pay.aile.bill.service.mail.analyze.util.TextExtractUtil;
 
 /**
- * 
+ *
  * @author Charlie
  * @description
  */
@@ -19,22 +19,22 @@ public class TextExtractor implements MailContentExtractor {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
-    public boolean support(String suffix) {
-        if (!StringUtils.hasText(suffix) || (!"html".equalsIgnoreCase(suffix)
-                && !"txt".equalsIgnoreCase(suffix))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String extract(String content) {
+    public String extract(String content, String... tagName) {
         try {
-            return TextExtractUtil.parseHtml(content, "td");
+            return TextExtractUtil.parseHtml(content, tagName);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return null;
         }
+    }
+
+    @Override
+    public boolean support(String suffix) {
+        if (!StringUtils.hasText(suffix)
+                || (!"html".equalsIgnoreCase(suffix) && !"txt".equalsIgnoreCase(suffix))) {
+            return false;
+        }
+        return true;
     }
 
 }

@@ -7,7 +7,7 @@ import com.pay.aile.bill.service.mail.analyze.MailContentExtractor;
 import com.pay.aile.bill.service.mail.analyze.util.TextExtractUtil;
 
 /**
- * 
+ *
  * @author Charlie
  * @description
  */
@@ -15,13 +15,13 @@ import com.pay.aile.bill.service.mail.analyze.util.TextExtractUtil;
 public class PdfExtractor implements MailContentExtractor {
 
     @Override
-    public boolean support(String suffix) {
-        return StringUtils.hasText(suffix) && "pdf".equalsIgnoreCase(suffix);
+    public String extract(String content, String... tagName) {
+        return TextExtractUtil.parsePdf(content);
     }
 
     @Override
-    public String extract(String content) {
-        return TextExtractUtil.parsePdf(content);
+    public boolean support(String suffix) {
+        return StringUtils.hasText(suffix) && "pdf".equalsIgnoreCase(suffix);
     }
 
 }

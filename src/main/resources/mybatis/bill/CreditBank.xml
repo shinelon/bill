@@ -6,6 +6,7 @@
 	<resultMap id="BaseResultMap" type="com.pay.aile.bill.entity.CreditBank">
 		<result column="id" property="id" />
 		<result column="name" property="name" />
+		<result column="code" property="code" />
 		<result column="ext_keyword" property="extKeyword" />
 		<result column="online" property="online" />
 		<result column="email" property="email" />
@@ -13,7 +14,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, ext_keyword AS extKeyword, online, email
+        id, name, code, ext_keyword AS extKeyword, online, email
     </sql>
 
 </mapper>

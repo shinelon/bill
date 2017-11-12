@@ -24,13 +24,13 @@ import com.pay.aile.bill.service.CreditBillDetailService;
 import com.pay.aile.bill.service.CreditBillService;
 import com.pay.aile.bill.service.CreditCardService;
 import com.pay.aile.bill.service.mail.analyze.BankMailAnalyzerTemplate;
-import com.pay.aile.bill.service.mail.analyze.constant.Constant;
+import com.pay.aile.bill.service.mail.analyze.MailContentExtractor;
+import com.pay.aile.bill.service.mail.analyze.config.TemplateCache;
 import com.pay.aile.bill.service.mail.analyze.enums.CardTypeEnum;
 import com.pay.aile.bill.service.mail.analyze.exception.AnalyzeBillException;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeResult;
 import com.pay.aile.bill.service.mail.analyze.util.DateUtil;
-import com.pay.aile.bill.service.mail.analyze.util.JedisClusterUtils;
 import com.pay.aile.bill.service.mail.analyze.util.PatternMatcherUtil;
 
 /**
@@ -40,7 +40,8 @@ import com.pay.aile.bill.service.mail.analyze.util.PatternMatcherUtil;
  */
 public abstract class BaseBankTemplate
         implements BankMailAnalyzerTemplate, Comparable<BaseBankTemplate>, InitializingBean {
-
+    @Resource(name = "textExtractor")
+    private MailContentExtractor extractor;
     /**
      * 统计每一种模板的调用次数 用于不同卡种之间的排序,调用次数高的排位靠前
      */
@@ -82,6 +83,7 @@ public abstract class BaseBankTemplate
         if (rules != null) {
             apm.setCardtypeId(rules.getCardtypeId());
         }
+
         beforeAnalyze(apm);
         analyzeInternal(apm);
         afterAnalyze(apm);
@@ -132,7 +134,8 @@ public abstract class BaseBankTemplate
     protected void analyzeCardholder(CreditCard card, String content, AnalyzeParamsModel apm) {
         if (StringUtils.hasText(rules.getCardholder())) {
 
-            String cardholder = getValueByPattern("cardholder", content, rules.getCardholder(), apm, " ");
+            String cardholder = getValueByPattern("cardholder", content, rules.getCardholder(), apm,
+                    " ");
             card.setCardholder(cardholder);
         }
     }
@@ -150,7 +153,7 @@ public abstract class BaseBankTemplate
         if (StringUtils.hasText(rules.getCash())) {
 
             String cash = getValueByPattern("cash", content, rules.getCash(), apm, " ");
-            cash = PatternMatcherUtil.getMatcherString("\\d+\\.?\\d*", cash);
+            cash = PatternMatcherUtil.getMatcherString("\\d+.?\\d*", cash);
             bill.setCash(new BigDecimal(cash));
         }
     }
@@ -168,7 +171,7 @@ public abstract class BaseBankTemplate
         if (StringUtils.hasText(rules.getCredits())) {
 
             String credits = getValueByPattern("credits", content, rules.getCredits(), apm, " ");
-            credits = PatternMatcherUtil.getMatcherString("\\d+\\.?\\d*", credits);
+            credits = PatternMatcherUtil.getMatcherString("\\d+.?\\d*", credits);
             bill.setCredits(new BigDecimal(credits));
         }
     }
@@ -185,7 +188,8 @@ public abstract class BaseBankTemplate
     protected void analyzeCurrentAmount(CreditBill bill, String content, AnalyzeParamsModel apm) {
         if (StringUtils.hasText(rules.getCurrentAmount())) {
 
-            String currentAmount = getValueByPattern("currentAmount", content, rules.getCurrentAmount(), apm, " ");
+            String currentAmount = getValueByPattern("currentAmount", content,
+                    rules.getCurrentAmount(), apm, " ");
             currentAmount = PatternMatcherUtil.getMatcherString("-?\\d+\\.?\\d*", currentAmount);
             if (StringUtils.hasText(currentAmount)) {
                 if (currentAmount.startsWith("-")) {
@@ -206,8 +210,8 @@ public abstract class BaseBankTemplate
         }
     }
 
-    protected void analyzeDetails(List<CreditBillDetail> detail, String content, AnalyzeParamsModel apm,
-            CreditCard card) {
+    protected void analyzeDetails(List<CreditBillDetail> detail, String content,
+            AnalyzeParamsModel apm, CreditCard card) {
         List<String> list = null;
         if (StringUtils.hasText(rules.getDetails())) {
             // 交易明细
@@ -260,7 +264,7 @@ public abstract class BaseBankTemplate
         analyzeCycle(bill, content, apm);
         // 持卡人
         analyzeCardholder(card, content, apm);
-        // 账单日
+        // 还款日
         analyzeBillDate(card, content, apm);
         // 还款日
         analyzeDueDate(bill, content, apm);
@@ -283,7 +287,7 @@ public abstract class BaseBankTemplate
         if (StringUtils.hasText(rules.getMinimum())) {
 
             String minimum = getValueByPattern("minimum", content, rules.getMinimum(), apm, " ");
-            minimum = PatternMatcherUtil.getMatcherString("\\d+\\.?\\d*", minimum);
+            minimum = PatternMatcherUtil.getMatcherString("\\d+.?\\d*", minimum);
             bill.setMinimum(new BigDecimal(minimum));
         }
     }
@@ -291,7 +295,8 @@ public abstract class BaseBankTemplate
     protected void analyzeYearMonth(CreditBill bill, String content, AnalyzeParamsModel apm) {
         if (StringUtils.hasText(rules.getYearMonth())) {
 
-            String yearMonth = getValueByPattern("yearMonth", content, rules.getYearMonth(), apm, " ");
+            String yearMonth = getValueByPattern("yearMonth", content, rules.getYearMonth(), apm,
+                    " ");
             yearMonth = PatternMatcherUtil.getMatcherString("\\d+.?\\d*", yearMonth);
             // bill.setYear(year);
             // bill.setMonth(month);
@@ -305,7 +310,7 @@ public abstract class BaseBankTemplate
      * @param apm
      */
     protected void beforeAnalyze(AnalyzeParamsModel apm) {
-
+        initContext(apm);
     }
 
     /**
@@ -322,8 +327,8 @@ public abstract class BaseBankTemplate
         }
     }
 
-    protected String getValueByPattern(String key, String content, String ruleValue, AnalyzeParamsModel apm,
-            String splitSign) {
+    protected String getValueByPattern(String key, String content, String ruleValue,
+            AnalyzeParamsModel apm, String splitSign) {
 
         if (StringUtils.hasText(ruleValue)) {
 
@@ -358,18 +363,28 @@ public abstract class BaseBankTemplate
         Long cardId = creditCardService.saveOrUpateCreditCard(card);
         // 解析成功，保存账单到数据库
         CreditBill bill = apm.getResult().getBill();
+        // 设置卡id
+        bill.setCardId(cardId);
         List<CreditBillDetail> billDetails = apm.getResult().getDetail();
         Long billId = null;
         if (bill != null) {
-            // 设置卡id
-            bill.setCardId(cardId);
             bill.setEmailId(emailId);
+            bill.setSentDate(apm.getSentDate());
             billId = creditBillService.saveOrUpdateCreditBill(bill);
+            // billId = bill.getId();
         }
 
         if (billDetails != null && !billDetails.isEmpty()) {
             for (CreditBillDetail creditBillDetail : billDetails) {
                 try {
+                    if (billId == null) {
+                        bill.setSentDate(creditBillDetail.getTransactionDate());
+                        bill = creditBillService.findCreditBillByTransDate(bill);
+                        if (bill == null) {
+                            logger.warn("未查询到明细对应的账单,result={}", apm);
+                            throw new RuntimeException("未查询到明细对应的账单");
+                        }
+                    }
                     creditBillDetail.setBillId(billId);
                     creditBillDetailService.saveCreditBillDetail(creditBillDetail);
                 } catch (Exception e) {
@@ -378,6 +393,15 @@ public abstract class BaseBankTemplate
             }
         }
 
+    }
+
+    /**
+     *
+     * @Title: initContext @Description: 初始化需要解析的内容 @param @param apm 参数 @return
+     *         void 返回类型 @throws
+     */
+    protected void initContext(AnalyzeParamsModel apm) {
+        extractor.extract(apm.getContent(), "td");
     }
 
     protected void initDetail() {
@@ -398,28 +422,32 @@ public abstract class BaseBankTemplate
             }
             if (StringUtils.hasText(rules.getTransactionDescription())) {
                 try {
-                    detailMap.put(Integer.parseInt(rules.getTransactionDescription()), "transactionDescription");
+                    detailMap.put(Integer.parseInt(rules.getTransactionDescription()),
+                            "transactionDescription");
                 } catch (Exception e) {
                     logger.error(e.getMessage());
                 }
             }
             if (StringUtils.hasText(rules.getTransactionCurrency())) {
                 try {
-                    detailMap.put(Integer.parseInt(rules.getTransactionCurrency()), "transactionCurrency");
+                    detailMap.put(Integer.parseInt(rules.getTransactionCurrency()),
+                            "transactionCurrency");
                 } catch (Exception e) {
                     logger.error(e.getMessage());
                 }
             }
             if (StringUtils.hasText(rules.getTransactionAmount())) {
                 try {
-                    detailMap.put(Integer.parseInt(rules.getTransactionAmount()), "transactionAmount");
+                    detailMap.put(Integer.parseInt(rules.getTransactionAmount()),
+                            "transactionAmount");
                 } catch (Exception e) {
                     logger.error(e.getMessage());
                 }
             }
             if (StringUtils.hasText(rules.getAccountableAmount())) {
                 try {
-                    detailMap.put(Integer.parseInt(rules.getAccountableAmount()), "accountableAmount");
+                    detailMap.put(Integer.parseInt(rules.getAccountableAmount()),
+                            "accountableAmount");
                 } catch (Exception e) {
                     logger.error(e.getMessage());
                 }
@@ -434,7 +462,12 @@ public abstract class BaseBankTemplate
     protected void initRules() {
         // 根据cardCode从缓存中获取对应的规则
         String cardCode = cardType.getCardCode();
-        rules = JedisClusterUtils.getBean(Constant.redisTemplateRuleCache + cardCode, CreditTemplate.class);
+        // 从缓存中找模板
+        // rules = JedisClusterUtils.getBean(Constant.redisTemplateRuleCache +
+        // cardCode,
+        // CreditTemplate.class);
+        rules = TemplateCache.templateCache.get(cardCode);
+
     }
 
     /**
