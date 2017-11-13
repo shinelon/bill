@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.pay.aile.bill.entity.CreditEmail;
+import com.pay.aile.bill.entity.CreditFile;
 import com.pay.aile.bill.mapper.CreditFileMapper;
 import com.pay.aile.bill.service.CreditFileService;
 import com.pay.aile.bill.service.mail.analyze.model.CreditFileModel;
@@ -19,23 +20,28 @@ import com.pay.aile.bill.service.mail.analyze.model.CreditFileModel;
 @Service
 public class CreditFileServiceImpl implements CreditFileService {
 
-	@Autowired
-	private CreditFileMapper creditFileMapper;
+    @Autowired
+    private CreditFileMapper creditFileMapper;
 
-	@Override
-	public List<CreditFileModel> findUnAnalyzedList() {
-		return creditFileMapper.selectUnAnalyzedList();
-	}
+    @Override
+    public CreditFile findById(Long id) {
+        return creditFileMapper.selectById(id);
+    }
 
-	@Override
-	public List<CreditFileModel> findUnAnalyzedListByEmail(CreditEmail eamil) {
-		return creditFileMapper.selectUnAnalyzedListByEmail(eamil.getEmail());
-	}
+    @Override
+    public List<CreditFileModel> findUnAnalyzedList() {
+        return creditFileMapper.selectUnAnalyzedList();
+    }
 
-	@Transactional
-	@Override
-	public Integer updateProcessResult(int result, Long id) {
-		return creditFileMapper.updateProcessResult(result, id);
-	}
+    @Override
+    public List<CreditFileModel> findUnAnalyzedListByEmail(CreditEmail eamil) {
+        return creditFileMapper.selectUnAnalyzedListByEmail(eamil.getEmail());
+    }
+
+    @Transactional
+    @Override
+    public Integer updateProcessResult(int result, Long id) {
+        return creditFileMapper.updateProcessResult(result, id);
+    }
 
 }

@@ -71,6 +71,7 @@ public class ParseMailImpl implements IParseMail {
      * @param creditFile
      * @return void 返回类型 @throws
      */
+    @Override
     public void executeParseFile(CreditFileModel creditFile) {
         // 解析
         Exception error = null;
@@ -175,6 +176,7 @@ public class ParseMailImpl implements IParseMail {
             EmailFile emailFile = mongoDownloadUtil.getFile(creditFile.getFileName(), creditFile.getEmail());
             apm.setAttachment(emailFile.getAttachment());
             apm.setOriginContent(emailFile.getContent());
+			logger.info(emailFile.getContent());
         } catch (MailBillException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

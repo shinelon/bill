@@ -38,12 +38,7 @@ public class FileAnalyzeScheduler {
 
     public void analyzeLoop() {
         while (flagJobLoop) {
-            try {
-                Thread.sleep(1 * 1000);
-            } catch (InterruptedException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            }
+
             taskExecutor.execute(() -> {
                 try {
                     CreditFileModel file = fileQueueRedisHandle.getFile();

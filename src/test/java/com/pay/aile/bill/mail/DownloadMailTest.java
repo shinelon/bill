@@ -1,6 +1,5 @@
 package com.pay.aile.bill.mail;
 
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,7 +23,7 @@ public class DownloadMailTest {
     public DownloadMail downloadMail;
 
     // 开启POP3授权码
-    @Test
+    // @Test
     public void testHotMail() {
         try {
             downloadMail.execute("jinjing_0316@outlook.com", "bobo0316");
@@ -64,6 +63,15 @@ public class DownloadMailTest {
     }
 
     // @Test
+    public void testMail189() {
+        try {
+            downloadMail.execute("xxxx@189.cn", "vjbvejavwiqobcgf");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // @Test
     public void testMailAliyun() {
         try {
             downloadMail.execute("jinjing_0316@aliyun.com", "jinjing0316");
@@ -81,4 +89,14 @@ public class DownloadMailTest {
             e.printStackTrace();
         }
     }
+
+    // @Test
+    public void testMailWo() {
+        try {
+            downloadMail.execute("xxxx@wo.cn", "vjbvejavwiqobcgf");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
