@@ -20,6 +20,11 @@ public class PSBCTemplate extends AbstractPSBCTemplate {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
+    protected void analyzeInternal(AnalyzeParamsModel apm) {
+        super.analyzeInternal(apm);
+    }
+
+    @Override
     public void initRules() {
         super.initRules();
         if (rules == null) {
@@ -32,11 +37,6 @@ public class PSBCTemplate extends AbstractPSBCTemplate {
             rules.setPrepaidCashAmount("预借现金额度 \\d+.?\\d*");
             rules.setDetails("\\d{4}/\\d{2}/\\d{2} \\d{4}/\\d{2}/\\d{2} \\S+ \\d+.?\\d* \\d{4}");
         }
-    }
-
-    @Override
-    protected void analyzeInternal(AnalyzeParamsModel apm) {
-        super.analyzeInternal(apm);
     }
 
     @Override

@@ -11,6 +11,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import com.pay.aile.bill.service.mail.analyze.task.FileAnalyzeScheduler;
+import com.pay.aile.bill.service.mail.analyze.task.FileQueueRedisHandle;
 
 /**
  *
@@ -31,12 +32,17 @@ public class FileAnalyzeStartup implements ApplicationListener<ContextRefreshedE
 
             FileAnalyzeScheduler fileAnalyzeScheduler = event.getApplicationContext()
                     .getBean(FileAnalyzeScheduler.class);
+            // 初始化文件列表
+            FileQueueRedisHandle fileQueueRedisHandle = event.getApplicationContext()
+                    .getBean(FileQueueRedisHandle.class);
+            fileQueueRedisHandle.initFileList();
             ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1,
-                    new BasicThreadFactory.Builder().namingPattern("loop-file-pool-%d").daemon(true).build());
+                    new BasicThreadFactory.Builder().namingPattern("loop-file-pool-%d").daemon(true)
+                            .build());
 
-            // executorService.execute(() -> {
-            // fileAnalyzeScheduler.analyzeLoop();
-            // });
+            executorService.execute(() -> {
+                fileAnalyzeScheduler.analyzeLoop();
+            });
 
         }
     }

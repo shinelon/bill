@@ -32,8 +32,8 @@ public class HXBTemplate extends AbstractHXBTemplate {
 
     }
 
-	/**
-	 *
+    /**
+     *
      * @Title: analyzeDueDate
      * @Description: 解析参数
      * @param card
@@ -49,6 +49,17 @@ public class HXBTemplate extends AbstractHXBTemplate {
                     "");
             cardholder = cardholder.substring(cardholder.indexOf("的") + 1, cardholder.length() - 3);
             card.setCardholder(cardholder);
+        }
+    }
+
+    @Override
+    protected void analyzeCycle(CreditBill bill, String content, AnalyzeParamsModel apm) {
+        if (StringUtils.hasText(rules.getCycle())) {
+
+            String cycle = getValueByPattern("cycle", content, rules.getCycle(), apm, " ");
+            cycle = PatternMatcherUtil.getMatcherString("\\d+.?\\d", cycle);
+            // bill.setBeginDate(beginDate);
+            // bill.setEndDate(endDate);
         }
     }
 
@@ -73,17 +84,6 @@ public class HXBTemplate extends AbstractHXBTemplate {
     // }
 
     @Override
-    protected void analyzeCycle(CreditBill bill, String content, AnalyzeParamsModel apm) {
-        if (StringUtils.hasText(rules.getCycle())) {
-
-            String cycle = getValueByPattern("cycle", content, rules.getCycle(), apm, " ");
-            cycle = PatternMatcherUtil.getMatcherString("\\d+.?\\d", cycle);
-            // bill.setBeginDate(beginDate);
-            // bill.setEndDate(endDate);
-        }
-    }
-
-    @Override
     protected void analyzeInternal(AnalyzeParamsModel apm) {
         super.analyzeInternal(apm);
     }
@@ -101,6 +101,11 @@ public class HXBTemplate extends AbstractHXBTemplate {
             // bill.setEndDate(endDate);
         }
     }
+
+    // @Override
+    // protected void initContext(AnalyzeParamsModel apm) {
+    // TextExtractUtil.parseHtml(apm.getContent(), "fron")
+    // }
 
     @Override
     protected void setCardNumbers(CreditCard card, String number) {

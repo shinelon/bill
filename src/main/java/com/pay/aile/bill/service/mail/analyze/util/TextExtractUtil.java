@@ -1,5 +1,7 @@
 package com.pay.aile.bill.service.mail.analyze.util;
 
+import java.util.List;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -34,8 +36,7 @@ public class TextExtractUtil {
                     // td需要特殊处理
                     if ("td".equals(tagName[i])) {
 
-                        Elements childElements = element
-                                .getElementsByTag(tagName[i]);
+                        Elements childElements = element.getElementsByTag(tagName[i]);
 
                         if (childElements != null && childElements.size() > 1) {
                             continue;
@@ -71,6 +72,22 @@ public class TextExtractUtil {
         return html;
     }
 
+    public static String parseHtmlBoc(String html, String... tagName) {
+        List<String> list = null;
+        Document document = Jsoup.parse(html);
+        Elements element = document.select("table.bill_pay_des").get(1).select("td");
+        for (int i = 0; i < element.size(); i++) {
+            Elements tds = element.get(i).select("td");
+            for (int j = 0; j < tds.size(); j++) {
+                String text = tds.get(j).text();
+                System.out.print(text);
+            }
+        }
+        System.out.println(element.toString());
+
+        return "";
+    }
+
     /**
      * 去除pdf正文中的无用字符 格式化pdf正文
      *
@@ -81,8 +98,7 @@ public class TextExtractUtil {
         pdf = pdf.replaceAll(",", "");// 去掉金额分隔符
         pdf = pdf.replaceAll("￥", "");// 去掉人民币符号
         pdf = pdf.replaceAll("$", "");// 去掉美元符号
-        pdf = pdf.replaceAll("([\\u4e00-\\u9fa5]+) +([\\u4e00-\\u9fa5]+)",
-                "$1$2");// 去掉中文之间空格
+        pdf = pdf.replaceAll("([\\u4e00-\\u9fa5]+) +([\\u4e00-\\u9fa5]+)", "$1$2");// 去掉中文之间空格
         pdf = pdf.replaceAll("\r", " ");// remove \r
         pdf = pdf.replaceAll("\n", " ");// remove \n
         pdf = pdf.replaceAll(" {2,}", " ");// 去掉多余空格，只留一个

@@ -7,6 +7,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisSentinelConfiguration;
@@ -18,6 +19,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import redis.clients.jedis.JedisPoolConfig;
 
 @Configuration
+@ConditionalOnProperty(name = "redis.sentinel")
 public class RedisSentinelConfig {
     private Logger logger = LoggerFactory.getLogger(RedisSentinelConfig.class);
     @Value("${redis.host}")
@@ -35,7 +37,8 @@ public class RedisSentinelConfig {
         Set<String> sentinels = new HashSet<String>();
         sentinels.addAll(Arrays.asList(host.split(";")));
         RedisSentinelConfiguration rscfg = new RedisSentinelConfiguration(masterName, sentinels);
-        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(rscfg, initJedisPoolConfig());
+        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(rscfg,
+                initJedisPoolConfig());
         jedisConnectionFactory.setDatabase(dbIndex);
         jedisConnectionFactory.setPassword(password);
         jedisConnectionFactory.setTimeout(timeout);

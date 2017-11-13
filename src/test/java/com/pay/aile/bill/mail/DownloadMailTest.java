@@ -24,7 +24,7 @@ public class DownloadMailTest {
     public DownloadMail downloadMail;
 
     // 开启POP3授权码
-    // @Test
+    @Test
     public void testHotMail() {
         try {
             downloadMail.execute("jinjing_0316@outlook.com", "bobo0316");
@@ -34,10 +34,10 @@ public class DownloadMailTest {
     }
 
     // 开启POP3授权码
-    @Test
+    // @Test
     public void testMail126() {
         try {
-            downloadMail.execute("jinjing_0316@126.com", "jinjing03161");
+            downloadMail.execute("czb18518679659@126.com", "12345qwerty");
         } catch (Exception e) {
             e.printStackTrace();
         }

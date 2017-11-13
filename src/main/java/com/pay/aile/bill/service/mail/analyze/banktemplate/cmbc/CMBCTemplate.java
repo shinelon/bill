@@ -50,6 +50,7 @@ public class CMBCTemplate extends AbstractCMBCTemplate {
     protected CreditBillDetail setCreditBillDetail(String detail) {
         CreditBillDetail cbd = new CreditBillDetail();
         String[] sa = detail.split(" ");
+        
         String year = date.substring(0, 5);
         cbd.setTransactionDate(DateUtil.parseDate(year + sa[0]));
         cbd.setBillingDate(DateUtil.parseDate(year + sa[1]));
@@ -61,5 +62,4 @@ public class CMBCTemplate extends AbstractCMBCTemplate {
         cbd.setTransactionDescription(desc);
         return cbd;
     }
-
 }

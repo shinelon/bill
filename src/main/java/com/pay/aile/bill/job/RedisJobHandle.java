@@ -55,7 +55,8 @@ public class RedisJobHandle {
      */
     public void addJob(CreditEmail creditEmail) {
         String id = creditEmail.getId().toString();
-        redisTemplate.opsForValue().set(MAIL_DOWANLOD_JOB_CONTENT.concat(id), JSON.toJSONString(creditEmail));
+        redisTemplate.opsForValue().set(MAIL_DOWANLOD_JOB_CONTENT.concat(id),
+                JSON.toJSONString(creditEmail));
         redisTemplate.opsForList().leftPush(MAIL_DOWANLOD_LIST_NAME, id);
     }
 
@@ -66,7 +67,8 @@ public class RedisJobHandle {
      */
     public void doneJob(CreditEmail creditEmail) {
         String id = creditEmail.getId().toString();
-        redisTemplate.opsForValue().set(MAIL_DOWANLOD_JOB_CONTENT.concat(id), JSON.toJSONString(creditEmail));
+        redisTemplate.opsForValue().set(MAIL_DOWANLOD_JOB_CONTENT.concat(id),
+                JSON.toJSONString(creditEmail));
         redisTemplate.opsForList().rightPush(MAIL_DOWANLOD_LIST_NAME, id);
     }
 
@@ -98,7 +100,8 @@ public class RedisJobHandle {
     }
 
     public int incrementAndGet(String key, long ttlInSeconds) {
-        RedisAtomicInteger redisAtomicInteger = new RedisAtomicInteger(key, redisTemplate.getConnectionFactory());
+        RedisAtomicInteger redisAtomicInteger = new RedisAtomicInteger(key,
+                redisTemplate.getConnectionFactory());
         if (redisAtomicInteger.getExpire() < 0) {
             redisAtomicInteger.expire(ttlInSeconds, TimeUnit.SECONDS);
         }
@@ -111,21 +114,26 @@ public class RedisJobHandle {
      */
     public void initJobList() {
         List<CreditEmail> list = creditEmailService.getCreditEmails();
-        List<String> listJsonString = list.stream().map(e -> e.getId().toString()).collect(Collectors.toList());
+        List<String> listJsonString = list.stream().map(e -> e.getId().toString())
+                .collect(Collectors.toList());
         logger.debug("key:{},value:{}", MAIL_DOWANLOD_LIST_NAME, listJsonString);
         Long redisJobListSize = redisTemplate.opsForList().size(MAIL_DOWANLOD_LIST_NAME);
-        if (list.size() == redisJobListSize) {
+        if (list.size() == redisJobListSize || listJsonString == null
+                || listJsonString.size() == 0) {
             return;
         }
+
         // 初始list
         redisTemplate.delete(MAIL_DOWANLOD_LIST_NAME);
         redisTemplate.opsForList().leftPushAll(MAIL_DOWANLOD_LIST_NAME, listJsonString);
         redisTemplate.executePipelined(new RedisCallback<Object>() {
             @Override
             public Object doInRedis(RedisConnection connection) throws DataAccessException {
-                DefaultStringRedisConnection stringRedisConnection = new DefaultStringRedisConnection(connection);
+                DefaultStringRedisConnection stringRedisConnection = new DefaultStringRedisConnection(
+                        connection);
                 for (CreditEmail creditEmail : list) {
-                    stringRedisConnection.set(MAIL_DOWANLOD_JOB_CONTENT.concat(creditEmail.getId().toString()),
+                    stringRedisConnection.set(
+                            MAIL_DOWANLOD_JOB_CONTENT.concat(creditEmail.getId().toString()),
                             JSON.toJSONString(creditEmail));
                 }
                 return null;
