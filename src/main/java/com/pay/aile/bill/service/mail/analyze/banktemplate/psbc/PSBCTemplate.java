@@ -19,10 +19,6 @@ import com.pay.aile.bill.service.mail.analyze.util.DateUtil;
 public class PSBCTemplate extends AbstractPSBCTemplate {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Override
-    protected void analyzeInternal(AnalyzeParamsModel apm) {
-        super.analyzeInternal(apm);
-    }
 
     @Override
     public void initRules() {
