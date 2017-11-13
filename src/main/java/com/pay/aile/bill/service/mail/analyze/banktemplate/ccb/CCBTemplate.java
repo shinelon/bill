@@ -35,6 +35,7 @@ public class CCBTemplate extends AbstractCCBTemplate {
         super.initRules();
         if (rules == null) {
             rules = new CreditTemplate();
+            rules.setCardtypeId(13L);
             rules.setCardholder("尊敬的[\\u4e00-\\u9fa5]+");
             rules.setCycle("账单周期：\\d{4}年\\d{2}月\\d{2}日-\\d{4}年\\d{2}月\\d{2}日");
             rules.setBillDay("StatementDate \\d{4}-\\d{2}-\\d{2}");

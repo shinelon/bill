@@ -28,6 +28,7 @@ public class BCMTemplate extends AbstractBCMTemplate {
         super.initRules();
         if (rules == null) {
             rules = new CreditTemplate();
+            rules.setCardtypeId(10L);
             rules.setCardholder("尊敬的 [\\u4e00-\\u9fa5]+(女士|先生)");
             rules.setCardNumbers("卡号末四位\\d{4}");
             rules.setCycle(" 账单周期：\\d{4}/\\d{2}/\\d{2}-\\d{4}/\\d{2}/\\d{2}");

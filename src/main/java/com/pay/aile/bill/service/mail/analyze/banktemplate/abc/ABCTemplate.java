@@ -16,7 +16,7 @@ public class ABCTemplate extends AbstractABCTemplate {
 
     @Override
     public void initRules() {
-        // super.initRules();
+        super.initRules();
         if (rules == null) {
             rules = new CreditTemplate();
             rules.setCardtypeId(5L);
