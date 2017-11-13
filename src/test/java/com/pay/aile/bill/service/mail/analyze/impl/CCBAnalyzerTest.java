@@ -43,6 +43,7 @@ public class CCBAnalyzerTest {
         AnalyzeParamsModel amp = new AnalyzeParamsModel();
         amp.setContent(content);
         amp.setBankCode("CCB");
+        amp.setBankId("1");
         amp.setCardtypeId(2l);
         amp.setEmail("jinjing_0316@outlook.com");
         amp.setEmailId(6L);

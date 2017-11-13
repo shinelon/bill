@@ -150,8 +150,7 @@ public class ParseMailImpl implements IParseMail {
         });
     }
 
-    public String getFileContent(CreditFileModel creditFile, MailContentExtractor extractor)
-            throws MailBillException {
+    public String getFileContent(CreditFileModel creditFile, MailContentExtractor extractor) throws MailBillException {
 
         // 从mongodb中获取邮件内容
         String content = mongoDownloadUtil.getFile(creditFile.getFileName());
@@ -173,10 +172,9 @@ public class ParseMailImpl implements IParseMail {
 
         try {
             // 从mongodb中获取邮件内容
-            EmailFile emailFile = mongoDownloadUtil.getFile(creditFile.getFileName(),
-                    creditFile.getEmail());
+            EmailFile emailFile = mongoDownloadUtil.getFile(creditFile.getFileName(), creditFile.getEmail());
             apm.setAttachment(emailFile.getAttachment());
-            apm.setContent(emailFile.getContent());
+            apm.setOriginContent(emailFile.getContent());
         } catch (MailBillException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

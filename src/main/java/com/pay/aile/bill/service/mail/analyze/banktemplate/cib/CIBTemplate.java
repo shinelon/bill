@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.pay.aile.bill.entity.CreditBill;
+import com.pay.aile.bill.entity.CreditCard;
 import com.pay.aile.bill.entity.CreditTemplate;
 import com.pay.aile.bill.service.mail.analyze.enums.CardTypeEnum;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
@@ -26,17 +27,28 @@ public class CIBTemplate extends AbstractCIBTemplate {
         if (rules == null) {
             rules = new CreditTemplate();
             rules.setCardtypeId(11L);
-            // rules.setCycle(
-            // "StatementCycle\\d{4}/\\d{2}/\\d{2}-\\d{4}/\\d{2}/\\d{2}");
+            rules.setCardholder("尊敬的[\\u4e00-\\u9fa5]+您好");
+            rules.setCycle("StatementCycle\\d{4}/\\d{2}/\\d{2}-\\d{4}/\\d{2}/\\d{2}");
             rules.setDueDate("PaymentDueDate\\d{4}年\\d{2}月\\d{2}日");
             rules.setCurrentAmount("NewBalance[a-zA-Z]{3}\\d+\\.?\\d*");
             rules.setCredits("CreditLimit\\([a-zA-Z]{3}\\)\\d+\\.?\\d*");
             rules.setPrepaidCashAmount("CashAdvanceLimit\\([a-zA-Z]{3}\\)\\d+\\.?\\d*");
+            rules.setMinimum("MinimumPayment[a-zA-Z]{3}\\d+\\.?\\d*");
+            rules.setCardNumbers("卡号末四位\\d{4}");
             rules.setDetails("\\d{4}-\\d{2}-\\d{2} \\d{4}-\\d{2}-\\d{2} \\S+ -?\\d+\\.?\\d*");
             rules.setTransactionDate("0");
             rules.setBillingDate("1");
             rules.setTransactionDescription("2");
             rules.setTransactionAmount("3");
+        }
+    }
+
+    @Override
+    protected void analyzeCardNo(CreditCard card, String content, AnalyzeParamsModel apm) {
+        if (StringUtils.hasText(rules.getCardNumbers())) {
+            String value = getValueByPattern("cardNumbers", content, rules.getCardNumbers(), apm, "");
+            String cardNo = PatternMatcherUtil.getMatcherString("\\d{4}", value);
+            card.setNumbers(cardNo);
         }
     }
 
@@ -73,11 +85,30 @@ public class CIBTemplate extends AbstractCIBTemplate {
     }
 
     @Override
+    protected void analyzeCycle(CreditBill bill, String content, AnalyzeParamsModel apm) {
+        if (StringUtils.hasText(rules.getCycle())) {
+            String cycle = getValueByPattern("cycle", content, rules.getCycle(), apm, "");
+            cycle = cycle.replaceAll("StatementCycle", "");
+            String[] sa = cycle.split("-");
+            bill.setBeginDate(DateUtil.parseDate(sa[0]));
+            bill.setEndDate(DateUtil.parseDate(sa[1]));
+        }
+    }
+
+    @Override
     protected void analyzeDueDate(CreditBill bill, String content, AnalyzeParamsModel apm) {
         if (StringUtils.hasText(rules.getDueDate())) {
-
             String date = getValueByPattern("dueDate", content, rules.getDueDate(), apm, "PaymentDueDate");
             bill.setDueDate(DateUtil.parseDate(date));
+        }
+    }
+
+    @Override
+    protected void analyzeMinimum(CreditBill bill, String content, AnalyzeParamsModel apm) {
+        if (StringUtils.hasText(rules.getMinimum())) {
+            String minimum = getValueByPattern("minimum", content, rules.getMinimum(), apm, "");
+            minimum = PatternMatcherUtil.getMatcherString("\\d+\\.?\\d*", minimum);
+            bill.setMinimum(new BigDecimal(minimum));
         }
     }
 

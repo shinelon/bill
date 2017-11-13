@@ -23,6 +23,9 @@ public class CITICTemplate extends AbstractCITICTemplate {
         if (rules == null) {
             rules = new CreditTemplate();
             rules.setCardtypeId(1L);
+            rules.setYearMonth("\\d{4}年\\d{2}月账单已产生");
+            rules.setCardholder(" 尊敬的[\\u4e00-\\u9fa5]+");
+            rules.setCycle("\\d{4}年\\d{2}月\\d{2}日-\\d{4}年\\d{2}月\\d{2}日");
             rules.setDueDate("到期还款日：\\d{4}年\\d{2}月\\d{2}日");
             rules.setCurrentAmount("到期还款日：\\d{4}年\\d{2}月\\d{2}日 [a-zA-Z]{3} \\d+\\.?\\d*");
             rules.setCredits(
@@ -32,10 +35,22 @@ public class CITICTemplate extends AbstractCITICTemplate {
             rules.setDetails("\\d{8} \\d{8} \\d{0,4} \\S+ [A-Za-z]{3} -?\\d+\\.?\\d* [a-zA-Z]{3} -?\\d+\\.?\\d*");
             rules.setTransactionDate("0");
             rules.setBillingDate("1");
+            rules.setCardNumbers("2");
             rules.setTransactionDescription("3");
             rules.setTransactionCurrency("4");
             rules.setTransactionAmount("5");
             rules.setAccountableAmount("7");
+        }
+    }
+
+    @Override
+    protected void analyzeCycle(CreditBill bill, String content, AnalyzeParamsModel apm) {
+        if (StringUtils.hasText(rules.getCycle())) {
+
+            String cycle = getValueByPattern("cycle", content, rules.getCycle(), apm, "");
+            String[] sa = cycle.split("-");
+            bill.setBeginDate(DateUtil.parseDate(sa[0]));
+            bill.setEndDate(DateUtil.parseDate(sa[1]));
         }
     }
 
@@ -45,6 +60,19 @@ public class CITICTemplate extends AbstractCITICTemplate {
 
             String date = getValueByPattern("dueDate", content, rules.getDueDate(), apm, "：");
             bill.setDueDate(DateUtil.parseDate(date));
+        }
+    }
+
+    @Override
+    protected void analyzeYearMonth(CreditBill bill, String content, AnalyzeParamsModel apm) {
+        if (StringUtils.hasText(rules.getYearMonth())) {
+            String yearMonth = getValueByPattern("yearMonth", content, rules.getYearMonth(), apm, "");
+            if (StringUtils.hasText(yearMonth)) {
+                String year = yearMonth.substring(0, 4);
+                String month = yearMonth.substring(5, 7);
+                bill.setYear(year);
+                bill.setMonth(month);
+            }
         }
     }
 

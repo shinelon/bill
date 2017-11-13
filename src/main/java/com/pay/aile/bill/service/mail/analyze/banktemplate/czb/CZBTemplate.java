@@ -19,6 +19,7 @@ public class CZBTemplate extends AbstractCZBTemplate {
         if (rules == null) {
             rules = new CreditTemplate();
             rules.setCardtypeId(6L);
+            rules.setCardholder("尊敬的[\\u4e00-\\u9fa5]+");
             rules.setDueDate("PaymentDueDate \\d+\\.?\\d* \\d+\\.?\\d* \\d{8} \\d{8}");
             rules.setCurrentAmount("循环利息Interest \\d+\\.?\\d*");
             rules.setCredits("PaymentDueDate \\d+\\.?\\d*");
@@ -27,6 +28,7 @@ public class CZBTemplate extends AbstractCZBTemplate {
             rules.setBillingDate("1");
             rules.setTransactionDescription("2");
             rules.setTransactionAmount("3");
+            rules.setCardNumbers("4");
         }
     }
 

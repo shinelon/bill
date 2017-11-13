@@ -12,11 +12,10 @@ public class AnalyzeParamsModel {
     private String bankId;// 银行id
     private Long cardtypeId;// 卡片类型
     private String content;// 邮件内容
+    private String originContent;// 未格式化的内容
     private String attachment;// 邮件内容
     private String email;// 用户邮箱
-
     private Long emailId;// 邮箱id
-
     private AnalyzeResult result;// 解析之后的规则数据
     private Date sentDate;// 邮件发送日期
 
@@ -46,6 +45,10 @@ public class AnalyzeParamsModel {
 
     public Long getEmailId() {
         return emailId;
+    }
+
+    public String getOriginContent() {
+        return originContent;
     }
 
     public AnalyzeResult getResult() {
@@ -84,6 +87,10 @@ public class AnalyzeParamsModel {
         this.emailId = emailId;
     }
 
+    public void setOriginContent(String originContent) {
+        this.originContent = originContent;
+    }
+
     public void setResult(AnalyzeResult result) {
         this.result = result;
     }
@@ -98,9 +105,9 @@ public class AnalyzeParamsModel {
 
     @Override
     public String toString() {
-        return "AnalyzeParamsModel [bankCode=" + bankCode + ", content=" + content + ", email="
-                + email + ", emailId=" + emailId + ", cardtypeId=" + cardtypeId + ", sentDate="
-                + sentDate + ", result=" + result + "]";
+        return "AnalyzeParamsModel [bankCode=" + bankCode + ", bankId=" + bankId + ", cardtypeId=" + cardtypeId
+                + ", content=" + content + ", attachment=" + attachment + ", email=" + email + ", emailId=" + emailId
+                + ", result=" + result + ", sentDate=" + sentDate + "]";
     }
 
 }

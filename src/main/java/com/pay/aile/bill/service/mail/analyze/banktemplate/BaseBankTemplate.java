@@ -132,8 +132,9 @@ public abstract class BaseBankTemplate
      */
     protected void analyzeCardholder(CreditCard card, String content, AnalyzeParamsModel apm) {
         if (StringUtils.hasText(rules.getCardholder())) {
-            String cardholder = getValueByPattern("cardholder", content, rules.getCardholder(), apm, " ");
-            cardholder = cardholder.replaceAll("尊敬的", "").replaceAll("先生", "").replaceAll("女士", "");
+            String cardholder = getValueByPattern("cardholder", content, rules.getCardholder(), apm, "");
+            cardholder = cardholder.replaceAll("尊敬的", "").replaceAll("先生", "").replaceAll("女士", "").replaceAll("您好",
+                    "");
             card.setCardholder(cardholder);
         }
     }
@@ -209,7 +210,6 @@ public abstract class BaseBankTemplate
         if (StringUtils.hasText(rules.getCycle())) {
 
             String cycle = getValueByPattern("cycle", content, rules.getCycle(), apm, " ");
-            cycle = PatternMatcherUtil.getMatcherString("\\d+.?\\d*", cycle);
             String[] sa = cycle.split("-");
             bill.setBeginDate(DateUtil.parseDate(sa[0]));
             bill.setEndDate(DateUtil.parseDate(sa[1]));
@@ -251,7 +251,7 @@ public abstract class BaseBankTemplate
     }
 
     protected void analyzeInternal(AnalyzeParamsModel apm) {
-        logger.info("账单内容：{}", apm);
+        logger.info("账单内容：{}", apm.toString());
         String content = apm.getContent();
         AnalyzeResult ar = new AnalyzeResult();
         // ka
@@ -303,11 +303,15 @@ public abstract class BaseBankTemplate
     protected void analyzeYearMonth(CreditBill bill, String content, AnalyzeParamsModel apm) {
         if (StringUtils.hasText(rules.getYearMonth())) {
 
-            String yearMonth = getValueByPattern("yearMonth", content, rules.getYearMonth(), apm, " ");
-            String year = PatternMatcherUtil.getMatcherString("\\d{4}", yearMonth);
-            String month = PatternMatcherUtil.getMatcherString("\\d{2}", yearMonth);
-            bill.setYear(year);
-            bill.setMonth(month);
+            String yearMonth = getValueByPattern("yearMonth", content, rules.getYearMonth(), apm, "");
+            yearMonth.replaceAll("年|月|-|/", "");
+            yearMonth = PatternMatcherUtil.getMatcherString("\\d{6}", yearMonth);
+            if (StringUtils.hasText(yearMonth)) {
+                String year = yearMonth.substring(0, 4);
+                String month = yearMonth.substring(4);
+                bill.setYear(year);
+                bill.setMonth(month);
+            }
         }
     }
 
@@ -399,7 +403,7 @@ public abstract class BaseBankTemplate
      *         void 返回类型 @throws
      */
     protected void initContext(AnalyzeParamsModel apm) {
-        String content = extractor.extract(apm.getContent(), "td");
+        String content = extractor.extract(apm.getOriginContent(), "td");
         apm.setContent(content);
     }
 

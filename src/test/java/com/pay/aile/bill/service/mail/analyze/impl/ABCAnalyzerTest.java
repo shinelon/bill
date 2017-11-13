@@ -44,6 +44,7 @@ public class ABCAnalyzerTest {
         amp.setContent(content);
         amp.setBankCode("ABC");
         amp.setEmail("123@qq.com");
+        amp.setBankId("1");
         amp.setEmailId(1L);
         ABCAnalyzer.analyze(amp);
     }

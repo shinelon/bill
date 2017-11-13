@@ -19,8 +19,12 @@ public class PABTemplate extends AbstractPABTemplate {
         if (rules == null) {
             rules = new CreditTemplate();
             rules.setCardtypeId(18L);
+            rules.setCardNumbers("\\*+\\d{4}");
+            rules.setCardholder("尊敬的[\\u4e00-\\u9fa5]+");
+            rules.setBillDay("本期账单日 \\d{4}-\\d{2}-\\d{2}");
             rules.setDueDate("本期还款日 \\d{4}-\\d{2}-\\d{2}");
             rules.setCurrentAmount("本期最低应还金额 \\d+\\.?\\d*");
+            rules.setMinimum("本期最低应还金额 \\d+\\.?\\d* \\S+\\d+\\.?\\d* \\d+\\.?\\d*");
             rules.setCredits("信用额度 \\d+\\.?\\d*");
             rules.setCash("取现额度 \\d+\\.?\\d*");
             rules.setDetails("\\d{4}-\\d{2}-\\d{2} \\d{4}-\\d{2}-\\d{2} \\S+ \\d+\\.?\\d*");

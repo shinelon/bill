@@ -12,7 +12,6 @@ import com.pay.aile.bill.BillApplication;
 import com.pay.aile.bill.exception.MailBillException;
 import com.pay.aile.bill.service.mail.analyze.BankMailAnalyzer;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
-import com.pay.aile.bill.service.mail.analyze.util.TextExtractUtil;
 import com.pay.aile.bill.utils.MongoDownloadUtil;
 
 @RunWith(SpringRunner.class)
@@ -34,10 +33,10 @@ public class CMBAnalyzerTest {
             e.printStackTrace();
         }
 
-        content = TextExtractUtil.parseHtml(content, "td");
         AnalyzeParamsModel amp = new AnalyzeParamsModel();
-        amp.setContent(content);
+        amp.setOriginContent(content);
         amp.setBankCode("CMB");
+        amp.setBankId("1");
         amp.setEmail("123@qq.com");
         amp.setEmailId(1L);
         CMBAnalyzer.analyze(amp);

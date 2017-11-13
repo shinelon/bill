@@ -33,6 +33,8 @@ public class CMBUnionPayTemplate extends AbstractCMBTemplate {
         if (rules == null) {
             rules = new CreditTemplate();
             rules.setCardtypeId(3L);
+            rules.setCardholder("尊敬的 [\\u4e00-\\u9fa5]+");
+            rules.setYearMonth("\\d{4} 年 \\d{2} 月");
             rules.setDueDate("\\d{2} 月 \\d{2} 日");
             rules.setCurrentAmount("本期应还金额NewBalance \\d+\\.?\\d*");
             rules.setDetails("\\d{4} \\d{8} \\d{2}:\\d{2}:\\d{2} \\S+ \\S+ \\d+\\.?\\d*");
@@ -99,20 +101,17 @@ public class CMBUnionPayTemplate extends AbstractCMBTemplate {
     }
 
     @Override
-    protected String getValueByPattern(String key, String content, String ruleValue, AnalyzeParamsModel apm,
-            String splitSign) {
-
-        if (StringUtils.hasText(ruleValue)) {
-
-            List<String> list = PatternMatcherUtil.getMatcher(ruleValue, content);
-            if (!list.isEmpty()) {
-                String result = list.get(0);
-                String[] sa = result.split(splitSign);
-                String value = sa[sa.length - 1];
-                return value;
+    protected void analyzeYearMonth(CreditBill bill, String content, AnalyzeParamsModel apm) {
+        if (StringUtils.hasText(rules.getYearMonth())) {
+            String yearMonth = super.getValueByPattern("yearMonth", content, rules.getYearMonth(), apm, "");
+            yearMonth = yearMonth.replaceAll("\\s+", "");
+            if (StringUtils.hasText(yearMonth)) {
+                String year = yearMonth.substring(0, 4);
+                String month = yearMonth.substring(5, 7);
+                bill.setYear(year);
+                bill.setMonth(month);
             }
         }
-        return "";
     }
 
     @Override

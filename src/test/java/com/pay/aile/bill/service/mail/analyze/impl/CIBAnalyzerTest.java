@@ -12,7 +12,6 @@ import com.pay.aile.bill.BillApplication;
 import com.pay.aile.bill.exception.MailBillException;
 import com.pay.aile.bill.service.mail.analyze.BankMailAnalyzer;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
-import com.pay.aile.bill.service.mail.analyze.util.TextExtractUtil;
 import com.pay.aile.bill.utils.MongoDownloadUtil;
 
 @RunWith(SpringRunner.class)
@@ -28,18 +27,15 @@ public class CIBAnalyzerTest {
     public void test() {
         String content = "";
         try {
-            content = downloadUtil
-                    .getFile("03940560-0d7c-4175-b5b9-93b1f42155c1");
+            content = downloadUtil.getFile("03940560-0d7c-4175-b5b9-93b1f42155c1");
         } catch (MailBillException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
-        content = TextExtractUtil.parseHtml(content, "td");
-        System.out.println(content);
         AnalyzeParamsModel amp = new AnalyzeParamsModel();
-        amp.setContent(content);
+        amp.setOriginContent(content);
         amp.setBankCode("CIB");
+        amp.setBankId("1");
         amp.setEmail("123@qq.com");
         amp.setEmailId(1L);
         CIBAnalyzer.analyze(amp);

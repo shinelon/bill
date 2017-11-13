@@ -12,7 +12,6 @@ import com.pay.aile.bill.BillApplication;
 import com.pay.aile.bill.exception.MailBillException;
 import com.pay.aile.bill.service.mail.analyze.BankMailAnalyzer;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
-import com.pay.aile.bill.service.mail.analyze.util.TextExtractUtil;
 import com.pay.aile.bill.utils.MongoDownloadUtil;
 
 @RunWith(SpringRunner.class)
@@ -28,18 +27,15 @@ public class CITICAnalyzerTest {
     public void test() {
         String content = "";
         try {
-            content = downloadUtil.getFile(
-                    "CITIC_中信银行信用卡电子账单2017年10月_2017-11-02T10:54:34.html");
+            content = downloadUtil.getFile("CITIC_中信银行信用卡电子账单2017年10月_2017-11-02T10:54:34.html");
         } catch (MailBillException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
-        content = TextExtractUtil.parseHtml(content, "td");
-        System.out.println(content);
         AnalyzeParamsModel amp = new AnalyzeParamsModel();
-        amp.setContent(content);
+        amp.setOriginContent(content);
         amp.setBankCode("CITIC");
+        amp.setBankId("1");
         amp.setEmail("123@qq.com");
         amp.setEmailId(1L);
         CITICAnalyzer.analyze(amp);

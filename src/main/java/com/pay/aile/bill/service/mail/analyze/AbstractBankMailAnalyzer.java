@@ -23,8 +23,7 @@ import com.pay.aile.bill.utils.SpringContextUtil;
  * @param <T>
  *            每个银行卡种的父类
  */
-public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
-        implements BankMailAnalyzer {
+public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate> implements BankMailAnalyzer {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
     /**
@@ -43,7 +42,7 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
     @Override
     public void analyze(AnalyzeParamsModel apm) {
         long startTime = System.currentTimeMillis();
-        logger.debug("analyze start,params={}", apm);
+        logger.debug("analyze start,params={}", apm.toString());
         String email = apm.getEmail();
         String bankCode = apm.getBankCode();
         T template = null;
@@ -87,17 +86,15 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
             // 解析成功，处理解析结果
             template.handleResult(apm);
         }
-        logger.debug("analyze end,useTime={}",
-                System.currentTimeMillis() - startTime);
+        logger.debug("analyze end,useTime={}", System.currentTimeMillis() - startTime);
     }
 
     /**
-     * 
+     *
      * @return 根据用户邮箱和银行编码从缓存中获取对应的模板
      */
     private T getTemplateFromCache(String email, String bankCode) {
-        Object o = JedisClusterUtils
-                .hashGet(Constant.redisTemplateCache + bankCode, email);
+        Object o = JedisClusterUtils.hashGet(Constant.redisTemplateCache + bankCode, email);
         if (o == null) {
             return null;
         } else {
@@ -117,15 +114,14 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
     }
 
     /**
-     * 
+     *
      * @param email
      * @param bankCode
      * @param template
      *            将模板存入缓存
      */
     private void setTemplateToCache(String email, String bankCode, T template) {
-        JedisClusterUtils.hashSet(Constant.redisTemplateCache + bankCode, email,
-                template.getClass().getName());
+        JedisClusterUtils.hashSet(Constant.redisTemplateCache + bankCode, email, template.getClass().getName());
     }
 
     protected void preAnalyze(String content) {

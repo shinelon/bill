@@ -7,11 +7,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.pay.aile.bill.entity.CreditBill;
+import com.pay.aile.bill.entity.CreditCard;
+import com.pay.aile.bill.entity.CreditTemplate;
 import com.pay.aile.bill.mapper.CreditTemplateMapper;
 import com.pay.aile.bill.service.mail.analyze.MailContentExtractor;
 import com.pay.aile.bill.service.mail.analyze.enums.CardTypeEnum;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
 import com.pay.aile.bill.service.mail.analyze.util.DateUtil;
+import com.pay.aile.bill.service.mail.analyze.util.PatternMatcherUtil;
 import com.pay.aile.bill.service.mail.analyze.util.TextExtractUtil;
 
 /**
@@ -30,16 +33,26 @@ public class CCBTemplate extends AbstractCCBTemplate {
     @Override
     public void initRules() {
         super.initRules();
-
-        rules.setCardholder("尊敬的[\\u4e00-\\u9fa5]+");
-        rules.setCycle("账单周期 ：\\d{4}年\\d{2}月\\d{2}日-\\d{4}年\\d{2}月\\d{2}日");
-        rules.setBillDay("Statement Date \\d{4}-\\d{2}-\\d{2}");
-        rules.setDueDate("Due Date \\d{4}-\\d{2}-\\d{2}");
-        rules.setCredits("Credit Limit [a-zA-Z]+ \\d+\\.?\\d*");
-        rules.setCash("Cash Advance Limit [a-zA-Z]+ \\d+\\.?\\d*");
-        rules.setCurrentAmount("争议款/笔数DisputeAmt/Nbr [\\u4e00-\\u9fa5]+（[a-zA-Z]+） \\d+\\.?\\d*");
-        rules.setMinimum("争议款/笔数DisputeAmt/Nbr [\\u4e00-\\u9fa5]+（[a-zA-Z]+） \\d+\\.?\\d* \\d+\\.?\\d*");
-        rules.setDetails("\\d{4}-\\d{2}-\\d{2} \\d{4}-\\d{2}-\\d{2} \\d{4/}/?\\d{4}*");
+        if (rules == null) {
+            rules = new CreditTemplate();
+            rules.setCardholder("尊敬的[\\u4e00-\\u9fa5]+");
+            rules.setCycle("账单周期：\\d{4}年\\d{2}月\\d{2}日-\\d{4}年\\d{2}月\\d{2}日");
+            rules.setBillDay("StatementDate \\d{4}-\\d{2}-\\d{2}");
+            rules.setDueDate("DueDate \\d{4}-\\d{2}-\\d{2}");
+            rules.setCredits("CreditLimit [a-zA-Z]+\\d+\\.?\\d*");
+            rules.setCash("CashAdvanceLimit [a-zA-Z]+\\d+\\.?\\d*");
+            rules.setCurrentAmount("争议款/笔数DisputeAmt/Nbr [\\u4e00-\\u9fa5]+（[a-zA-Z]+） \\d+\\.?\\d*");
+            rules.setMinimum("争议款/笔数DisputeAmt/Nbr [\\u4e00-\\u9fa5]+（[a-zA-Z]+） \\d+\\.?\\d* \\d+\\.?\\d*");
+            rules.setDetails(
+                    "\\d{4}-\\d{2}-\\d{2} \\d{4}-\\d{2}-\\d{2} \\d{4}/?(\\d{4})? \\S+ [A-Za-z]+ -?\\d+\\.?\\d* [A-Za-z]+ -?\\d+\\.?\\d*");
+            rules.setTransactionDate("0");
+            rules.setBillingDate("1");
+            rules.setCardNumbers("2");
+            rules.setTransactionDescription("3");
+            rules.setTransactionCurrency("4");
+            rules.setTransactionAmount("5");
+            rules.setAccountableAmount("7");
+        }
     }
 
     @Override
@@ -57,6 +70,21 @@ public class CCBTemplate extends AbstractCCBTemplate {
         String content = TextExtractUtil.parseHtml(apm.getContent(), "font");
         apm.setContent(content);
 
+    }
+
+    @Override
+    protected void setCardNumbers(CreditCard card, String number) {
+        if (StringUtils.hasText(rules.getCardNumbers()) && !StringUtils.hasText(card.getNumbers())) {
+            try {
+                int n = Integer.parseInt(rules.getCardNumbers());
+                String[] detailArray = number.split(" ");
+                String numbers = detailArray[n];
+                String no = PatternMatcherUtil.getMatcherString("\\d{4}", numbers);
+                card.setNumbers(no);
+            } catch (Exception e) {
+
+            }
+        }
     }
 
     @Override

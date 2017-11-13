@@ -43,6 +43,7 @@ public class BCMAnalyzerTest {
         amp.setContent(content);
         amp.setBankCode("BCM");
         amp.setEmail("123@qq.com");
+        amp.setBankId("1");
         amp.setEmailId(1L);
         BCMAnalyzer.analyze(amp);
     }

@@ -35,6 +35,7 @@ public class CMBYoungTemplate extends AbstractCMBTemplate {
             rules.setCardtypeId(2L);
             rules.setDueDate("\\d{2}/\\d{2}");
             rules.setCurrentAmount("\\d{2}/\\d{2} \\d+\\.?\\d*");
+            rules.setMinimum("\\d{2}/\\d{2} \\d+\\.?\\d* \\d+\\.?\\d* \\d+\\.?\\d*");
             rules.setDetails("\\d{4} \\d{8} \\d{2}:\\d{2}:\\d{2} \\S+ \\S+ \\d+\\.?\\d*");
             rules.setTransactionDate("1");
             rules.setTransactionCurrency("3");
