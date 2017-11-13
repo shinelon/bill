@@ -13,7 +13,6 @@ import com.pay.aile.bill.exception.MailBillException;
 import com.pay.aile.bill.mapper.CreditTemplateMapper;
 import com.pay.aile.bill.service.mail.analyze.BankMailAnalyzer;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
-import com.pay.aile.bill.service.mail.analyze.util.TextExtractUtil;
 import com.pay.aile.bill.utils.MongoDownloadUtil;
 
 @RunWith(SpringRunner.class)
@@ -38,8 +37,6 @@ public class CCBAnalyzerTest {
             e.printStackTrace();
         }
 
-        content = TextExtractUtil.parseHtml(content, "font");
-        System.out.println("**************" + content);
         AnalyzeParamsModel amp = new AnalyzeParamsModel();
         amp.setContent(content);
         amp.setBankCode("CCB");

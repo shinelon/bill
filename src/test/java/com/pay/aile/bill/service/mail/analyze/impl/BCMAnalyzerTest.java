@@ -40,7 +40,7 @@ public class BCMAnalyzerTest {
 
         content = TextExtractUtil.parseHtml(content, "td");
         AnalyzeParamsModel amp = new AnalyzeParamsModel();
-        amp.setContent(content);
+        amp.setOriginContent(content);
         amp.setBankCode("BCM");
         amp.setEmail("123@qq.com");
         amp.setBankId("1");
