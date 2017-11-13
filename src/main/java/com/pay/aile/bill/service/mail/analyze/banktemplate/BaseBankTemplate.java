@@ -488,8 +488,8 @@ public abstract class BaseBankTemplate
         // 查询
         // CreditCard tempCard = creditCardService.findCreditCard(card);
 
-        card.setCash(String.valueOf(bill.getCash()));
-        card.setCredits(String.valueOf(bill.getCredits()));
+        card.setCash(bill.getCash());
+        card.setCredits(bill.getCredits());
 
         // creditCardService.saveOrUpateCreditCard(card);
     }

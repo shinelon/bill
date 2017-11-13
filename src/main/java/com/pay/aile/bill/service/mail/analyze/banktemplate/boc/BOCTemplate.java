@@ -4,10 +4,13 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.pay.aile.bill.entity.CreditBillDetail;
+import com.pay.aile.bill.entity.CreditCard;
 import com.pay.aile.bill.entity.CreditTemplate;
 import com.pay.aile.bill.service.mail.analyze.enums.CardTypeEnum;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
@@ -20,6 +23,7 @@ import com.pay.aile.bill.service.mail.analyze.util.DateUtil;
  */
 @Service
 public class BOCTemplate extends AbstractBOCTemplate {
+    Logger logger = LoggerFactory.getLogger(BOCTemplate.class);
 
     @Override
     public void initRules() {
@@ -28,11 +32,14 @@ public class BOCTemplate extends AbstractBOCTemplate {
             rules.setBillingDate("Due \\d{4}-\\d{2}-\\d{2} \\d{4}-\\d{2}-\\d{2}"); // 账单日
             rules.setDueDate("Due \\d{4}-\\d{2}-\\d{2}");
             rules.setCurrentAmount("Due \\d{4}-\\d{2}-\\d{2} \\d{4}-\\d{2}-\\d{2} \\d+.?\\d*");
-            rules.setDetails("\\d{4}-\\d{2}-\\d{2} \\d{4}-\\d{2}-\\d{2} \\d{4} \\S+ \\d+.?\\d*");
+            // rules.setDetails("\\d{4}-\\d{2}-\\d{2} \\d{4}-\\d{2}-\\d{2}
+            // \\d{4} \\S+ \\d+.?\\d*");
+            rules.setDetails("\\d{4}-\\d{2}-\\d{2} \\d{4}-\\d{2}-\\d{2} \\d{4} \\S+ -?\\d+.?\\d*");
         }
-    };
+    }
 
     private String parseHtml(String html) {
+        html = html.replaceAll("&nbsp;", ""); // remove &nbsp;
         Document document = Jsoup.parse(html);
         Elements elements = document.getElementsByClass("bill_pay_des");
         // 将收入的数字替换为-
@@ -45,9 +52,13 @@ public class BOCTemplate extends AbstractBOCTemplate {
                 Element tr = trs.get(i);
                 Elements tds = tr.getElementsByTag("td");
                 if (tds.size() > 5) {
-                    Element td = trs.get(4);
-                    if (StringUtils.hasText(td.text())) {
-                        td.text("-" + td.text());
+                    Element td = tds.get(4);
+                    String tdText = td.text();
+                    // tdText = tdText.replaceAll("   ", tdText);
+                    // tdText = tdText.replaceAll(" ", tdText);
+
+                    if (StringUtils.hasText(tdText) && !"".equals(tdText)) {
+                        td.text("-" + tdText);
                     }
                 }
             }
@@ -82,22 +93,30 @@ public class BOCTemplate extends AbstractBOCTemplate {
                                                                     // javascript
         html = html.replaceAll("(?is)<style.*?>.*?</style>", ""); // remove css
         html = html.replaceAll("(?is)<.*?>", "");
-        html = html.replaceAll("&nbsp;", ""); // remove &nbsp;
+
         html = html.replaceAll("\n", "");// remove \n
         html = html.replaceAll("$", "");// 去掉美元符号
         html = html.replaceAll("＄", "");
         html = html.replaceAll("￥", "");// 去掉人民币符号
         html = html.replace(",", "");// 去掉金额分隔符
         html = html.replaceAll(" {2,}", " ");// 去掉多余空格，只留一个
+        logger.info(html);
         return html;
-    }
+    };
 
     @Override
     protected void initContext(AnalyzeParamsModel apm) {
 
-        parseHtml(apm.getContent());
+        apm.setContent(parseHtml(apm.getContent()));
 
         // extractor.extract(apm.getContent(), "td");
+    }
+
+    @Override
+    protected void setCardNumbers(CreditCard card, String number) {
+
+        card.setNumbers(number.split(" ")[2]);
+
     }
 
     @Override
@@ -111,18 +130,21 @@ public class BOCTemplate extends AbstractBOCTemplate {
         String[] sa = detail.split(" ");
         cbd.setTransactionDate(DateUtil.parseDate(sa[0]));
         cbd.setBillingDate(DateUtil.parseDate(sa[1]));
-        if (sa[sa.length - 2] != null) {
-            // 存入
-            cbd.setTransactionAmount("-" + sa[sa.length - 2].replaceAll("\\n", ""));
-        } else if (sa[sa.length - 1] != null) {
-            // 支出
-            cbd.setTransactionAmount(sa[sa.length - 1].replaceAll("\\n", ""));
-        }
-        String desc = "";
-        for (int i = 2; i < sa.length - 2; i++) {
-            desc = desc + sa[i];
-        }
-        cbd.setTransactionDescription(desc);
+        cbd.setTransactionDescription(sa[3]);
+        cbd.setTransactionAmount(sa[4]);
+        // if (sa[sa.length - 2] != null) {
+        // // 存入
+        // cbd.setTransactionAmount("-" + sa[sa.length - 2].replaceAll("\\n",
+        // ""));
+        // } else if (sa[sa.length - 1] != null) {
+        // // 支出
+        // cbd.setTransactionAmount(sa[sa.length - 1].replaceAll("\\n", ""));
+        // }
+        // String desc = "";
+        // for (int i = 2; i < sa.length - 2; i++) {
+        // desc = desc + sa[i];
+        // }
+        // cbd.setTransactionDescription(desc);
         return cbd;
     }
 

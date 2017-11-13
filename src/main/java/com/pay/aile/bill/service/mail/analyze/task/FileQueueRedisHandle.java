@@ -107,12 +107,15 @@ public class FileQueueRedisHandle {
         redisTemplate.delete(MAIL_FILE_LIST);
 
         List<CreditFileModel> creditFileList = creditFileService.findUnAnalyzedList();
-        List<String> values = new ArrayList<String>();
-        for (CreditFileModel file : creditFileList) {
-            values.add(JSONObject.toJSONString(file));
+        if (creditFileList != null && creditFileList.size() > 0) {
+            List<String> values = new ArrayList<String>();
+            for (CreditFileModel file : creditFileList) {
+                values.add(JSONObject.toJSONString(file));
+            }
+            // 批量保存
+            redisTemplate.opsForList().rightPushAll(MAIL_FILE_LIST, values);
         }
-        // 批量保存
-        redisTemplate.opsForList().rightPushAll(MAIL_FILE_LIST, values);
+
     }
 
     /***

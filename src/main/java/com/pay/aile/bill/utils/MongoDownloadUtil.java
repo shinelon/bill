@@ -58,15 +58,12 @@ public class MongoDownloadUtil {
     }
 
     @SuppressWarnings("static-access")
-    public EmailFile getFile(String email, String fileName) throws MailBillException {
+    public EmailFile getFile(String fileName, String email) throws MailBillException {
 
         try {
 
-            Criteria criteria = new Criteria();
-            criteria.where(DOC_KEY_FILE_NAME).is(fileName).and(DOC_KEY_FILE_EMAIL).is(email);
-
-            Query query = new Query(criteria);
-            EmailFile ef = mongoTemplate.findOne(query, EmailFile.class);
+            EmailFile ef = mongoTemplate.findOne(new Query(Criteria.where(DOC_KEY_FILE_NAME)
+                    .is(fileName).and(DOC_KEY_FILE_EMAIL).is(email)), EmailFile.class);
             return ef;
         } catch (Exception e) {
 
