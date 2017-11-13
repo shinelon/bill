@@ -42,7 +42,6 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate> imple
     @Override
     public void analyze(AnalyzeParamsModel apm) {
         long startTime = System.currentTimeMillis();
-        logger.debug("analyze start,params={}", apm.toString());
         String email = apm.getEmail();
         String bankCode = apm.getBankCode();
         T template = null;
@@ -124,9 +123,5 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate> imple
         JedisClusterUtils.hashSet(Constant.redisTemplateCache + bankCode, email, template.getClass().getName());
     }
 
-    protected void preAnalyze(String content) {
-        // TODO Auto-generated method stub
-
-    }
 
 }

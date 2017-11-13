@@ -21,9 +21,6 @@ public class HXBAnalyzer extends AbstractBankMailAnalyzer<AbstractHXBTemplate> {
 				&& (name.contains(BankCodeEnum.HXB.getBankCode()) || name.contains(BankCodeEnum.HXB.getBankName()));
 	}
 
-	@Override
-	protected void preAnalyze(String content) {
 
-	}
 
 }

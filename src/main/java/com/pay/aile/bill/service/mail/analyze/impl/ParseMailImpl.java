@@ -126,9 +126,7 @@ public class ParseMailImpl implements IParseMail {
                 // 更新解析状态
                 creditFileService.updateProcessResult(1, id);
             }
-        } catch (
-
-        Exception e) {
+        } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
 
