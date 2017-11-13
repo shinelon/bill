@@ -83,10 +83,6 @@ public class HXBTemplate extends AbstractHXBTemplate {
     // }
     // }
 
-    @Override
-    protected void analyzeInternal(AnalyzeParamsModel apm) {
-        super.analyzeInternal(apm);
-    }
 
     @Override
     protected void analyzeYearMonth(CreditBill bill, String content, AnalyzeParamsModel apm) {

@@ -15,7 +15,7 @@ public class Constant {
     public static final String redisTemplateCache = "bill_bank_email_template";
 
     /**
-     * 
+     * 正则-匹配金额
      */
-    public static final String redisTemplateRuleCache = "bill_template_rule";
+    public static final String pattern_amount = "-?\\d+\\.?\\d*";
 }

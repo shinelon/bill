@@ -26,6 +26,7 @@ import com.pay.aile.bill.service.CreditCardService;
 import com.pay.aile.bill.service.mail.analyze.BankMailAnalyzerTemplate;
 import com.pay.aile.bill.service.mail.analyze.MailContentExtractor;
 import com.pay.aile.bill.service.mail.analyze.config.TemplateCache;
+import com.pay.aile.bill.service.mail.analyze.constant.Constant;
 import com.pay.aile.bill.service.mail.analyze.enums.CardTypeEnum;
 import com.pay.aile.bill.service.mail.analyze.exception.AnalyzeBillException;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
@@ -160,7 +161,7 @@ public abstract class BaseBankTemplate
         if (StringUtils.hasText(rules.getCash())) {
 
             String cash = getValueByPattern("cash", content, rules.getCash(), apm, " ");
-            cash = PatternMatcherUtil.getMatcherString("\\d+\\.?\\d*", cash);
+            cash = PatternMatcherUtil.getMatcherString(Constant.pattern_amount, cash);
             bill.setCash(new BigDecimal(cash));
         }
     }
@@ -178,7 +179,7 @@ public abstract class BaseBankTemplate
         if (StringUtils.hasText(rules.getCredits())) {
 
             String credits = getValueByPattern("credits", content, rules.getCredits(), apm, " ");
-            credits = PatternMatcherUtil.getMatcherString("\\d+\\.?\\d*", credits);
+            credits = PatternMatcherUtil.getMatcherString(Constant.pattern_amount, credits);
             bill.setCredits(new BigDecimal(credits));
         }
     }
@@ -196,7 +197,7 @@ public abstract class BaseBankTemplate
         if (StringUtils.hasText(rules.getCurrentAmount())) {
 
             String currentAmount = getValueByPattern("currentAmount", content, rules.getCurrentAmount(), apm, " ");
-            currentAmount = PatternMatcherUtil.getMatcherString("-?\\d+\\.?\\d*", currentAmount);
+            currentAmount = PatternMatcherUtil.getMatcherString(Constant.pattern_amount, currentAmount);
             if (StringUtils.hasText(currentAmount)) {
                 if (currentAmount.startsWith("-")) {
                     currentAmount = currentAmount.replaceAll("-", "");
@@ -250,7 +251,7 @@ public abstract class BaseBankTemplate
         }
     }
 
-    protected void analyzeInternal(AnalyzeParamsModel apm) {
+    protected void analyzeInternal(AnalyzeParamsModel apm) throws AnalyzeBillException{
         logger.info("账单内容：{}", apm.toString());
         String content = apm.getContent();
         AnalyzeResult ar = new AnalyzeResult();
@@ -261,7 +262,7 @@ public abstract class BaseBankTemplate
 
         List<CreditBillDetail> detail = ar.getDetail();
         if (rules == null) {
-            throw new RuntimeException("账单模板规则未初始化");
+            throw new AnalyzeBillException("账单模板规则未初始化");
         }
 
         // 年月
@@ -278,7 +279,7 @@ public abstract class BaseBankTemplate
         analyzeCurrentAmount(bill, content, apm);
         // 最低还款额
         analyzeMinimum(bill, content, apm);
-        // 信用二度
+        // 信用额度
         analyzeCredits(bill, content, apm);
         // 取取现金额
         analyzeCash(bill, content, apm);
@@ -295,7 +296,10 @@ public abstract class BaseBankTemplate
         if (StringUtils.hasText(rules.getMinimum())) {
 
             String minimum = getValueByPattern("minimum", content, rules.getMinimum(), apm, " ");
-            minimum = PatternMatcherUtil.getMatcherString("\\d+\\.?\\d*", minimum);
+            minimum = PatternMatcherUtil.getMatcherString(Constant.pattern_amount, minimum);
+            if(minimum.startsWith("-")) {
+            	minimum.replaceAll("-","");
+            }
             bill.setMinimum(new BigDecimal(minimum));
         }
     }
