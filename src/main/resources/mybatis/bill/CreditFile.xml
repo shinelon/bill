@@ -42,7 +42,7 @@
         a.email,
         a.status,
         a.process_result,
-        b.email_id
+        b.id as email_id
         from credit_file a 
         join credit_email b on a.email = b.email
         where a.process_result != 1

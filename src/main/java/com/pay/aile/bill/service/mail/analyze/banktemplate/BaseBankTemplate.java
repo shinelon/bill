@@ -41,7 +41,7 @@ import com.pay.aile.bill.service.mail.analyze.util.PatternMatcherUtil;
 public abstract class BaseBankTemplate
         implements BankMailAnalyzerTemplate, Comparable<BaseBankTemplate>, InitializingBean {
     @Resource(name = "textExtractor")
-    private MailContentExtractor extractor;
+    protected MailContentExtractor extractor;
     /**
      * 统计每一种模板的调用次数 用于不同卡种之间的排序,调用次数高的排位靠前
      */
@@ -403,7 +403,8 @@ public abstract class BaseBankTemplate
      *         void 返回类型 @throws
      */
     protected void initContext(AnalyzeParamsModel apm) {
-        extractor.extract(apm.getContent(), "td");
+        String content = extractor.extract(apm.getContent(), "td");
+        apm.setContent(content);
     }
 
     protected void initDetail() {

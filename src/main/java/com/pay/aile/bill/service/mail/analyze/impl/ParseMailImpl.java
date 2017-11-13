@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.pay.aile.bill.entity.CreditEmail;
+import com.pay.aile.bill.entity.EmailFile;
 import com.pay.aile.bill.exception.MailBillException;
 import com.pay.aile.bill.service.CreditFileService;
 import com.pay.aile.bill.service.mail.analyze.BankMailAnalyzer;
@@ -30,11 +31,6 @@ import com.pay.aile.bill.utils.MongoDownloadUtil;
 public class ParseMailImpl implements IParseMail {
     @Resource
     private CreditFileService creditFileService;
-    /**
-     * 邮件内容提取
-     */
-    @Autowired
-    private List<MailContentExtractor> extractors;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -165,6 +161,29 @@ public class ParseMailImpl implements IParseMail {
         return content;
     }
 
+    /**
+     *
+     * @Title: setFileContent
+     * @Description: 设置邮件需要解析的内容
+     * @param creditFile
+     * @param apm
+     * @return void 返回类型 @throws
+     */
+    public void setFileContent(CreditFileModel creditFile, AnalyzeParamsModel apm) {
+
+        try {
+            // 从mongodb中获取邮件内容
+            EmailFile emailFile = mongoDownloadUtil.getFile(creditFile.getFileName(),
+                    creditFile.getEmail());
+            apm.setAttachment(emailFile.getAttachment());
+            apm.setContent(emailFile.getContent());
+        } catch (MailBillException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+    }
+
     private String getBankCode(String subject) {
         BankCodeEnum bank = BankCodeEnum.getByString(subject);
         if (bank == null) {
@@ -184,7 +203,8 @@ public class ParseMailImpl implements IParseMail {
         apm.setBankId(String.valueOf(TemplateCache.bankCache.get(bankCode)));
         apm.setEmailId(creditFile.getEmailId());
         apm.setSentDate(creditFile.getSentDate());
-
+        //
+        setFileContent(creditFile, apm);
         return apm;
     }
 }

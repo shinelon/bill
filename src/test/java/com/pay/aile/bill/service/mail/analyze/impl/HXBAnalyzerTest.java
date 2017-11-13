@@ -15,7 +15,6 @@ import com.pay.aile.bill.exception.MailBillException;
 import com.pay.aile.bill.mapper.CreditTemplateMapper;
 import com.pay.aile.bill.service.mail.analyze.BankMailAnalyzer;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
-import com.pay.aile.bill.service.mail.analyze.util.TextExtractUtil;
 import com.pay.aile.bill.utils.MongoDownloadUtil;
 
 @RunWith(SpringRunner.class)
@@ -34,14 +33,14 @@ public class HXBAnalyzerTest {
     public void test() {
         String content = "";
         try {
-            content = downloadUtil.getFile("ae2012f6-98d2-4513-bceb-cbd8dd4664b0");
+            content = downloadUtil.getFile("Inbox|231");
         } catch (MailBillException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
         // CreditTemplate rules = creditTemplateMapper.selectById(3);
-        content = TextExtractUtil.parseHtml(content, "td");
+        // content = TextExtractUtil.parseHtml(content, "td");
 
         //
         // System.out.println(rules.getDueDate().equals(ruleValue));

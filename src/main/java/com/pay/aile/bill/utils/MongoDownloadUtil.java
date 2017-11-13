@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import com.pay.aile.bill.entity.CreditFile;
 import com.pay.aile.bill.entity.EmailFile;
 import com.pay.aile.bill.exception.MailBillException;
+import com.pay.aile.bill.service.mail.analyze.task.FileQueueRedisHandle;
 import com.pay.aile.bill.service.mail.relation.CreditFileRelation;
 
 /***
@@ -36,6 +37,9 @@ public class MongoDownloadUtil {
     @Autowired
     private MongoTemplate mongoTemplate;
 
+    @Autowired
+    private FileQueueRedisHandle fileQueueRedisHandle;
+
     public String getFile(String fileName) throws MailBillException {
 
         try {
@@ -54,7 +58,7 @@ public class MongoDownloadUtil {
     }
 
     @SuppressWarnings("static-access")
-    public String getFile(String email, String fileName) throws MailBillException {
+    public EmailFile getFile(String email, String fileName) throws MailBillException {
 
         try {
 
@@ -63,7 +67,7 @@ public class MongoDownloadUtil {
 
             Query query = new Query(criteria);
             EmailFile ef = mongoTemplate.findOne(query, EmailFile.class);
-            return ef.getContent();
+            return ef;
         } catch (Exception e) {
 
             logger.error(e.getMessage());
@@ -105,6 +109,7 @@ public class MongoDownloadUtil {
     public void saveFile(List<EmailFile> emailFileList, List<CreditFile> creditFileList) {
         saveEmailFiles(emailFileList);
         saveCreditFile(creditFileList);
+        fileQueueRedisHandle.bathPushFile(creditFileList);
 
     }
 }
