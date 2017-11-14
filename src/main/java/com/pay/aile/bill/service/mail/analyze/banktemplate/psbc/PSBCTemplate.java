@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.pay.aile.bill.entity.CreditBillDetail;
+import com.pay.aile.bill.entity.CreditCard;
 import com.pay.aile.bill.entity.CreditTemplate;
 import com.pay.aile.bill.service.mail.analyze.enums.CardTypeEnum;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
@@ -26,13 +27,21 @@ public class PSBCTemplate extends AbstractPSBCTemplate {
         if (rules == null) {
             rules = new CreditTemplate();
             rules.setCardtypeId(16L);
-            rules.setBillingDate("账单日 \\d{2}");
+            rules.setBillDay("账单日 \\d{2}");
             rules.setDueDate("到期还款日 \\d{4}年\\d{2}月\\d{2}日");
             rules.setCurrentAmount("本期应还款总额 \\d+.?\\d*");
             rules.setCredits("信用额度 \\d+.?\\d*");
             rules.setPrepaidCashAmount("预借现金额度 \\d+.?\\d*");
+            rules.setCardNumbers("\\d+.?\\d* \\d{4}");
+            rules.setMinimum("最低还款额 \\d+.?\\d*");
             rules.setDetails("\\d{4}/\\d{2}/\\d{2} \\d{4}/\\d{2}/\\d{2} \\S+ \\d+.?\\d* \\d{4}");
         }
+    }
+
+    @Override
+    protected void setCardNumbers(CreditCard card, String number) {
+        String[] detailArray = number.split(" ");
+        card.setNumbers(detailArray[4]);
     }
 
     @Override

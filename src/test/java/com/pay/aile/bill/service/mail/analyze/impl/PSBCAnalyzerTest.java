@@ -19,29 +19,29 @@ import com.pay.aile.bill.utils.MongoDownloadUtil;
 @SpringBootTest(classes = BillApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class PSBCAnalyzerTest {
 
-	@Resource(name = "PSBCAnalyzer")
-	private BankMailAnalyzer PSBCAnalyzer;
-	@Autowired
-	private MongoDownloadUtil downloadUtil;
+    @Resource(name = "PSBCAnalyzer")
+    private BankMailAnalyzer PSBCAnalyzer;
+    @Autowired
+    private MongoDownloadUtil downloadUtil;
 
-	@Test
-	public void test() {
-		String content = "";
-		try {
-			content = downloadUtil.getFile("c2843547-68ed-460b-a74d-c77b89a4f5a0");
-		} catch (MailBillException e) {
-			e.printStackTrace();
-		}
+    @Test
+    public void test() {
+        String content = "";
+        try {
+            content = downloadUtil.getFile("c2843547-68ed-460b-a74d-c77b89a4f5a0");
+        } catch (MailBillException e) {
+            e.printStackTrace();
+        }
 
-		content = TextExtractUtil.parseHtml(content, "font");
-		System.out.println(content);
-		AnalyzeParamsModel amp = new AnalyzeParamsModel();
-		amp.setContent(content);
-		amp.setBankCode("PSBC");
-		// amp.setCardtypeId(2l);
-		amp.setEmail("czb18518679659@126.com");
-		// amp.setEmailId(6L);
-		PSBCAnalyzer.analyze(amp);
-	}
+        content = TextExtractUtil.parseHtml(content, "font");
+        System.out.println(content);
+        AnalyzeParamsModel amp = new AnalyzeParamsModel();
+        amp.setContent(content);
+        amp.setBankCode("PSBC");
+        amp.setBankId("2");
+        amp.setEmail("czb18518679659@126.com");
+        // amp.setEmailId(6L);
+        PSBCAnalyzer.analyze(amp);
+    }
 
 }
