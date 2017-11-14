@@ -96,6 +96,7 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate> imple
      */
     private T getTemplateFromCache(String email, String bankCode) {
         Object o = JedisClusterUtils.hashGet(Constant.redisTemplateCache + bankCode, email);
+
         if (o == null) {
             return null;
         } else {

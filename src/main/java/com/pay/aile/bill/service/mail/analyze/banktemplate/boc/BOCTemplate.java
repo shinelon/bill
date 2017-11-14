@@ -26,11 +26,21 @@ public class BOCTemplate extends AbstractBOCTemplate {
     Logger logger = LoggerFactory.getLogger(BOCTemplate.class);
 
     @Override
+    protected void initContext(AnalyzeParamsModel apm) {
+
+        parseHtml(apm.getContent());
+
+        // extractor.extract(apm.getContent(), "td");
+    };
+
+    @Override
     public void initRules() {
         if (rules == null) {
             rules = new CreditTemplate();
             rules.setBillingDate("Due \\d{4}-\\d{2}-\\d{2} \\d{4}-\\d{2}-\\d{2}"); // 账单日
             rules.setDueDate("Due \\d{4}-\\d{2}-\\d{2}");
+            rules.setMinimum("外币FCY \\S+ \\d+.?\\d* \\d+.?\\d*");
+            rules.setCardNumbers("\\d{4}-\\d{2}-\\d{2} \\d{4}-\\d{2}-\\d{2} \\d{4}");
             rules.setCurrentAmount("Due \\d{4}-\\d{2}-\\d{2} \\d{4}-\\d{2}-\\d{2} \\d+.?\\d*");
             // rules.setDetails("\\d{4}-\\d{2}-\\d{2} \\d{4}-\\d{2}-\\d{2}
             // \\d{4} \\S+ \\d+.?\\d*");
@@ -105,14 +115,6 @@ public class BOCTemplate extends AbstractBOCTemplate {
     };
 
     @Override
-    protected void initContext(AnalyzeParamsModel apm) {
-
-        apm.setContent(parseHtml(apm.getContent()));
-
-        // extractor.extract(apm.getContent(), "td");
-    }
-
-    @Override
     protected void setCardNumbers(CreditCard card, String number) {
 
         card.setNumbers(number.split(" ")[2]);
@@ -145,7 +147,11 @@ public class BOCTemplate extends AbstractBOCTemplate {
         // desc = desc + sa[i];
         // }
         // cbd.setTransactionDescription(desc);
+        String desc = "";
+        for (int i = 2; i < sa.length - 2; i++) {
+            desc = desc + sa[i];
+        }
+        cbd.setTransactionDescription(desc);
         return cbd;
     }
-
 }

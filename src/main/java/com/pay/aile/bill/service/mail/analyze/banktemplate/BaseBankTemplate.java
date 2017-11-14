@@ -71,6 +71,15 @@ public abstract class BaseBankTemplate
      */
     protected CreditTemplate rules;
 
+    /**
+     *
+     * @param apm
+     * @throws AnalyzeBillException
+     */
+    protected void afterAnalyze(AnalyzeParamsModel apm) throws AnalyzeBillException {
+        checkCardAndBill(apm);
+    }
+
     @Override
     public void afterPropertiesSet() throws Exception {
         setCardType();
@@ -88,31 +97,6 @@ public abstract class BaseBankTemplate
         beforeAnalyze(apm);
         analyzeInternal(apm);
         afterAnalyze(apm);
-    }
-
-    /**
-     * 用于不同卡种之间的排序,调用次数高的排位靠前
-     */
-    @Override
-    public int compareTo(BaseBankTemplate o) {
-        if (o == null) {
-            return 1;
-        }
-        return count > o.count ? 1 : -1;
-    }
-
-    @Override
-    public void handleResult(AnalyzeParamsModel apm) {
-        handleResultInternal(apm);
-    }
-
-    /**
-     *
-     * @param apm
-     * @throws AnalyzeBillException
-     */
-    protected void afterAnalyze(AnalyzeParamsModel apm) throws AnalyzeBillException {
-        checkCardAndBill(apm);
     }
 
     protected void analyzeBillDate(CreditCard card, String content, AnalyzeParamsModel apm) {
@@ -251,7 +235,7 @@ public abstract class BaseBankTemplate
         }
     }
 
-    protected void analyzeInternal(AnalyzeParamsModel apm) throws AnalyzeBillException{
+    protected void analyzeInternal(AnalyzeParamsModel apm) throws AnalyzeBillException {
         logger.info("账单内容：{}", apm.toString());
         String content = apm.getContent();
         AnalyzeResult ar = new AnalyzeResult();
@@ -297,8 +281,8 @@ public abstract class BaseBankTemplate
 
             String minimum = getValueByPattern("minimum", content, rules.getMinimum(), apm, " ");
             minimum = PatternMatcherUtil.getMatcherString(Constant.pattern_amount, minimum);
-            if(minimum.startsWith("-")) {
-            	minimum.replaceAll("-","");
+            if (minimum.startsWith("-")) {
+                minimum.replaceAll("-", "");
             }
             bill.setMinimum(new BigDecimal(minimum));
         }
@@ -341,6 +325,17 @@ public abstract class BaseBankTemplate
         }
     }
 
+    /**
+     * 用于不同卡种之间的排序,调用次数高的排位靠前
+     */
+    @Override
+    public int compareTo(BaseBankTemplate o) {
+        if (o == null) {
+            return 1;
+        }
+        return count > o.count ? 1 : -1;
+    }
+
     protected String getValueByPattern(String key, String content, String ruleValue, AnalyzeParamsModel apm,
             String splitSign) {
 
@@ -368,6 +363,11 @@ public abstract class BaseBankTemplate
         apm.setResult(null);
         throw new RuntimeException(String.format("未找到匹配值,bank=%s,cardType=%s,key=%s,reg=%s",
                 cardType.getBankCode().getBankCode(), cardType.getCardCode(), key, reg));
+    }
+
+    @Override
+    public void handleResult(AnalyzeParamsModel apm) {
+        handleResultInternal(apm);
     }
 
     @Transactional
