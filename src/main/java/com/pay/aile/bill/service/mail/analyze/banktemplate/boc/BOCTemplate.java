@@ -37,7 +37,7 @@ public class BOCTemplate extends AbstractBOCTemplate {
     public void initRules() {
         if (rules == null) {
             rules = new CreditTemplate();
-            rules.setBillingDate("Due \\d{4}-\\d{2}-\\d{2} \\d{4}-\\d{2}-\\d{2}"); // 账单日
+            rules.setBillDay("Due \\d{4}-\\d{2}-\\d{2} \\d{4}-\\d{2}-\\d{2}"); // 账单日
             rules.setDueDate("Due \\d{4}-\\d{2}-\\d{2}");
             rules.setMinimum("外币FCY \\S+ \\d+.?\\d* \\d+.?\\d*");
             rules.setCardNumbers("\\d{4}-\\d{2}-\\d{2} \\d{4}-\\d{2}-\\d{2} \\d{4}");
