@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.pay.aile.bill.service.mail.analyze.banktemplate.BaseBankTemplate;
 import com.pay.aile.bill.service.mail.analyze.constant.Constant;
 import com.pay.aile.bill.service.mail.analyze.enums.CardTypeEnum;
+import com.pay.aile.bill.service.mail.analyze.exception.AnalyzeBillException;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
 import com.pay.aile.bill.service.mail.analyze.util.JedisClusterUtils;
 import com.pay.aile.bill.utils.SpringContextUtil;
@@ -40,7 +41,7 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate> imple
      * 子类不要重写此方法
      */
     @Override
-    public void analyze(AnalyzeParamsModel apm) {
+    public void analyze(AnalyzeParamsModel apm) throws AnalyzeBillException {
         long startTime = System.currentTimeMillis();
         String email = apm.getEmail();
         String bankCode = apm.getBankCode();
@@ -78,7 +79,8 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate> imple
                 analyzeErrors.forEach(ee -> {
                     logger.error("解析错误:" + ee.getMessage(), ee);
                 });
-                throw new RuntimeException("解析错误");
+                throw new AnalyzeBillException(
+                        String.format("解析错误,bankCode=%s,email=%s", apm.getBankCode(), apm.getEmail()));
             }
         }
         if (apm.success()) {
@@ -122,6 +124,5 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate> imple
     private void setTemplateToCache(String email, String bankCode, T template) {
         JedisClusterUtils.hashSet(Constant.redisTemplateCache + bankCode, email, template.getClass().getName());
     }
-
 
 }
