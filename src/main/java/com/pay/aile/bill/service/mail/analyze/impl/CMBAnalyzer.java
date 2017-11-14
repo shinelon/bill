@@ -8,7 +8,7 @@ import com.pay.aile.bill.service.mail.analyze.banktemplate.cmb.AbstractCMBTempla
 import com.pay.aile.bill.service.mail.analyze.enums.BankCodeEnum;
 
 /**
- * 
+ *
  * @author Charlie
  * @description 招商银行解析模板
  */
@@ -18,9 +18,8 @@ public class CMBAnalyzer extends AbstractBankMailAnalyzer<AbstractCMBTemplate> {
 
     @Override
     public boolean support(String name) {
-        return StringUtils.hasText(name)
-                && (name.contains(BankCodeEnum.CMB.getBankCode())
-                        || name.contains(BankCodeEnum.CMB.getBankName()));
+        return StringUtils.hasText(name) && (name.equalsIgnoreCase(BankCodeEnum.CMB.getBankCode())
+                || name.contains(BankCodeEnum.CMB.getBankName()));
     }
 
 }

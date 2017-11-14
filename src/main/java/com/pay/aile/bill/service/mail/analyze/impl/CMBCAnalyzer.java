@@ -15,10 +15,10 @@ import com.pay.aile.bill.service.mail.analyze.enums.BankCodeEnum;
 @Service("CMBCAnalyzer")
 public class CMBCAnalyzer extends AbstractBankMailAnalyzer<AbstractCMBCTemplate> {
 
-	@Override
-	public boolean support(String name) {
-		return StringUtils.hasText(name)
-				&& (name.contains(BankCodeEnum.CMBC.getBankCode()) || name.contains(BankCodeEnum.CMBC.getBankName()));
-	}
+    @Override
+    public boolean support(String name) {
+        return StringUtils.hasText(name) && (name.equalsIgnoreCase(BankCodeEnum.CMBC.getBankCode())
+                || name.contains(BankCodeEnum.CMBC.getBankName()));
+    }
 
 }

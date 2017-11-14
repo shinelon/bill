@@ -14,12 +14,12 @@ import com.pay.aile.bill.service.mail.analyze.enums.BankCodeEnum;
  */
 @Service("PSBCAnalyzer")
 public class PSBCAnalyzer extends AbstractBankMailAnalyzer<AbstractPSBCTemplate> {
-	public static final BankCodeEnum bankCode = BankCodeEnum.PSBC;
+    public static final BankCodeEnum bankCode = BankCodeEnum.PSBC;
 
-	@Override
-	public boolean support(String name) {
-		return StringUtils.hasText(name)
-				&& (name.contains(BankCodeEnum.PSBC.getBankCode()) || name.contains(BankCodeEnum.PSBC.getBankName()));
-	}
+    @Override
+    public boolean support(String name) {
+        return StringUtils.hasText(name) && (name.equalsIgnoreCase(BankCodeEnum.PSBC.getBankCode())
+                || name.contains(BankCodeEnum.PSBC.getBankName()));
+    }
 
 }

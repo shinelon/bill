@@ -17,9 +17,8 @@ public class BCMAnalyzer extends AbstractBankMailAnalyzer<AbstractBCMTemplate> {
 
     @Override
     public boolean support(String name) {
-        return StringUtils.hasText(name)
-                && (name.contains(BankCodeEnum.BCM.getBankCode())
-                        || name.contains(BankCodeEnum.BCM.getBankName()));
+        return StringUtils.hasText(name) && (name.equalsIgnoreCase(BankCodeEnum.BCM.getBankCode())
+                || name.contains(BankCodeEnum.BCM.getBankName()));
     }
 
 }

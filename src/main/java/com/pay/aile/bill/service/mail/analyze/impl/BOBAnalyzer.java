@@ -17,9 +17,8 @@ public class BOBAnalyzer extends AbstractBankMailAnalyzer<AbstractBOBTemplate> {
 
     @Override
     public boolean support(String name) {
-        return StringUtils.hasText(name)
-                && (name.contains(BankCodeEnum.BOB.getBankCode())
-                        || name.contains(BankCodeEnum.BOB.getBankName()));
+        return StringUtils.hasText(name) && (name.equalsIgnoreCase(BankCodeEnum.BOB.getBankCode())
+                || name.contains(BankCodeEnum.BOB.getBankName()));
     }
 
 }

@@ -28,7 +28,7 @@ public class CITICAnalyzerTest {
     public void test() throws AnalyzeBillException {
         String content = "";
         try {
-            content = downloadUtil.getFile("CITIC_中信银行信用卡电子账单2017年10月_2017-11-02T10:54:34.html");
+            content = downloadUtil.getFile("INBOX|7103a0149e25d0f600000001");
         } catch (MailBillException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

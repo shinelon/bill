@@ -14,13 +14,11 @@ import com.pay.aile.bill.service.mail.analyze.enums.BankCodeEnum;
  */
 @Service("CCBAnalyzer")
 public class CCBAnalyzer extends AbstractBankMailAnalyzer<AbstractCCBTemplate> {
-    public static final BankCodeEnum bankCode = BankCodeEnum.CCB;
 
     @Override
     public boolean support(String name) {
-        return StringUtils.hasText(name)
-                && (name.contains(BankCodeEnum.CCB.getBankCode())
-                        || name.contains(BankCodeEnum.CCB.getBankName()));
+        return StringUtils.hasText(name) && (name.equalsIgnoreCase(BankCodeEnum.CCB.getBankCode())
+                || name.contains(BankCodeEnum.CCB.getBankName()));
     }
 
 }

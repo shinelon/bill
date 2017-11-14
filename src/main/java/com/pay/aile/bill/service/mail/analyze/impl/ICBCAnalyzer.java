@@ -8,19 +8,17 @@ import com.pay.aile.bill.service.mail.analyze.banktemplate.icbc.AbstractICBCTemp
 import com.pay.aile.bill.service.mail.analyze.enums.BankCodeEnum;
 
 /**
- * 
+ *
  * @author Charlie
  * @description 工商银行解析模板
  */
 @Service
-public class ICBCAnalyzer
-        extends AbstractBankMailAnalyzer<AbstractICBCTemplate> {
+public class ICBCAnalyzer extends AbstractBankMailAnalyzer<AbstractICBCTemplate> {
 
     @Override
     public boolean support(String name) {
-        return StringUtils.hasText(name)
-                && (name.contains(BankCodeEnum.ICBC.getBankCode())
-                        || name.contains(BankCodeEnum.ICBC.getBankName()));
+        return StringUtils.hasText(name) && (name.equalsIgnoreCase(BankCodeEnum.ICBC.getBankCode())
+                || name.contains(BankCodeEnum.ICBC.getBankName()));
     }
 
 }

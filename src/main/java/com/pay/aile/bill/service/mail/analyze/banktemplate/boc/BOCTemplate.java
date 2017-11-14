@@ -26,14 +26,6 @@ public class BOCTemplate extends AbstractBOCTemplate {
     Logger logger = LoggerFactory.getLogger(BOCTemplate.class);
 
     @Override
-    protected void initContext(AnalyzeParamsModel apm) {
-
-        parseHtml(apm.getContent());
-
-        // extractor.extract(apm.getContent(), "td");
-    };
-
-    @Override
     public void initRules() {
         if (rules == null) {
             rules = new CreditTemplate();
@@ -46,7 +38,7 @@ public class BOCTemplate extends AbstractBOCTemplate {
             // \\d{4} \\S+ \\d+.?\\d*");
             rules.setDetails("\\d{4}-\\d{2}-\\d{2} \\d{4}-\\d{2}-\\d{2} \\d{4} \\S+ -?\\d+.?\\d*");
         }
-    }
+    };
 
     private String parseHtml(String html) {
         html = html.replaceAll("&nbsp;", ""); // remove &nbsp;
@@ -110,8 +102,16 @@ public class BOCTemplate extends AbstractBOCTemplate {
         html = html.replaceAll("￥", "");// 去掉人民币符号
         html = html.replace(",", "");// 去掉金额分隔符
         html = html.replaceAll(" {2,}", " ");// 去掉多余空格，只留一个
-        logger.info(html);
+        // logger.info(html);
         return html;
+    }
+
+    @Override
+    protected void initContext(AnalyzeParamsModel apm) {
+
+        apm.setContent(parseHtml(apm.getOriginContent()));
+
+        // extractor.extract(apm.getContent(), "td");
     };
 
     @Override

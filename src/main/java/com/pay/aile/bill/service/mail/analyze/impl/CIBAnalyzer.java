@@ -18,9 +18,8 @@ public class CIBAnalyzer extends AbstractBankMailAnalyzer<AbstractCIBTemplate> {
 
     @Override
     public boolean support(String name) {
-        return StringUtils.hasText(name)
-                && (name.contains(BankCodeEnum.CIB.getBankCode())
-                        || name.contains(BankCodeEnum.CIB.getBankName()));
+        return StringUtils.hasText(name) && (name.equalsIgnoreCase(BankCodeEnum.CIB.getBankCode())
+                || name.contains(BankCodeEnum.CIB.getBankName()));
     }
 
 }

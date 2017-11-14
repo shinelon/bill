@@ -15,10 +15,10 @@ import com.pay.aile.bill.service.mail.analyze.enums.BankCodeEnum;
 @Service("BOCAnalyzer")
 public class BOCAnalyzer extends AbstractBankMailAnalyzer<AbstractBOCTemplate> {
 
-	@Override
-	public boolean support(String name) {
-		return StringUtils.hasText(name)
-				&& (name.contains(BankCodeEnum.BOC.getBankCode()) || name.contains(BankCodeEnum.BOC.getBankName()));
-	}
+    @Override
+    public boolean support(String name) {
+        return StringUtils.hasText(name) && (name.equalsIgnoreCase(BankCodeEnum.BOC.getBankCode())
+                || name.contains(BankCodeEnum.BOC.getBankName()));
+    }
 
 }

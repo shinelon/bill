@@ -17,9 +17,8 @@ public class PABAnalyzer extends AbstractBankMailAnalyzer<AbstractPABTemplate> {
 
     @Override
     public boolean support(String name) {
-        return StringUtils.hasText(name)
-                && (name.contains(BankCodeEnum.PAB.getBankCode())
-                        || name.contains(BankCodeEnum.PAB.getBankName()));
+        return StringUtils.hasText(name) && (name.equalsIgnoreCase(BankCodeEnum.PAB.getBankCode())
+                || name.contains(BankCodeEnum.PAB.getBankName()));
     }
 
 }

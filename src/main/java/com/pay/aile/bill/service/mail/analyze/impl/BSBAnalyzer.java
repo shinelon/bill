@@ -17,9 +17,8 @@ public class BSBAnalyzer extends AbstractBankMailAnalyzer<AbstractBSBTemplate> {
 
     @Override
     public boolean support(String name) {
-        return StringUtils.hasText(name)
-                && (name.contains(BankCodeEnum.BSB.getBankCode())
-                        || name.contains(BankCodeEnum.BSB.getBankName()));
+        return StringUtils.hasText(name) && (name.equalsIgnoreCase(BankCodeEnum.BSB.getBankCode())
+                || name.contains(BankCodeEnum.BSB.getBankName()));
     }
 
 }

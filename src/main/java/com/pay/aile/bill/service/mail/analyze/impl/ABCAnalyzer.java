@@ -17,9 +17,8 @@ public class ABCAnalyzer extends AbstractBankMailAnalyzer<AbstractABCTemplate> {
 
     @Override
     public boolean support(String name) {
-        return StringUtils.hasText(name)
-                && (name.contains(BankCodeEnum.ABC.getBankCode())
-                        || name.contains(BankCodeEnum.ABC.getBankName()));
+        return StringUtils.hasText(name) && (name.equalsIgnoreCase(BankCodeEnum.ABC.getBankCode())
+                || name.contains(BankCodeEnum.ABC.getBankName()));
     }
 
 }

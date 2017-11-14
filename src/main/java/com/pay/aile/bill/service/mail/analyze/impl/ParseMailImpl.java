@@ -113,7 +113,8 @@ public class ParseMailImpl implements IParseMail {
                     }
                 }
                 if (parser == null) {
-                    throw new RuntimeException("no parsers found");
+                    throw new RuntimeException(
+                            String.format("no parsers found,bankCode=%s,email=%s", apm.getBankCode(), apm.getEmail()));
                 }
 
                 parser.analyze(apm);
@@ -174,7 +175,7 @@ public class ParseMailImpl implements IParseMail {
             EmailFile emailFile = mongoDownloadUtil.getFile(creditFile.getFileName(), creditFile.getEmail());
             apm.setAttachment(emailFile.getAttachment());
             apm.setOriginContent(emailFile.getContent());
-			logger.info(emailFile.getContent());
+            // logger.info(emailFile.getContent());
         } catch (MailBillException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

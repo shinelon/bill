@@ -17,9 +17,8 @@ public class GDBAnalyzer extends AbstractBankMailAnalyzer<AbstractGDBTemplate> {
 
     @Override
     public boolean support(String name) {
-        return StringUtils.hasText(name)
-                && (name.contains(BankCodeEnum.GDB.getBankCode())
-                        || name.contains(BankCodeEnum.GDB.getBankName()));
+        return StringUtils.hasText(name) && (name.equalsIgnoreCase(BankCodeEnum.GDB.getBankCode())
+                || name.contains(BankCodeEnum.GDB.getBankName()));
     }
 
 }

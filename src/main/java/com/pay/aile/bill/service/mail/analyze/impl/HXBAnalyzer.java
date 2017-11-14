@@ -15,12 +15,10 @@ import com.pay.aile.bill.service.mail.analyze.enums.BankCodeEnum;
 @Service("HBXAnalyzer")
 public class HXBAnalyzer extends AbstractBankMailAnalyzer<AbstractHXBTemplate> {
 
-	@Override
-	public boolean support(String name) {
-		return StringUtils.hasText(name)
-				&& (name.contains(BankCodeEnum.HXB.getBankCode()) || name.contains(BankCodeEnum.HXB.getBankName()));
-	}
-
-
+    @Override
+    public boolean support(String name) {
+        return StringUtils.hasText(name) && (name.equalsIgnoreCase(BankCodeEnum.HXB.getBankCode())
+                || name.contains(BankCodeEnum.HXB.getBankName()));
+    }
 
 }

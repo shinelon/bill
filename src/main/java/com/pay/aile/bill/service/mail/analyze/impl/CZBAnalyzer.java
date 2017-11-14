@@ -17,9 +17,8 @@ public class CZBAnalyzer extends AbstractBankMailAnalyzer<AbstractCZBTemplate> {
 
     @Override
     public boolean support(String name) {
-        return StringUtils.hasText(name)
-                && (name.contains(BankCodeEnum.CZB.getBankCode())
-                        || name.contains(BankCodeEnum.CZB.getBankName()));
+        return StringUtils.hasText(name) && (name.equalsIgnoreCase(BankCodeEnum.CZB.getBankCode())
+                || name.contains(BankCodeEnum.CZB.getBankName()));
     }
 
 }
