@@ -12,6 +12,7 @@ import com.pay.aile.bill.BillApplication;
 import com.pay.aile.bill.exception.MailBillException;
 import com.pay.aile.bill.mapper.CreditTemplateMapper;
 import com.pay.aile.bill.service.mail.analyze.BankMailAnalyzer;
+import com.pay.aile.bill.service.mail.analyze.exception.AnalyzeBillException;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
 import com.pay.aile.bill.utils.MongoDownloadUtil;
 
@@ -28,7 +29,7 @@ public class GDBAnalyzerTest {
     CreditTemplateMapper creditTemplateMapper;
 
     @Test
-    public void test() {
+    public void test() throws AnalyzeBillException {
         String content = "";
         try {
             content = downloadUtil.getFile("【广发卡10月账单】广发分享日，周五买一送一或半价！");

@@ -10,6 +10,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.pay.aile.bill.BillApplication;
 import com.pay.aile.bill.service.mail.analyze.BankMailAnalyzer;
+import com.pay.aile.bill.service.mail.analyze.exception.AnalyzeBillException;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
 import com.pay.aile.bill.service.mail.analyze.util.TextExtractUtil;
 import com.pay.aile.bill.utils.MongoDownloadUtil;
@@ -29,7 +30,7 @@ public class CMBCAnlyzerTest {
     private MongoDownloadUtil downloadUtil;
 
     @Test
-    public void test() {
+    public void test() throws AnalyzeBillException {
         String content = "";
         try {
             content = downloadUtil.getFile("INBOX|1tbiThWLWFhgzTOQiAAAsW");

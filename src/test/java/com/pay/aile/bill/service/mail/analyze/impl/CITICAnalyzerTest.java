@@ -11,6 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.pay.aile.bill.BillApplication;
 import com.pay.aile.bill.exception.MailBillException;
 import com.pay.aile.bill.service.mail.analyze.BankMailAnalyzer;
+import com.pay.aile.bill.service.mail.analyze.exception.AnalyzeBillException;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
 import com.pay.aile.bill.utils.MongoDownloadUtil;
 
@@ -24,7 +25,7 @@ public class CITICAnalyzerTest {
     private MongoDownloadUtil downloadUtil;
 
     @Test
-    public void test() {
+    public void test() throws AnalyzeBillException {
         String content = "";
         try {
             content = downloadUtil.getFile("CITIC_中信银行信用卡电子账单2017年10月_2017-11-02T10:54:34.html");
