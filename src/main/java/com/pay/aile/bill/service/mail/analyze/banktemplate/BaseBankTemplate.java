@@ -70,6 +70,15 @@ public abstract class BaseBankTemplate
      */
     protected CreditTemplate rules;
 
+    /**
+     *
+     * @param apm
+     * @throws AnalyzeBillException
+     */
+    protected void afterAnalyze(AnalyzeParamsModel apm) throws AnalyzeBillException {
+        checkCardAndBill(apm);
+    }
+
     @Override
     public void afterPropertiesSet() throws Exception {
         setCardType();
@@ -87,31 +96,6 @@ public abstract class BaseBankTemplate
         beforeAnalyze(apm);
         analyzeInternal(apm);
         afterAnalyze(apm);
-    }
-
-    /**
-     * 用于不同卡种之间的排序,调用次数高的排位靠前
-     */
-    @Override
-    public int compareTo(BaseBankTemplate o) {
-        if (o == null) {
-            return 1;
-        }
-        return count > o.count ? 1 : -1;
-    }
-
-    @Override
-    public void handleResult(AnalyzeParamsModel apm) {
-        handleResultInternal(apm);
-    }
-
-    /**
-     *
-     * @param apm
-     * @throws AnalyzeBillException
-     */
-    protected void afterAnalyze(AnalyzeParamsModel apm) throws AnalyzeBillException {
-        checkCardAndBill(apm);
     }
 
     protected void analyzeBillDate(CreditCard card, String content, AnalyzeParamsModel apm) {
@@ -134,8 +118,7 @@ public abstract class BaseBankTemplate
     protected void analyzeCardholder(CreditCard card, String content, AnalyzeParamsModel apm) {
         if (StringUtils.hasText(rules.getCardholder())) {
 
-            String cardholder = getValueByPattern("cardholder", content, rules.getCardholder(), apm,
-                    " ");
+            String cardholder = getValueByPattern("cardholder", content, rules.getCardholder(), apm, " ");
             card.setCardholder(cardholder);
         }
     }
@@ -188,8 +171,7 @@ public abstract class BaseBankTemplate
     protected void analyzeCurrentAmount(CreditBill bill, String content, AnalyzeParamsModel apm) {
         if (StringUtils.hasText(rules.getCurrentAmount())) {
 
-            String currentAmount = getValueByPattern("currentAmount", content,
-                    rules.getCurrentAmount(), apm, " ");
+            String currentAmount = getValueByPattern("currentAmount", content, rules.getCurrentAmount(), apm, " ");
             currentAmount = PatternMatcherUtil.getMatcherString("-?\\d+\\.?\\d*", currentAmount);
             if (StringUtils.hasText(currentAmount)) {
                 if (currentAmount.startsWith("-")) {
@@ -210,8 +192,8 @@ public abstract class BaseBankTemplate
         }
     }
 
-    protected void analyzeDetails(List<CreditBillDetail> detail, String content,
-            AnalyzeParamsModel apm, CreditCard card) {
+    protected void analyzeDetails(List<CreditBillDetail> detail, String content, AnalyzeParamsModel apm,
+            CreditCard card) {
         List<String> list = null;
         if (StringUtils.hasText(rules.getDetails())) {
             // 交易明细
@@ -295,8 +277,7 @@ public abstract class BaseBankTemplate
     protected void analyzeYearMonth(CreditBill bill, String content, AnalyzeParamsModel apm) {
         if (StringUtils.hasText(rules.getYearMonth())) {
 
-            String yearMonth = getValueByPattern("yearMonth", content, rules.getYearMonth(), apm,
-                    " ");
+            String yearMonth = getValueByPattern("yearMonth", content, rules.getYearMonth(), apm, " ");
             yearMonth = PatternMatcherUtil.getMatcherString("\\d+.?\\d*", yearMonth);
             // bill.setYear(year);
             // bill.setMonth(month);
@@ -327,8 +308,19 @@ public abstract class BaseBankTemplate
         }
     }
 
-    protected String getValueByPattern(String key, String content, String ruleValue,
-            AnalyzeParamsModel apm, String splitSign) {
+    /**
+     * 用于不同卡种之间的排序,调用次数高的排位靠前
+     */
+    @Override
+    public int compareTo(BaseBankTemplate o) {
+        if (o == null) {
+            return 1;
+        }
+        return count > o.count ? 1 : -1;
+    }
+
+    protected String getValueByPattern(String key, String content, String ruleValue, AnalyzeParamsModel apm,
+            String splitSign) {
 
         if (StringUtils.hasText(ruleValue)) {
 
@@ -354,6 +346,11 @@ public abstract class BaseBankTemplate
         apm.setResult(null);
         throw new RuntimeException(String.format("未找到匹配值,bank=%s,cardType=%s,key=%s,reg=%s",
                 cardType.getBankCode().getBankCode(), cardType.getCardCode(), key, reg));
+    }
+
+    @Override
+    public void handleResult(AnalyzeParamsModel apm) {
+        handleResultInternal(apm);
     }
 
     @Transactional
@@ -425,32 +422,28 @@ public abstract class BaseBankTemplate
             }
             if (StringUtils.hasText(rules.getTransactionDescription())) {
                 try {
-                    detailMap.put(Integer.parseInt(rules.getTransactionDescription()),
-                            "transactionDescription");
+                    detailMap.put(Integer.parseInt(rules.getTransactionDescription()), "transactionDescription");
                 } catch (Exception e) {
                     logger.error(e.getMessage());
                 }
             }
             if (StringUtils.hasText(rules.getTransactionCurrency())) {
                 try {
-                    detailMap.put(Integer.parseInt(rules.getTransactionCurrency()),
-                            "transactionCurrency");
+                    detailMap.put(Integer.parseInt(rules.getTransactionCurrency()), "transactionCurrency");
                 } catch (Exception e) {
                     logger.error(e.getMessage());
                 }
             }
             if (StringUtils.hasText(rules.getTransactionAmount())) {
                 try {
-                    detailMap.put(Integer.parseInt(rules.getTransactionAmount()),
-                            "transactionAmount");
+                    detailMap.put(Integer.parseInt(rules.getTransactionAmount()), "transactionAmount");
                 } catch (Exception e) {
                     logger.error(e.getMessage());
                 }
             }
             if (StringUtils.hasText(rules.getAccountableAmount())) {
                 try {
-                    detailMap.put(Integer.parseInt(rules.getAccountableAmount()),
-                            "accountableAmount");
+                    detailMap.put(Integer.parseInt(rules.getAccountableAmount()), "accountableAmount");
                 } catch (Exception e) {
                     logger.error(e.getMessage());
                 }

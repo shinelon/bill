@@ -23,8 +23,7 @@ import com.pay.aile.bill.utils.SpringContextUtil;
  * @param <T>
  *            每个银行卡种的父类
  */
-public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
-        implements BankMailAnalyzer {
+public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate> implements BankMailAnalyzer {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
     /**
@@ -87,17 +86,17 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
             // 解析成功，处理解析结果
             template.handleResult(apm);
         }
-        logger.debug("analyze end,useTime={}",
-                System.currentTimeMillis() - startTime);
+        logger.debug("analyze end,useTime={}", System.currentTimeMillis() - startTime);
     }
 
     /**
-     * 
+     *
      * @return 根据用户邮箱和银行编码从缓存中获取对应的模板
      */
     private T getTemplateFromCache(String email, String bankCode) {
-        Object o = JedisClusterUtils
-                .hashGet(Constant.redisTemplateCache + bankCode, email);
+        // Object o = JedisClusterUtils.hashGet(Constant.redisTemplateCache +
+        // bankCode, email);
+        Object o = null;
         if (o == null) {
             return null;
         } else {
@@ -116,21 +115,20 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate>
         }
     }
 
+    protected void preAnalyze(String content) {
+        // TODO Auto-generated method stub
+
+    }
+
     /**
-     * 
+     *
      * @param email
      * @param bankCode
      * @param template
      *            将模板存入缓存
      */
     private void setTemplateToCache(String email, String bankCode, T template) {
-        JedisClusterUtils.hashSet(Constant.redisTemplateCache + bankCode, email,
-                template.getClass().getName());
-    }
-
-    protected void preAnalyze(String content) {
-        // TODO Auto-generated method stub
-
+        JedisClusterUtils.hashSet(Constant.redisTemplateCache + bankCode, email, template.getClass().getName());
     }
 
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.pay.aile.bill.entity.CreditBillDetail;
+import com.pay.aile.bill.entity.CreditCard;
 import com.pay.aile.bill.entity.CreditTemplate;
 import com.pay.aile.bill.service.mail.analyze.enums.CardTypeEnum;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
@@ -22,15 +23,25 @@ import com.pay.aile.bill.service.mail.analyze.util.DateUtil;
 public class BOCTemplate extends AbstractBOCTemplate {
 
     @Override
+    protected void initContext(AnalyzeParamsModel apm) {
+
+        parseHtml(apm.getContent());
+
+        // extractor.extract(apm.getContent(), "td");
+    };
+
+    @Override
     public void initRules() {
         if (rules == null) {
             rules = new CreditTemplate();
             rules.setBillingDate("Due \\d{4}-\\d{2}-\\d{2} \\d{4}-\\d{2}-\\d{2}"); // 账单日
             rules.setDueDate("Due \\d{4}-\\d{2}-\\d{2}");
+            rules.setMinimum("外币FCY \\S+ \\d+.?\\d* \\d+.?\\d*");
+            rules.setCardNumbers("\\d{4}-\\d{2}-\\d{2} \\d{4}-\\d{2}-\\d{2} \\d{4}");
             rules.setCurrentAmount("Due \\d{4}-\\d{2}-\\d{2} \\d{4}-\\d{2}-\\d{2} \\d+.?\\d*");
             rules.setDetails("\\d{4}-\\d{2}-\\d{2} \\d{4}-\\d{2}-\\d{2} \\d{4} \\S+ \\d+.?\\d*");
         }
-    };
+    }
 
     private String parseHtml(String html) {
         Document document = Jsoup.parse(html);
@@ -93,11 +104,9 @@ public class BOCTemplate extends AbstractBOCTemplate {
     }
 
     @Override
-    protected void initContext(AnalyzeParamsModel apm) {
-
-        parseHtml(apm.getContent());
-
-        // extractor.extract(apm.getContent(), "td");
+    protected void setCardNumbers(CreditCard card, String number) {
+        String[] detailArray = number.split(" ");
+        card.setNumbers(detailArray[2]);
     }
 
     @Override
@@ -111,13 +120,7 @@ public class BOCTemplate extends AbstractBOCTemplate {
         String[] sa = detail.split(" ");
         cbd.setTransactionDate(DateUtil.parseDate(sa[0]));
         cbd.setBillingDate(DateUtil.parseDate(sa[1]));
-        if (sa[sa.length - 2] != null) {
-            // 存入
-            cbd.setTransactionAmount("-" + sa[sa.length - 2].replaceAll("\\n", ""));
-        } else if (sa[sa.length - 1] != null) {
-            // 支出
-            cbd.setTransactionAmount(sa[sa.length - 1].replaceAll("\\n", ""));
-        }
+        cbd.setTransactionAmount(sa[sa.length - 1]);
         String desc = "";
         for (int i = 2; i < sa.length - 2; i++) {
             desc = desc + sa[i];
@@ -125,5 +128,4 @@ public class BOCTemplate extends AbstractBOCTemplate {
         cbd.setTransactionDescription(desc);
         return cbd;
     }
-
 }

@@ -19,32 +19,32 @@ import com.pay.aile.bill.utils.MongoDownloadUtil;
 @SpringBootTest(classes = BillApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class BOCAnalyzerTest {
 
-	@Resource(name = "BOCAnalyzer")
-	private BankMailAnalyzer BOCAnalyzer;
-	@Autowired
-	private MongoDownloadUtil downloadUtil;
+    @Resource(name = "BOCAnalyzer")
+    private BankMailAnalyzer BOCAnalyzer;
+    @Autowired
+    private MongoDownloadUtil downloadUtil;
 
-	@Test
-	public void test() {
-		String content = "";
-		try {
-			content = downloadUtil.getFile("INBOX|1tbikBaLWFag3N99LgAAsz");
-		} catch (MailBillException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    @Test
+    public void test() {
+        String content = "";
+        try {
+            content = downloadUtil.getFile("INBOX|1tbikBaLWFag3N99LgAAsz");
+        } catch (MailBillException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
-		// CreditTemplate rules = creditTemplateMapper.selectById(3);
-		// content = TextExtractUtil.parseHtml(content, "font");
-		content = TextExtractUtil.parseHtmlBoc(content);
+        // CreditTemplate rules = creditTemplateMapper.selectById(3);
+        content = TextExtractUtil.parseHtml(content, "td");
+        // content = TextExtractUtil.parseHtmlBoc(content);
 
-		System.out.println(content);
-		AnalyzeParamsModel amp = new AnalyzeParamsModel();
-		amp.setContent(content);
-		amp.setBankCode("BOC");
-		// amp.setCardtypeId(2l);
-		amp.setEmail("czb18518679659@126.com");
-		// amp.setEmailId(6L);
-		BOCAnalyzer.analyze(amp);
-	}
+        System.out.println(content);
+        AnalyzeParamsModel amp = new AnalyzeParamsModel();
+        amp.setContent(content);
+        amp.setBankCode("BOC");
+        amp.setBankId("2");
+        amp.setEmail("czb18518679659@126.com");
+        // amp.setEmailId(6L);
+        BOCAnalyzer.analyze(amp);
+    }
 }

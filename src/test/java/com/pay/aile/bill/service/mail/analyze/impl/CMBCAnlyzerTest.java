@@ -23,27 +23,28 @@ import com.pay.aile.bill.utils.MongoDownloadUtil;
 @SpringBootTest(classes = BillApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CMBCAnlyzerTest {
 
-	@Resource(name = "CMBCAnalyzer")
-	private BankMailAnalyzer CMBCAnalyzer;
-	@Autowired
-	private MongoDownloadUtil downloadUtil;
+    @Resource(name = "CMBCAnalyzer")
+    private BankMailAnalyzer CMBCAnalyzer;
+    @Autowired
+    private MongoDownloadUtil downloadUtil;
 
-	@Test
-	public void test() {
-		String content = "";
-		try {
-			content = downloadUtil.getFile("INBOX|1tbiThWLWFhgzTOQiAAAsW");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		content = TextExtractUtil.parseHtml(content, "font");
-		System.out.println(content);
-		AnalyzeParamsModel amp = new AnalyzeParamsModel();
-		amp.setContent(content);
-		amp.setBankCode("CMBC");
-		amp.setEmail("czb18518679659@126.com");
-		CMBCAnalyzer.analyze(amp);
+    @Test
+    public void test() {
+        String content = "";
+        try {
+            content = downloadUtil.getFile("INBOX|1tbiThWLWFhgzTOQiAAAsW");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        content = TextExtractUtil.parseHtml(content, "font");
+        System.out.println(content);
+        AnalyzeParamsModel amp = new AnalyzeParamsModel();
+        amp.setContent(content);
+        amp.setBankCode("CMBC");
+        amp.setBankId("1");
+        amp.setEmail("czb18518679659@126.com");
+        CMBCAnalyzer.analyze(amp);
 
-	}
+    }
 
 }
