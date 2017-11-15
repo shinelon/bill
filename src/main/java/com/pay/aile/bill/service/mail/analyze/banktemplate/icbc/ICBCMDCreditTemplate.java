@@ -61,7 +61,11 @@ public class ICBCMDCreditTemplate extends AbstractICBCTemplate {
         if (StringUtils.hasText(rules.getBillDay())) {
             String billDay = getValueByPattern("billDay", content, rules.getBillDay(), apm, "");
             billDay = PatternMatcherUtil.getMatcherString("\\d{4}年\\d{2}月\\d{2}日", billDay);
-            card.setBillDay(billDay);
+            if (StringUtils.hasText(billDay)) {
+                billDay = billDay.replaceAll("年", "").replaceAll("月", "").replaceAll("日", "").replaceAll("\\s+", "");
+                billDay = billDay.substring(billDay.length() - 2);
+                card.setBillDay(billDay);
+            }
         }
     }
 

@@ -118,7 +118,11 @@ public abstract class BaseBankTemplate
     protected void analyzeBillDate(CreditCard card, String content, AnalyzeParamsModel apm) {
         if (StringUtils.hasText(rules.getBillDay())) {
             String billDay = getValueByPattern("billDay", content, rules.getBillDay(), apm, " ");
-            card.setBillDay(billDay);
+            if (StringUtils.hasText(billDay)) {
+                billDay = billDay.replaceAll("年", "").replaceAll("月", "").replaceAll("日", "").replaceAll("\\s+", "");
+                billDay = billDay.substring(billDay.length() - 2);
+                card.setBillDay(billDay);
+            }
         }
     }
 
