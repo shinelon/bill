@@ -77,7 +77,8 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate> imple
             }
             if (!apm.success()) {
                 analyzeErrors.forEach(ee -> {
-                    logger.error("解析错误:" + ee.getMessage(), ee);
+                    logger.error("解析错误,bankCode={},email={},msg={}", apm.getBankCode(), apm.getEmail(), ee.getMessage(),
+                            ee);
                 });
                 throw new AnalyzeBillException(
                         String.format("解析错误,bankCode=%s,email=%s", apm.getBankCode(), apm.getEmail()));
