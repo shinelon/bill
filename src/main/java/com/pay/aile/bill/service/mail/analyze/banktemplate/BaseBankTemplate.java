@@ -345,6 +345,12 @@ public abstract class BaseBankTemplate
         if (!StringUtils.hasText(card.getNumbers())) {
             throw new AnalyzeBillException("无法获取卡号");
         }
+        CreditBill bill = apm.getResult().getBill();
+        if (bill.getDueDate() == null && bill.getCurrentAmount() == null) {
+            apm.setResult(null);
+            throw new AnalyzeBillException("应还款日期和应还款额都为空!");
+        }
+
     }
 
     protected String getValueByPattern(String key, String content, String ruleValue, AnalyzeParamsModel apm,

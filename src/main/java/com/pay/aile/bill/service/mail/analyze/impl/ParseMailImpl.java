@@ -78,32 +78,6 @@ public class ParseMailImpl implements IParseMail {
         Long id = creditFile.getId();
         try {
             try {
-
-                // String fileName = creditFile.getFileName();
-                // String email = creditFile.getEmail();
-                // Long emailId = creditFile.getEmailId();
-                // Date sentDate = creditFile.getSentDate();// 邮件日期
-                // String subject = creditFile.getSubject();// 邮件主题
-                // String bankCode = getBankCode(subject);
-                // String type = creditFile.getMailType();
-                // MailContentExtractor extractor = null;
-                // for (MailContentExtractor mailContentExtractor : extractors)
-                // {
-                // if (mailContentExtractor.support(type)) {
-                // extractor = mailContentExtractor;
-                // break;
-                // }
-                // }
-                // if (extractor == null) {
-                // throw new RuntimeException("no extractors found");
-                // }
-                // // 获取邮件内容，并做处理，默认是去除td里面的空格
-                // String content = getFileContent(creditFile, extractor);
-                // if (!StringUtils.hasText(content)) {
-                // logger.error("extract error");
-                // }
-                // 获取解析器
-
                 AnalyzeParamsModel apm = setModel(creditFile);
                 BankMailAnalyzer parser = null;
                 for (BankMailAnalyzer p : parsers) {
@@ -116,7 +90,6 @@ public class ParseMailImpl implements IParseMail {
                     throw new RuntimeException(
                             String.format("no parsers found,bankCode=%s,email=%s", apm.getBankCode(), apm.getEmail()));
                 }
-
                 parser.analyze(apm);
             } catch (Exception e) {
                 // TODO 解析错误,发送信息告知
