@@ -35,10 +35,11 @@ public class CMBCTemplate extends AbstractCMBCTemplate {
         if (rules == null) {
             rules = new CreditTemplate();
             rules.setCardtypeId(17L);
-            rules.setBillingDate("StatementDate \\d{4}/\\d{2}/\\d{2}"); // 账单日
+            rules.setCardholder("尊敬的[\\u4e00-\\u9fa5]+");
+            rules.setBillDay("StatementDate \\d{4}/\\d{2}/\\d{2}"); // 账单日
             rules.setDueDate("PaymentDueDate \\d{4}/\\d{2}/\\d{2}");
             rules.setCurrentAmount("NewBalance \\d+.?\\d*");
-            rules.setMinimum("Min.Payment: [\\u4e00-\\u9fa5][\\u4e00-\\u9fa5][\\u4e00-\\u9fa5] \\d+.?\\d*");
+            rules.setMinimum("Min.Payment: [\\u4e00-\\u9fa5]+ \\d+.?\\d*");
             rules.setCardNumbers("\\d+.?\\d* \\d{4}");
             rules.setDetails("\\d{2}/\\d{2} \\d{2}/\\d{2} \\S+ \\d+.?\\d* \\d{4}");
         }
