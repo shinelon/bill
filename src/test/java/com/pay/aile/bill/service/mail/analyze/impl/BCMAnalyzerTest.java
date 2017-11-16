@@ -33,7 +33,8 @@ public class BCMAnalyzerTest {
     public void test() throws AnalyzeBillException {
         String content = "";
         try {
-            content = downloadUtil.getFile("交通银行信用卡电子账单");
+            // content = downloadUtil.getFile("交通银行信用卡电子账单");
+            content = downloadUtil.getFile("0bd7ced8-0466-4469-8d5b-17503a5e2d40");
         } catch (MailBillException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

@@ -1,5 +1,6 @@
 package com.pay.aile.bill.mail;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,7 +34,7 @@ public class DownloadMailTest {
     }
 
     // 开启POP3授权码
-    // @Test
+    @Test
     public void testMail126() {
         try {
             downloadMail.execute("czb18518679659@126.com", "12345qwerty");

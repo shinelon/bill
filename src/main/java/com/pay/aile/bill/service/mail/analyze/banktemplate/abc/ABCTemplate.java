@@ -30,6 +30,7 @@ public class ABCTemplate extends AbstractABCTemplate {
             rules.setCredits(
                     "CreditLimit [\\u4e00-\\u9fa5]+\\([a-zA-Z]+\\) -?\\d+\\.?\\d* -?\\d+\\.?\\d* \\d+\\.?\\d*");
             rules.setDetails("\\d{8} \\d{8} \\d{4} \\S+ \\S+ \\d+\\.?\\d*/[a-zA-Z]+ -?\\d+\\.?\\d*/[a-zA-Z]+");
+            rules.setIntegral("PointsRemaining \\d+ \\d+ \\d+");
             rules.setTransactionDate("0");
             rules.setBillingDate("1");
             rules.setCardNumbers("2");

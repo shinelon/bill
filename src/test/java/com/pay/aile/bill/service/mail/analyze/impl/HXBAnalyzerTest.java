@@ -34,7 +34,8 @@ public class HXBAnalyzerTest {
     public void test() throws AnalyzeBillException {
         String content = "";
         try {
-            content = downloadUtil.getFile("Inbox|231");
+            // content = downloadUtil.getFile("Inbox|231");
+            content = downloadUtil.getFile("INBOX|1tbi0A6RWFUJZO8elwAAsJ");
         } catch (MailBillException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -52,6 +53,7 @@ public class HXBAnalyzerTest {
         System.out.println(content);
         AnalyzeParamsModel amp = new AnalyzeParamsModel();
         amp.setContent(content);
+        amp.setOriginContent(content);
         amp.setBankCode("HXB");
         amp.setCardtypeId(2l);
 

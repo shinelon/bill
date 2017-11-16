@@ -38,6 +38,7 @@ public class PSBCAnalyzerTest {
         System.out.println(content);
         AnalyzeParamsModel amp = new AnalyzeParamsModel();
         amp.setContent(content);
+        amp.setOriginContent(content);
         amp.setBankCode("PSBC");
         amp.setBankId("2");
         amp.setEmail("czb18518679659@126.com");

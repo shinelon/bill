@@ -13,6 +13,7 @@ import com.pay.aile.bill.exception.MailBillException;
 import com.pay.aile.bill.service.mail.analyze.BankMailAnalyzer;
 import com.pay.aile.bill.service.mail.analyze.exception.AnalyzeBillException;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
+import com.pay.aile.bill.service.mail.analyze.util.TextExtractUtil;
 import com.pay.aile.bill.utils.MongoDownloadUtil;
 
 @RunWith(SpringRunner.class)
@@ -28,11 +29,14 @@ public class CITICAnalyzerTest {
     public void test() throws AnalyzeBillException {
         String content = "";
         try {
-            content = downloadUtil.getFile("INBOX|7103a0149e25d0f600000001");
+            // content = downloadUtil.getFile("INBOX|7103a0149e25d0f600000001");
+            content = downloadUtil.getFile("3a4bc22e-be1d-4e9b-a3ca-17133b9c5a71");
         } catch (MailBillException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        content = TextExtractUtil.parseHtml(content, "td");
+        System.out.println(content);
         AnalyzeParamsModel amp = new AnalyzeParamsModel();
         amp.setOriginContent(content);
         amp.setBankCode("CITIC");

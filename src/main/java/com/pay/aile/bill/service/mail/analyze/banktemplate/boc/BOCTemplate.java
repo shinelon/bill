@@ -26,6 +26,14 @@ public class BOCTemplate extends AbstractBOCTemplate {
     Logger logger = LoggerFactory.getLogger(BOCTemplate.class);
 
     @Override
+    protected void initContext(AnalyzeParamsModel apm) {
+
+        apm.setContent(parseHtml(apm.getOriginContent()));
+
+        // extractor.extract(apm.getContent(), "td");
+    };
+
+    @Override
     public void initRules() {
         if (rules == null) {
             rules = new CreditTemplate();
@@ -34,11 +42,12 @@ public class BOCTemplate extends AbstractBOCTemplate {
             rules.setMinimum("外币FCY \\S+ \\d+.?\\d* \\d+.?\\d*");
             rules.setCardNumbers("\\d{4}-\\d{2}-\\d{2} \\d{4}-\\d{2}-\\d{2} \\d{4}");
             rules.setCurrentAmount("Due \\d{4}-\\d{2}-\\d{2} \\d{4}-\\d{2}-\\d{2} \\d+.?\\d*");
+            rules.setIntegral("积分余额总计:\\d+");
             // rules.setDetails("\\d{4}-\\d{2}-\\d{2} \\d{4}-\\d{2}-\\d{2}
             // \\d{4} \\S+ \\d+.?\\d*");
             rules.setDetails("\\d{4}-\\d{2}-\\d{2} \\d{4}-\\d{2}-\\d{2} \\d{4} \\S+ -?\\d+.?\\d*");
         }
-    };
+    }
 
     private String parseHtml(String html) {
         html = html.replaceAll("&nbsp;", ""); // remove &nbsp;
@@ -104,14 +113,6 @@ public class BOCTemplate extends AbstractBOCTemplate {
         html = html.replaceAll(" {2,}", " ");// 去掉多余空格，只留一个
         // logger.info(html);
         return html;
-    }
-
-    @Override
-    protected void initContext(AnalyzeParamsModel apm) {
-
-        apm.setContent(parseHtml(apm.getOriginContent()));
-
-        // extractor.extract(apm.getContent(), "td");
     };
 
     @Override

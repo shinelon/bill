@@ -24,6 +24,17 @@ public class BCMTemplate extends AbstractBCMTemplate {
     CreditTemplateMapper creditTemplateMapper;
 
     @Override
+    protected void analyzeCycle(CreditBill bill, String content, AnalyzeParamsModel apm) {
+        if (StringUtils.hasText(rules.getCycle())) {
+
+            String cycle = getValueByPattern("cycle", content, rules.getCycle(), apm, "：");
+            String[] sa = cycle.split("-");
+            bill.setBeginDate(DateUtil.parseDate(sa[0]));
+            bill.setEndDate(DateUtil.parseDate(sa[1]));
+        }
+    }
+
+    @Override
     public void initRules() {
         super.initRules();
         if (rules == null) {
@@ -37,22 +48,12 @@ public class BCMTemplate extends AbstractBCMTemplate {
             rules.setMinimum("最低还款额 \\d+\\.?\\d*");
             rules.setCredits("信用额度 \\d+.?\\d*");
             rules.setCash("取现额度 \\d+\\.?\\d*");
+            rules.setIntegral("人民币账户 \\d+");
             rules.setDetails(
                     "\\d{4}/\\d{2}/\\d{2} \\d{4}/\\d{2}/\\d{2} \\S+ [a-zA-Z]{3}\\d+\\.?\\d* [a-zA-Z]{3}\\d+\\.?\\d*");
             rules.setTransactionDate("0");
             rules.setBillingDate("1");
             rules.setTransactionDescription("2");
-        }
-    }
-
-    @Override
-    protected void analyzeCycle(CreditBill bill, String content, AnalyzeParamsModel apm) {
-        if (StringUtils.hasText(rules.getCycle())) {
-
-            String cycle = getValueByPattern("cycle", content, rules.getCycle(), apm, "：");
-            String[] sa = cycle.split("-");
-            bill.setBeginDate(DateUtil.parseDate(sa[0]));
-            bill.setEndDate(DateUtil.parseDate(sa[1]));
         }
     }
 

@@ -24,6 +24,7 @@ public class CZBTemplate extends AbstractCZBTemplate {
             rules.setCurrentAmount("循环利息Interest \\d+\\.?\\d*");
             rules.setCredits("PaymentDueDate \\d+\\.?\\d*");
             rules.setDetails("\\d{8} \\d{8} \\S+ -?\\d+\\.?\\d* \\d{4}");
+            rules.setIntegral("Interestthismonth \\d+");
             rules.setTransactionDate("0");
             rules.setBillingDate("1");
             rules.setTransactionDescription("2");

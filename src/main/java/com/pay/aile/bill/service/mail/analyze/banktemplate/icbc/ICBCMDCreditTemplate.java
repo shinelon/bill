@@ -23,40 +23,6 @@ import com.pay.aile.bill.service.mail.analyze.util.PatternMatcherUtil;
 public class ICBCMDCreditTemplate extends AbstractICBCTemplate {
 
     @Override
-    public void initRules() {
-        super.initRules();
-        if (rules == null) {
-            rules = new CreditTemplate();
-            rules.setCardtypeId(14L);
-            rules.setBillDay("对账单生成日\\d{4}年\\d{2}月\\d{2}日");
-            rules.setCardholder("尊敬的[\\u4e00-\\u9fa5]+");
-            rules.setCycle("账单周期\\d{4}年\\d{2}月\\d{2}日—\\d{4}年\\d{2}月\\d{2}日");
-            rules.setDueDate("贷记卡到期还款日 \\d{4}年\\d{1,2}月\\d{1,2}日");
-            rules.setCurrentAmount(
-                    "合计 -?\\d+\\.?\\d*/[a-z-A-Z]+ -?\\d+\\.?\\d*/[a-z-A-Z]+ -?\\d+\\.?\\d*/[a-z-A-Z]+ -?\\d+\\.?\\d*/[a-z-A-Z]+");
-            rules.setMinimum("合计 [\\u4e00-\\u9fa5]+ -?\\d+\\.?\\d*/[a-z-A-Z]+ -?\\d+\\.?\\d*/[a-z-A-Z]+");
-            rules.setCredits(
-                    "信用额度 \\d{4}\\(\\S+\\) [\\u4e00-\\u9fa5]+ (\\d+\\.?\\d*/[a-z-A-Z]+ ){2} \\d+\\.?\\d*/[a-z-A-Z]+");
-            rules.setDetails(
-                    "\\d{4} \\d{4}-\\d{2}-\\d{2} \\d{4}-\\d{2}-\\d{2} \\S+ \\S+ \\d+\\.?\\d*/[a-zA-Z]+ \\d+\\.?\\d*/[a-zA-Z]+\\([\\u4e00-\\u9fa5]+\\)");
-            rules.setCardNumbers("0");
-            rules.setTransactionDate("1");
-            rules.setBillingDate("2");
-            rules.setTransactionDescription("4");
-        }
-    }
-
-    private List<String> getValueListByPattern(String content, String ruleValue) {
-
-        if (StringUtils.hasText(ruleValue)) {
-
-            List<String> list = PatternMatcherUtil.getMatcher(ruleValue, content);
-            return list;
-        }
-        return null;
-    }
-
-    @Override
     protected void analyzeBillDate(CreditCard card, String content, AnalyzeParamsModel apm) {
         if (StringUtils.hasText(rules.getBillDay())) {
             String billDay = getValueByPattern("billDay", content, rules.getBillDay(), apm, "");
@@ -116,6 +82,41 @@ public class ICBCMDCreditTemplate extends AbstractICBCTemplate {
             List<String> list = PatternMatcherUtil.getMatcher("\\d{4}年\\d{2}月\\d{2}日", cycle);
             bill.setBeginDate(DateUtil.parseDate(list.get(0)));
             bill.setEndDate(DateUtil.parseDate(list.get(1)));
+        }
+    }
+
+    private List<String> getValueListByPattern(String content, String ruleValue) {
+
+        if (StringUtils.hasText(ruleValue)) {
+
+            List<String> list = PatternMatcherUtil.getMatcher(ruleValue, content);
+            return list;
+        }
+        return null;
+    }
+
+    @Override
+    public void initRules() {
+        super.initRules();
+        if (rules == null) {
+            rules = new CreditTemplate();
+            rules.setCardtypeId(14L);
+            rules.setBillDay("对账单生成日\\d{4}年\\d{2}月\\d{2}日");
+            rules.setCardholder("尊敬的[\\u4e00-\\u9fa5]+");
+            rules.setCycle("账单周期\\d{4}年\\d{2}月\\d{2}日—\\d{4}年\\d{2}月\\d{2}日");
+            rules.setDueDate("贷记卡到期还款日 \\d{4}年\\d{1,2}月\\d{1,2}日");
+            rules.setCurrentAmount(
+                    "合计 -?\\d+\\.?\\d*/[a-z-A-Z]+ -?\\d+\\.?\\d*/[a-z-A-Z]+ -?\\d+\\.?\\d*/[a-z-A-Z]+ -?\\d+\\.?\\d*/[a-z-A-Z]+");
+            rules.setMinimum("合计 [\\u4e00-\\u9fa5]+ -?\\d+\\.?\\d*/[a-z-A-Z]+ -?\\d+\\.?\\d*/[a-z-A-Z]+");
+            rules.setCredits(
+                    "信用额度 \\d{4}\\(\\S+\\) [\\u4e00-\\u9fa5]+ (\\d+\\.?\\d*/[a-z-A-Z]+ ){2} \\d+\\.?\\d*/[a-z-A-Z]+");
+            rules.setDetails(
+                    "\\d{4} \\d{4}-\\d{2}-\\d{2} \\d{4}-\\d{2}-\\d{2} \\S+ \\S+ \\d+\\.?\\d*/[a-zA-Z]+ \\d+\\.?\\d*/[a-zA-Z]+\\([\\u4e00-\\u9fa5]+\\)");
+            rules.setIntegral("个人综合积分 余额 \\d+");
+            rules.setCardNumbers("0");
+            rules.setTransactionDate("1");
+            rules.setBillingDate("2");
+            rules.setTransactionDescription("4");
         }
     }
 

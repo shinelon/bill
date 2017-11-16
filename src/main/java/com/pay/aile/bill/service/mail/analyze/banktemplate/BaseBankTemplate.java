@@ -71,6 +71,15 @@ public abstract class BaseBankTemplate
      */
     protected CreditTemplate rules;
 
+    /**
+     *
+     * @param apm
+     * @throws AnalyzeBillException
+     */
+    protected void afterAnalyze(AnalyzeParamsModel apm) throws AnalyzeBillException {
+        checkCardAndBill(apm);
+    }
+
     @Override
     public void afterPropertiesSet() throws Exception {
         setCardType();
@@ -88,31 +97,6 @@ public abstract class BaseBankTemplate
         beforeAnalyze(apm);
         analyzeInternal(apm);
         afterAnalyze(apm);
-    }
-
-    /**
-     * 用于不同卡种之间的排序,调用次数高的排位靠前
-     */
-    @Override
-    public int compareTo(BaseBankTemplate o) {
-        if (o == null) {
-            return 1;
-        }
-        return count > o.count ? 1 : -1;
-    }
-
-    @Override
-    public void handleResult(AnalyzeParamsModel apm) {
-        handleResultInternal(apm);
-    }
-
-    /**
-     *
-     * @param apm
-     * @throws AnalyzeBillException
-     */
-    protected void afterAnalyze(AnalyzeParamsModel apm) throws AnalyzeBillException {
-        checkCardAndBill(apm);
     }
 
     protected void analyzeBillDate(CreditCard card, String content, AnalyzeParamsModel apm) {
@@ -255,6 +239,21 @@ public abstract class BaseBankTemplate
         }
     }
 
+    /**
+     * @Description: 积分余额
+     * @param card
+     * @param content
+     * @param apm
+     */
+    protected void analyzeIntegral(CreditCard card, String content, AnalyzeParamsModel apm) {
+        if (StringUtils.hasText(rules.getIntegral())) {
+            String integral = getValueByPattern("integral", content, rules.getIntegral(), apm, " ");
+            if (StringUtils.hasText(integral)) {
+                card.setIntegral(new BigDecimal(integral));
+            }
+        }
+    }
+
     protected void analyzeInternal(AnalyzeParamsModel apm) throws AnalyzeBillException {
         logger.info("账单内容：{}", apm.toString());
         String content = apm.getContent();
@@ -289,6 +288,8 @@ public abstract class BaseBankTemplate
         analyzeCash(bill, content, apm);
         // 卡号
         analyzeCardNo(card, content, apm);
+        // 积分余额
+        analyzeIntegral(card, content, apm);
 
         analyzeDetails(detail, content, apm, card);
         // 设置卡片
@@ -314,7 +315,7 @@ public abstract class BaseBankTemplate
         if (StringUtils.hasText(rules.getYearMonth())) {
 
             String yearMonth = getValueByPattern("yearMonth", content, rules.getYearMonth(), apm, "");
-            yearMonth.replaceAll("年|月|-|/", "");
+            yearMonth = yearMonth.replaceAll("年|月|-|/", "");
             yearMonth = PatternMatcherUtil.getMatcherString("\\d{6}", yearMonth);
             if (StringUtils.hasText(yearMonth)) {
                 String year = yearMonth.substring(0, 4);
@@ -347,6 +348,17 @@ public abstract class BaseBankTemplate
         }
     }
 
+    /**
+     * 用于不同卡种之间的排序,调用次数高的排位靠前
+     */
+    @Override
+    public int compareTo(BaseBankTemplate o) {
+        if (o == null) {
+            return 1;
+        }
+        return count > o.count ? 1 : -1;
+    }
+
     protected String getValueByPattern(String key, String content, String ruleValue, AnalyzeParamsModel apm,
             String splitSign) {
 
@@ -374,6 +386,11 @@ public abstract class BaseBankTemplate
         apm.setResult(null);
         throw new RuntimeException(String.format("未找到匹配值,bank=%s,cardType=%s,key=%s,reg=%s",
                 cardType.getBankCode().getBankCode(), cardType.getCardCode(), key, reg));
+    }
+
+    @Override
+    public void handleResult(AnalyzeParamsModel apm) {
+        handleResultInternal(apm);
     }
 
     @Transactional

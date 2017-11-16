@@ -25,6 +25,7 @@ public class PSBCTemplate extends AbstractPSBCTemplate {
         if (rules == null) {
             rules = new CreditTemplate();
             rules.setCardtypeId(16L);
+            rules.setYearMonth("中国邮政储蓄银行信用卡对账单 \\(\\d{4}年\\d{2}月");
             rules.setCardholder("尊敬的[\\u4e00-\\u9fa5]+");
             rules.setBillDay("账单日 \\d{2}");
             rules.setDueDate("到期还款日 \\d{4}年\\d{2}月\\d{2}日");
@@ -34,6 +35,7 @@ public class PSBCTemplate extends AbstractPSBCTemplate {
             rules.setCardNumbers("\\d+.?\\d* \\d{4}");
             rules.setMinimum("最低还款额 \\d+.?\\d*");
             rules.setDetails("\\d{4}/\\d{2}/\\d{2} \\d{4}/\\d{2}/\\d{2} \\S+ \\d+.?\\d* \\d{4}");
+            rules.setIntegral("本期积分余额 \\d+");
         }
     }
 

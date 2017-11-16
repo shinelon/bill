@@ -25,7 +25,7 @@ public class ParseMailImplTest {
 
     @Test
     public void parseFile() {
-        CreditFile creditFile = creditFileService.findById(26L);
+        CreditFile creditFile = creditFileService.findById(35L);
         CreditFileModel creditFileModel = new CreditFileModel();
         BeanUtils.copyProperties(creditFile, creditFileModel);
         parseMail.executeParseFile(creditFileModel);

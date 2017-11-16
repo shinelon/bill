@@ -13,12 +13,13 @@
 		<result column="numbers" property="numbers" />
 		<result column="prepaidCashAmount" property="prepaid_cash_amount" />
 		<result column="cardholder" property="cardholder" />
+		<result column="integral" property="integral" />
         
 	</resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, bank_id AS bankId, bill_day AS billDay, credits, cash, name , numbers, prepaid_cash_amount as prepaidCashAmount,cardholder
+        id, bank_id AS bankId, bill_day AS billDay, credits, cash, name , numbers, prepaid_cash_amount as prepaidCashAmount,cardholder,integral
     </sql>
    
 </mapper>
