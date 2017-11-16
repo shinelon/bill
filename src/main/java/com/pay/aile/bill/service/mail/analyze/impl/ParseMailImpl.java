@@ -1,5 +1,6 @@
 package com.pay.aile.bill.service.mail.analyze.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -11,15 +12,19 @@ import org.springframework.stereotype.Service;
 
 import com.pay.aile.bill.entity.CreditEmail;
 import com.pay.aile.bill.entity.EmailFile;
+import com.pay.aile.bill.entity.SendMail;
 import com.pay.aile.bill.exception.MailBillException;
 import com.pay.aile.bill.service.CreditFileService;
 import com.pay.aile.bill.service.mail.analyze.BankMailAnalyzer;
 import com.pay.aile.bill.service.mail.analyze.IParseMail;
 import com.pay.aile.bill.service.mail.analyze.MailContentExtractor;
 import com.pay.aile.bill.service.mail.analyze.config.TemplateCache;
+import com.pay.aile.bill.service.mail.analyze.constant.Constant;
 import com.pay.aile.bill.service.mail.analyze.enums.BankCodeEnum;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
 import com.pay.aile.bill.service.mail.analyze.model.CreditFileModel;
+import com.pay.aile.bill.service.mail.analyze.util.JedisClusterUtils;
+import com.pay.aile.bill.utils.MailSendUtil;
 import com.pay.aile.bill.utils.MongoDownloadUtil;
 
 /**
@@ -37,6 +42,8 @@ public class ParseMailImpl implements IParseMail {
     @Autowired
     private MongoDownloadUtil mongoDownloadUtil;
 
+    @Autowired
+    private MailSendUtil mailSendUtil;
     /**
      * 提取后的邮件内容解析
      */
@@ -95,6 +102,7 @@ public class ParseMailImpl implements IParseMail {
                 // TODO 解析错误,发送信息告知
                 error = e;
                 logger.error(e.getMessage(), e);
+                // sendMail();
             }
             if (error == null) {
                 // 更新解析状态
@@ -123,6 +131,14 @@ public class ParseMailImpl implements IParseMail {
         });
     }
 
+    private String getBankCode(String subject) {
+        BankCodeEnum bank = BankCodeEnum.getByString(subject);
+        if (bank == null) {
+            throw new RuntimeException("未查到银行,name=" + subject);
+        }
+        return bank.getBankCode();
+    }
+
     public String getFileContent(CreditFileModel creditFile, MailContentExtractor extractor) throws MailBillException {
 
         // 从mongodb中获取邮件内容
@@ -131,6 +147,27 @@ public class ParseMailImpl implements IParseMail {
         content = extractor.extract(content); // 解析文件
 
         return content;
+    }
+
+    /**
+     * 邮件解析异常,发送邮件报警
+     *
+     * @param content
+     *            邮件内容
+     */
+    private void sendMail(String content) {
+        try {
+            List<SendMail> sendMails = JedisClusterUtils.hashGet(Constant.redisSendMail, "SendMail", ArrayList.class);
+            if (sendMails != null) {
+                for (SendMail sendMail : sendMails) {
+
+                    mailSendUtil.sendUtil(content, "邮件解析异常", sendMail.getRecipients(), sendMail.getAddresser(),
+                            sendMail.getPasword(), sendMail.getHost(), sendMail.getPort());
+                }
+            }
+        } catch (Exception e) {
+            logger.error("邮件发送失败:{}", e.getMessage());
+        }
     }
 
     /**
@@ -154,14 +191,6 @@ public class ParseMailImpl implements IParseMail {
             e.printStackTrace();
         }
 
-    }
-
-    private String getBankCode(String subject) {
-        BankCodeEnum bank = BankCodeEnum.getByString(subject);
-        if (bank == null) {
-            throw new RuntimeException("未查到银行,name=" + subject);
-        }
-        return bank.getBankCode();
     }
 
     private AnalyzeParamsModel setModel(CreditFileModel creditFile) {

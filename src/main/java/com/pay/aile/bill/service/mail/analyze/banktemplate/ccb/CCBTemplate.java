@@ -12,11 +12,34 @@ import com.pay.aile.bill.service.mail.analyze.enums.CardTypeEnum;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
 import com.pay.aile.bill.service.mail.analyze.util.DateUtil;
 import com.pay.aile.bill.service.mail.analyze.util.PatternMatcherUtil;
+
+/**
+ *
+ * @author Charlie
+ * @description 建设银行解析模板
+ */
 @Service
 public class CCBTemplate extends AbstractCCBTemplate {
 
     @Autowired
     CreditTemplateMapper creditTemplateMapper;
+
+    @Override
+    protected void analyzeCycle(CreditBill bill, String content, AnalyzeParamsModel apm) {
+        if (StringUtils.hasText(rules.getCycle())) {
+            String cycle = getValueByPattern("cycle", content, rules.getCycle(), apm, "：");
+            String[] sa = cycle.split("-");
+            bill.setBeginDate(DateUtil.parseDate(sa[0]));
+            bill.setEndDate(DateUtil.parseDate(sa[1]));
+        }
+    }
+
+    @Override
+    protected void initContext(AnalyzeParamsModel apm) {
+        String content = extractor.extract(apm.getOriginContent(), "font");
+        apm.setContent(content);
+
+    }
 
     @Override
     public void initRules() {
@@ -42,23 +65,6 @@ public class CCBTemplate extends AbstractCCBTemplate {
             rules.setTransactionAmount("5");
             rules.setAccountableAmount("7");
         }
-    }
-
-    @Override
-    protected void analyzeCycle(CreditBill bill, String content, AnalyzeParamsModel apm) {
-        if (StringUtils.hasText(rules.getCycle())) {
-            String cycle = getValueByPattern("cycle", content, rules.getCycle(), apm, "：");
-            String[] sa = cycle.split("-");
-            bill.setBeginDate(DateUtil.parseDate(sa[0]));
-            bill.setEndDate(DateUtil.parseDate(sa[1]));
-        }
-    }
-
-    @Override
-    protected void initContext(AnalyzeParamsModel apm) {
-        String content = extractor.extract(apm.getOriginContent(), "font");
-        apm.setContent(content);
-
     }
 
     @Override

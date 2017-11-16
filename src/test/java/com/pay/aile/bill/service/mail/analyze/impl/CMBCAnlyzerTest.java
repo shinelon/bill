@@ -13,6 +13,7 @@ import com.pay.aile.bill.service.mail.analyze.BankMailAnalyzer;
 import com.pay.aile.bill.service.mail.analyze.exception.AnalyzeBillException;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
 import com.pay.aile.bill.service.mail.analyze.util.TextExtractUtil;
+import com.pay.aile.bill.utils.MailSendUtil;
 import com.pay.aile.bill.utils.MongoDownloadUtil;
 
 /**
@@ -28,6 +29,8 @@ public class CMBCAnlyzerTest {
     private BankMailAnalyzer CMBCAnalyzer;
     @Autowired
     private MongoDownloadUtil downloadUtil;
+    @Autowired
+    private MailSendUtil mailSendUtil;
 
     @Test
     public void test() throws AnalyzeBillException {
@@ -37,10 +40,13 @@ public class CMBCAnlyzerTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        // mailSendUtil.sendUtil(content, "邮件解析异常", "czb18518679659@126.com");
+
         content = TextExtractUtil.parseHtml(content, "font");
         System.out.println(content);
         AnalyzeParamsModel amp = new AnalyzeParamsModel();
         amp.setContent(content);
+        amp.setOriginContent(content);
         amp.setBankCode("CMBC");
         amp.setBankId("1");
         amp.setEmail("czb18518679659@126.com");

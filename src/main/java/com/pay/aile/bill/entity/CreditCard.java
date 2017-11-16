@@ -79,6 +79,11 @@ public class CreditCard extends Model<CreditCard> {
     @TableField(value = "update_date", fill = FieldFill.UPDATE)
     private Date updateDate;
 
+    /**
+     * 累计积分余额
+     */
+    private BigDecimal integral;
+
     public Long getBankId() {
         return bankId;
     }
@@ -107,6 +112,10 @@ public class CreditCard extends Model<CreditCard> {
         return id;
     }
 
+    public BigDecimal getIntegral() {
+        return integral;
+    }
+
     public String getName() {
         return name;
     }
@@ -125,6 +134,12 @@ public class CreditCard extends Model<CreditCard> {
 
     public Date getUpdateDate() {
         return updateDate;
+    }
+
+    @Override
+    protected Serializable pkVal() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     public void setBankId(Long bankId) {
@@ -155,6 +170,10 @@ public class CreditCard extends Model<CreditCard> {
         this.id = id;
     }
 
+    public void setIntegral(BigDecimal integral) {
+        this.integral = integral;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -176,9 +195,11 @@ public class CreditCard extends Model<CreditCard> {
     }
 
     @Override
-    protected Serializable pkVal() {
-        // TODO Auto-generated method stub
-        return null;
+    public String toString() {
+        return "CreditCard [bankId=" + bankId + ", billDay=" + billDay + ", cardholder=" + cardholder + ", cash=" + cash
+                + ", createDate=" + createDate + ", credits=" + credits + ", id=" + id + ", name=" + name + ", numbers="
+                + numbers + ", prepaidCashAmount=" + prepaidCashAmount + ", status=" + status + ", updateDate="
+                + updateDate + ", integral=" + integral + "]";
     }
 
 }

@@ -14,6 +14,7 @@ import com.pay.aile.bill.mapper.CreditTemplateMapper;
 import com.pay.aile.bill.service.mail.analyze.BankMailAnalyzer;
 import com.pay.aile.bill.service.mail.analyze.exception.AnalyzeBillException;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
+import com.pay.aile.bill.service.mail.analyze.util.TextExtractUtil;
 import com.pay.aile.bill.utils.MongoDownloadUtil;
 
 @RunWith(SpringRunner.class)
@@ -32,12 +33,14 @@ public class CZBAnalyzerTest {
     public void test() throws AnalyzeBillException {
         String content = "";
         try {
-            content = downloadUtil.getFile("浙商银行信用卡电子账单");
+            // content = downloadUtil.getFile("浙商银行信用卡电子账单");
+            content = downloadUtil.getFile("INBOX|1tbiFBiRWFhglgtDsAAAsT");
         } catch (MailBillException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
+        content = TextExtractUtil.parseHtml(content, "td");
+        System.out.println(content);
         AnalyzeParamsModel amp = new AnalyzeParamsModel();
         amp.setOriginContent(content);
         amp.setBankCode("CZB");

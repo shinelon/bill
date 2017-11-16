@@ -53,6 +53,7 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate> imple
                 template.analyze(apm);
             } catch (Exception e) {
                 logger.error("默认模板执行错误!" + e.getMessage(), e);
+
             }
         }
         if (!apm.success()) {
@@ -97,7 +98,6 @@ public abstract class AbstractBankMailAnalyzer<T extends BaseBankTemplate> imple
      */
     private T getTemplateFromCache(String email, String bankCode) {
         Object o = JedisClusterUtils.hashGet(Constant.redisTemplateCache + bankCode, email);
-
         if (o == null) {
             return null;
         } else {

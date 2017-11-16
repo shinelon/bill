@@ -13,6 +13,7 @@ import com.pay.aile.bill.exception.MailBillException;
 import com.pay.aile.bill.service.mail.analyze.BankMailAnalyzer;
 import com.pay.aile.bill.service.mail.analyze.exception.AnalyzeBillException;
 import com.pay.aile.bill.service.mail.analyze.model.AnalyzeParamsModel;
+import com.pay.aile.bill.service.mail.analyze.util.TextExtractUtil;
 import com.pay.aile.bill.utils.MongoDownloadUtil;
 
 @RunWith(SpringRunner.class)
@@ -29,10 +30,12 @@ public class CEBAnalyzerTest {
 
         String content = "";
         try {
-            content = downloadUtil.getFile("24232c86-f320-4565-a6f3-8dfd2eb70415");
+            content = downloadUtil.getFile("5a9dcbbd-7926-4167-b973-771439acf52b");
         } catch (MailBillException e) {
             e.printStackTrace();
         }
+        content = TextExtractUtil.parseHtml(content, "td");
+        System.out.println(content);
         AnalyzeParamsModel amp = new AnalyzeParamsModel();
         amp.setOriginContent(content);
         amp.setBankCode("CEB");

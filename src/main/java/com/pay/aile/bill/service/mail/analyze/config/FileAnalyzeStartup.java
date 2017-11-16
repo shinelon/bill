@@ -37,11 +37,10 @@ public class FileAnalyzeStartup implements ApplicationListener<ContextRefreshedE
                     .getBean(FileQueueRedisHandle.class);
             fileQueueRedisHandle.initFileList();
             ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1,
-                    new BasicThreadFactory.Builder().namingPattern("loop-file-pool-%d").daemon(true)
-                            .build());
+                    new BasicThreadFactory.Builder().namingPattern("loop-file-pool-%d").daemon(true).build());
 
             executorService.execute(() -> {
-                fileAnalyzeScheduler.analyzeLoop();
+                 fileAnalyzeScheduler.analyzeLoop();
             });
 
         }

@@ -28,6 +28,7 @@ public class PABTemplate extends AbstractPABTemplate {
             rules.setCredits("信用额度 \\d+\\.?\\d*");
             rules.setCash("取现额度 \\d+\\.?\\d*");
             rules.setDetails("\\d{4}-\\d{2}-\\d{2} \\d{4}-\\d{2}-\\d{2} \\S+ \\d+\\.?\\d*");
+            rules.setIntegral("查看积分详情 \\^|&\\S+ \\d+");
             rules.setTransactionDate("0");
             rules.setBillingDate("1");
             rules.setTransactionDescription("2");

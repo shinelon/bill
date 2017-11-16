@@ -27,13 +27,14 @@
 		<result column="minimum" property="minimum" />
 		<result column="year_month" property="yearMonth" />
 		<result column="card_numbers" property="cardNumbers" />
+		<result column="integral" property="integral" />
 
 		
 	</resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, due_date AS dueDate, current_amount AS currentAmount, credits, cash, last_amount AS lastAmount, repayment, consumption, transaction_date AS transactionDate, billing_date AS billingDate, transaction_description AS transactionDescription, transaction_amount AS transactionAmount, accountable_amount AS accountableAmount, prepaid_cash_amount AS prepaidCashAmount, details, cardtype_id AS cardtypeId,cycle,bill_day as billDay,transaction_currency AS transactionCurrency,cardholder,year_month as yearMonth,minimum,card_numbers AS cardNumbers
+        id, due_date AS dueDate, current_amount AS currentAmount, credits, cash, last_amount AS lastAmount, repayment, consumption, transaction_date AS transactionDate, billing_date AS billingDate, transaction_description AS transactionDescription, transaction_amount AS transactionAmount, accountable_amount AS accountableAmount, prepaid_cash_amount AS prepaidCashAmount, details, cardtype_id AS cardtypeId,cycle,bill_day as billDay,transaction_currency AS transactionCurrency,cardholder,year_month as yearMonth,minimum,card_numbers AS cardNumbers,integral
     </sql>
 
 </mapper>

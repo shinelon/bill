@@ -1,6 +1,5 @@
 package com.pay.aile.bill.job;
 
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,10 +29,10 @@ public class DownloadMailSchedulerTest {
         downloadMailScheduler.downLoadMail();
     }
 
-    @Test
-    public void testJobLoop() throws InterruptedException {
-        downloadMailScheduler.downLoadMailLoop();
-        Thread.sleep(100000);
-        // downloadMailScheduler.offJobLoop();
-    }
+    // @Test
+    // public void testJobLoop() throws InterruptedException {
+    // downloadMailScheduler.downLoadMailLoop();
+    // Thread.sleep(100000);
+    // // downloadMailScheduler.offJobLoop();
+    // }
 }

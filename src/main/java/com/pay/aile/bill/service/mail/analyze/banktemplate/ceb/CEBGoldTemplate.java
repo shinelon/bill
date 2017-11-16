@@ -19,6 +19,16 @@ import com.pay.aile.bill.service.mail.analyze.util.DateUtil;
 public class CEBGoldTemplate extends AbstractCEBTemplate {
 
     @Override
+    protected void analyzeCardholder(CreditCard card, String content, AnalyzeParamsModel apm) {
+        if (StringUtils.hasText(rules.getCardholder())) {
+            String cardholder = getValueByPattern("cardholder", content, rules.getCardholder(), apm, " ");
+            cardholder = cardholder.replaceAll("尊敬的", "").replaceAll("先生", "").replaceAll("女士", "").replaceAll("您好",
+                    "");
+            card.setCardholder(cardholder);
+        }
+    }
+
+    @Override
     public void initRules() {
         super.initRules();
         if (rules == null) {
@@ -39,16 +49,7 @@ public class CEBGoldTemplate extends AbstractCEBTemplate {
 
             rules.setDetails("\\d{4}/\\d{2}/\\d{2} \\d{4}/\\d{2}/\\d{2} \\d{4} \\S+ -?\\d+\\.?\\d*");
             rules.setCardNumbers("2");
-        }
-    }
-
-    @Override
-    protected void analyzeCardholder(CreditCard card, String content, AnalyzeParamsModel apm) {
-        if (StringUtils.hasText(rules.getCardholder())) {
-            String cardholder = getValueByPattern("cardholder", content, rules.getCardholder(), apm, " ");
-            cardholder = cardholder.replaceAll("尊敬的", "").replaceAll("先生", "").replaceAll("女士", "").replaceAll("您好",
-                    "");
-            card.setCardholder(cardholder);
+            rules.setIntegral("PointsexpiringonDecember31st \\d+");
         }
     }
 
