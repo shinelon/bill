@@ -18,7 +18,17 @@ public class Constant {
     public static final String pattern_amount = "-?\\d+\\.?\\d*";
 
     /**
-     * 发送邮件
+     * 发送邮件 hName
      */
     public static final String redisSendMail = "bill_bank_send_email";
+
+    /**
+     * 邮件发送信息redisKey
+     */
+    public static final String sendMailKey = "SendMail";
+    
+    /**
+     * 邮件解析异常邮件主题
+     */
+    public static final String parseMailErrorSubject = "邮件解析异常";
 }

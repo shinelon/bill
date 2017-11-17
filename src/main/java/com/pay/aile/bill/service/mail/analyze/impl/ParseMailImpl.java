@@ -1,6 +1,5 @@
 package com.pay.aile.bill.service.mail.analyze.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -9,7 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import com.alibaba.fastjson.JSON;
 import com.pay.aile.bill.entity.CreditEmail;
 import com.pay.aile.bill.entity.EmailFile;
 import com.pay.aile.bill.entity.SendMail;
@@ -82,10 +83,11 @@ public class ParseMailImpl implements IParseMail {
     public void executeParseFile(CreditFileModel creditFile) {
         // 解析
         Exception error = null;
+        AnalyzeParamsModel apm = null;
         Long id = creditFile.getId();
         try {
             try {
-                AnalyzeParamsModel apm = setModel(creditFile);
+                apm = setModel(creditFile);
                 BankMailAnalyzer parser = null;
                 for (BankMailAnalyzer p : parsers) {
                     if (p.support(apm.getBankCode())) {
@@ -97,12 +99,13 @@ public class ParseMailImpl implements IParseMail {
                     throw new RuntimeException(
                             String.format("no parsers found,bankCode=%s,email=%s", apm.getBankCode(), apm.getEmail()));
                 }
+
                 parser.analyze(apm);
             } catch (Exception e) {
                 // TODO 解析错误,发送信息告知
                 error = e;
                 logger.error(e.getMessage(), e);
-                // sendMail();
+                sendMail(apm.getOriginContent());
             }
             if (error == null) {
                 // 更新解析状态
@@ -157,12 +160,13 @@ public class ParseMailImpl implements IParseMail {
      */
     private void sendMail(String content) {
         try {
-            List<SendMail> sendMails = JedisClusterUtils.hashGet(Constant.redisSendMail, "SendMail", ArrayList.class);
-            if (sendMails != null) {
-                for (SendMail sendMail : sendMails) {
-
-                    mailSendUtil.sendUtil(content, "邮件解析异常", sendMail.getRecipients(), sendMail.getAddresser(),
-                            sendMail.getPasword(), sendMail.getHost(), sendMail.getPort());
+            String map = JedisClusterUtils.hashGet(Constant.redisSendMail, Constant.sendMailKey, String.class);
+            if (StringUtils.hasText(map)) {
+                List<SendMail> studentList1 = JSON.parseArray(JSON.parseObject(map).getString("sendMail"),
+                        SendMail.class);
+                for (SendMail sendMail : studentList1) {
+                    mailSendUtil.sendUtil(content, Constant.parseMailErrorSubject, sendMail.getRecipients(),
+                            sendMail.getAddresser(), sendMail.getPasword(), sendMail.getHost(), sendMail.getPort());
                 }
             }
         } catch (Exception e) {

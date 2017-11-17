@@ -1,7 +1,9 @@
 package com.pay.aile.bill.job;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.alibaba.fastjson.JSON;
 import com.pay.aile.bill.BillApplication;
 import com.pay.aile.bill.entity.SendMail;
 import com.pay.aile.bill.service.mail.analyze.constant.Constant;
@@ -37,8 +40,14 @@ public class RedisJobSettingsTest {
             // SendMail sendMail =
             // JedisClusterUtils.getBean(Constant.redisSendMail +
             // "czb18518679659@126.com", SendMail.class);
-            List<SendMail> sendMail = JedisClusterUtils.hashGet(Constant.redisSendMail, "SendMail", ArrayList.class);
-            System.out.println(sendMail);
+
+            String map = JedisClusterUtils.hashGet(Constant.redisSendMail, "SendMail", String.class);
+
+            List<SendMail> studentList1 = JSON.parseArray(JSON.parseObject(map).getString("sendMail"), SendMail.class);
+            for (SendMail sendMail : studentList1) {
+                System.out.println(sendMail.getAddresser());
+            }
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -49,6 +58,9 @@ public class RedisJobSettingsTest {
     @Test
     public void hashset() {
         try {
+
+            Map<String, Object> map = new HashMap<String, Object>();
+
             List<SendMail> list = new ArrayList<SendMail>();
             SendMail sendMail = new SendMail();
             sendMail.setRecipients("czb18518679659@126.com");
@@ -59,13 +71,16 @@ public class RedisJobSettingsTest {
             list.add(sendMail);
 
             SendMail sendMail2 = new SendMail();
-            sendMail2.setRecipients("czb18518679659@126.com");
-            sendMail2.setAddresser("18518679659@sina.cn");
+            sendMail2.setRecipients("18518679659@139.com");
+            sendMail2.setAddresser("18518679659@139.com");
             sendMail2.setPasword("12345qwert");
             sendMail2.setHost("smtp.139.com");
             sendMail2.setPort("25");
             list.add(sendMail2);
-            JedisClusterUtils.hashSet(Constant.redisSendMail, "SendMail", list);
+
+            map.put("sendMail", list);
+
+            JedisClusterUtils.hashSet(Constant.redisSendMail, "SendMail", JSON.toJSONString(map));
         } catch (Exception e) {
 
             e.printStackTrace();
